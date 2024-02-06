@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "412697295860",
+    "project_id": "i2hand",
+    "storage_bucket": "i2hand.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412697295860:android:0a5672ef8257a4bc6e17a1",
+        "android_client_info": {
+          "package_name": "com.lance.i2hand"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "412697295860-51g4s0m6m2nuim9po7q0003sj4bm172f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFGuOF3smS3kOPYrZKfGCE9ZphgP6W91o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "412697295860-51g4s0m6m2nuim9po7q0003sj4bm172f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
