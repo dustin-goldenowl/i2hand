@@ -1,5 +1,10 @@
 {
     "i2hand": "i2hand",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "i": "i",
+    "two": "2",
+    "hand": "hand",
+    "welcome" : "welcome",
+    "next": "Next"
 }

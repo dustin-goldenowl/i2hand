@@ -164,6 +164,13 @@ flutter:
           weight: 500
         - asset: assets/fonts/Raleway-Bold.ttf
           weight: 700
+    - family: Lovelo
+      fonts:
+        - asset: assets/fonts/Lovelo-Black.ttf
+    - family: Shrikhand
+      fonts:
+        - asset: assets/fonts/Shrikhand-Regular.ttf
+
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -12,6 +12,7 @@ class AppColors {
   static const divider = Color(0xFFEFEFEF);
   static const scaffoldBackgroundColor = Color(0xFFF8F6EE);
   static const background = Color.fromARGB(255, 249, 247, 242);
+  static const splashBachground = Color(0xFF053262);
   static const backgroundButton = Color(0xffE5EBFC);
   static const greyScaleLine = Color.fromARGB(255, 188, 194, 203);
   static const hintTextColor = Color(0xFF8C8A8A);
