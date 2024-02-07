@@ -1,0 +1,39 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:i2hand/firebase_options.dart';
+import 'package:i2hand/src/config/device/app_infor.dart';
+import 'package:i2hand/src/local/database_app.dart';
+import 'package:i2hand/src/router/router.dart';
+import 'package:i2hand/src/service/shared_pref.dart';
+
+Future initializeApp() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // catch error
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+
+  await Future.wait([
+    AppInfo.initialize(),
+    SharedPrefs.instance.initialize(),
+  ]);
+  _locator();
+}
+
+void _locator() {
+  GetIt.I.registerLazySingleton(() => AppRouter());
+
+  GetIt.I.registerLazySingleton<DatabaseApp>((() => DatabaseApp()));
+}
