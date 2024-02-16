@@ -14,6 +14,9 @@ import 'package:flutter/services.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/devices.png
+  AssetGenImage get devices => const AssetGenImage('assets/images/devices.png');
+
   /// File path: assets/images/ecommerce_shop.png
   AssetGenImage get ecommerceShop =>
       const AssetGenImage('assets/images/ecommerce_shop.png');
@@ -29,25 +32,20 @@ class $AssetsImagesGen {
   AssetGenImage get splashLogo =>
       const AssetGenImage('assets/images/splash_logo.png');
 
+  /// File path: assets/images/thunder_sale.png
+  AssetGenImage get thunderSale =>
+      const AssetGenImage('assets/images/thunder_sale.png');
+
   /// List of all assets
   List<AssetGenImage> get values =>
-      [ecommerceShop, logo, shoppingCart3d, splashLogo];
+      [devices, ecommerceShop, logo, shoppingCart3d, splashLogo, thunderSale];
 }
 
 class $AssetsSvgGen {
   const $AssetsSvgGen();
 
-  /// File path: assets/svg/air_pod.svg
-  SvgGenImage get airPod => const SvgGenImage('assets/svg/air_pod.svg');
-
   /// File path: assets/svg/devices.svg
   SvgGenImage get devices => const SvgGenImage('assets/svg/devices.svg');
-
-  /// File path: assets/svg/headphone.svg
-  SvgGenImage get headphone => const SvgGenImage('assets/svg/headphone.svg');
-
-  /// File path: assets/svg/laptop.svg
-  SvgGenImage get laptop => const SvgGenImage('assets/svg/laptop.svg');
 
   /// File path: assets/svg/on_boarding_bg.svg
   SvgGenImage get onBoardingBg =>
@@ -57,33 +55,13 @@ class $AssetsSvgGen {
   SvgGenImage get onboardingIllustration =>
       const SvgGenImage('assets/svg/onboarding_illustration.svg');
 
-  /// File path: assets/svg/remote.svg
-  SvgGenImage get remote => const SvgGenImage('assets/svg/remote.svg');
-
-  /// File path: assets/svg/speaker.svg
-  SvgGenImage get speaker => const SvgGenImage('assets/svg/speaker.svg');
-
-  /// File path: assets/svg/switch_device.svg
-  SvgGenImage get switchDevice =>
-      const SvgGenImage('assets/svg/switch_device.svg');
-
   /// File path: assets/svg/thunder_sale.svg
   SvgGenImage get thunderSale =>
       const SvgGenImage('assets/svg/thunder_sale.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [
-        airPod,
-        devices,
-        headphone,
-        laptop,
-        onBoardingBg,
-        onboardingIllustration,
-        remote,
-        speaker,
-        switchDevice,
-        thunderSale
-      ];
+  List<SvgGenImage> get values =>
+      [devices, onBoardingBg, onboardingIllustration, thunderSale];
 }
 
 class Assets {

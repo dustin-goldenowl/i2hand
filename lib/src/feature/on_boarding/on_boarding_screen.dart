@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:i2hand/gen/fonts.gen.dart';
-import 'package:i2hand/src/feature/on_boarding/page/item/i2hand_text.dart';
-import 'package:i2hand/src/localization/localization_utils.dart';
+import 'package:i2hand/gen/assets.gen.dart';
+import 'package:i2hand/src/feature/on_boarding/page/first_page.dart';
+import 'package:i2hand/src/feature/on_boarding/page/second_page.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
@@ -33,14 +33,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
+      child: Stack(
         children: [
-          const XAppName(),
-          Expanded(child: _renderPageView()),
-          _renderFooter(),
-          XPaddingUtils.verticalPadding(height: AppPadding.p12)
+          _renderBackground(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(child: _renderPageView()),
+              _renderFooter(),
+              XPaddingUtils.verticalPadding(height: AppPadding.p45)
+            ],
+          ),
         ],
       ),
     ));
@@ -50,7 +54,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return PageView.builder(
       controller: _controller,
       itemCount: 2,
-      itemBuilder: (context, index) => Container(),
+      itemBuilder: (context, index) {
+        switch (index) {
+          case 0:
+            return const FirstPageOnBoardingScreen();
+          case 1:
+          default:
+            return const SecondPageOnBoardingScreen();
+        }
+      },
     );
   }
 
@@ -60,7 +72,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _renderIndicator(),
-        _renderNextButton(),
       ],
     );
   }
@@ -68,32 +79,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   Widget _renderIndicator() {
     return SmoothPageIndicator(
       controller: _controller,
-      count: 5,
-      effect: const ScrollingDotsEffect(
-          activeStrokeWidth: AppSize.s20,
-          activeDotScale: AppSize.s2,
-          maxVisibleDots: 5,
-          radius: 8,
-          spacing: AppPadding.p8,
-          dotHeight: AppSize.s6,
-          dotWidth: AppSize.s6,
-          activeDotColor: AppColors.primary),
+      count: 2,
+      effect: const ExpandingDotsEffect(
+        radius: 8,
+        spacing: AppPadding.p8,
+        dotHeight: AppSize.s6,
+        dotWidth: AppSize.s6,
+        activeDotColor: AppColors.orange,
+      ),
     );
   }
 
-  Widget _renderNextButton() {
-    return TextButton(
-        onPressed: () {
-          _controller.animateToPage((_controller.page! + 1).toInt(),
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.linear);
-        },
-        child: Text(
-          S.of(context).next.toUpperCase(),
-          style: const TextStyle(
-              fontSize: AppFontSize.f16,
-              color: AppColors.black,
-              fontFamily: FontFamily.raleway),
-        ));
+  Widget _renderBackground() {
+    return Assets.svg.onBoardingBg.svg(fit: BoxFit.fill);
   }
 }
