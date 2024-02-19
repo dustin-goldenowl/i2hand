@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/dialog/toast_wrapper.dart';
+import 'package:i2hand/src/feature/authentication/sign_in/logic/sign_in_bloc.dart';
+import 'package:i2hand/src/feature/authentication/sign_in/logic/sign_in_state.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
@@ -11,8 +15,19 @@ import 'package:i2hand/widget/avatar/avatar.dart';
 import 'package:i2hand/widget/button/text_and_icon_button.dart';
 import 'package:i2hand/widget/text_field/password_field.dart';
 
-class EnterPasswordScreen extends StatelessWidget {
+class EnterPasswordScreen extends StatefulWidget {
   const EnterPasswordScreen({super.key});
+
+  @override
+  State<EnterPasswordScreen> createState() => _EnterPasswordScreenState();
+}
+
+class _EnterPasswordScreenState extends State<EnterPasswordScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<SignInBloc>().initialData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +75,21 @@ class EnterPasswordScreen extends StatelessWidget {
   }
 
   Widget _renderHelloText(BuildContext context) {
-    return Text(
-      S.of(context).hello,
-      style: AppTextStyle.titleTextStyle.copyWith(fontSize: AppFontSize.f28),
+    return BlocBuilder<SignInBloc, SignInState>(
+      buildWhen: (previous, current) => previous.user != current.user,
+      builder: (context, state) {
+        return DefaultTextStyle(
+          style:
+              AppTextStyle.titleTextStyle.copyWith(fontSize: AppFontSize.f28),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(S.of(context).hello),
+              Text(state.user?.name ?? ''),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -75,19 +102,60 @@ class EnterPasswordScreen extends StatelessWidget {
   }
 
   Widget _renderPasswordField(BuildContext context) {
-    return const XPasswordField(passwordLength: 6);
+    return BlocConsumer<SignInBloc, SignInState>(
+      listenWhen: (previous, current) => previous.status != current.status,
+      listener: (context, state) {
+        switch (state.status) {
+          case SignInStatus.signingIn:
+            XToast.showLoading();
+            return;
+          case SignInStatus.successed:
+            if (XToast.isShowLoading) XToast.hideLoading();
+            XToast.success(S.of(context).goodToSeeYouBack);
+            return;
+          case SignInStatus.failed:
+            if (XToast.isShowLoading) XToast.hideLoading();
+            XToast.error(S.of(context).someThingWentWrong);
+            return;
+          default:
+            if (XToast.isShowLoading) XToast.hideLoading();
+        }
+      },
+      buildWhen: (previous, current) =>
+          previous.password != current.password ||
+          previous.isWrongPassword != current.isWrongPassword ||
+          previous.status != current.status,
+      builder: (context, state) {
+        return XPasswordField(
+          passwordLength: 8,
+          isWrong: state.isWrongPassword ?? false,
+          onChangedPassword: (pass) =>
+              context.read<SignInBloc>().onChangedPassword(pass),
+          password: state.password ?? '',
+        );
+      },
+    );
   }
 
   Widget _renderForgotButton(BuildContext context) {
-    return TextButton(
-        onPressed: () {
-          //TODO: ForgotPassword logic
-        },
-        child: Text(
-          S.of(context).forGotYourPassword,
-          style: AppTextStyle.textButtonTextStyle
-              .copyWith(fontSize: AppFontSize.f14),
-        ));
+    return BlocSelector<SignInBloc, SignInState, bool>(
+      selector: (state) {
+        return state.isShowForgotPass ?? false;
+      },
+      builder: (context, forgotPass) {
+        return forgotPass
+            ? TextButton(
+                onPressed: () {
+                  //TODO: ForgotPassword logic
+                },
+                child: Text(
+                  S.of(context).forGotYourPassword,
+                  style: AppTextStyle.textButtonTextStyle
+                      .copyWith(fontSize: AppFontSize.f14),
+                ))
+            : const SizedBox.shrink();
+      },
+    );
   }
 
   Widget _renderNotYouButton(BuildContext context) {

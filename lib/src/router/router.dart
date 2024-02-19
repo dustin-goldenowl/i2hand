@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:i2hand/src/feature/authentication/sign_in/logic/sign_in_bloc.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/view/enter_password_screen.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/view/sign_in_screen.dart';
 import 'package:i2hand/src/feature/authentication/start/view/start_screen.dart';
@@ -30,13 +32,21 @@ class AppRouter {
                 parentNavigatorKey: AppCoordinator.navigatorKey,
                 name: AppRouteNames.loginEmail.name,
                 path: AppRouteNames.loginEmail.subPath,
-                builder: (_, __) => const SignInScreen(),
+                builder: (_, __) => BlocProvider(
+                      create: (context) => SignInBloc(),
+                      child: const SignInScreen(),
+                    ),
                 routes: [
                   GoRoute(
                     parentNavigatorKey: AppCoordinator.navigatorKey,
                     name: AppRouteNames.loginPass.name,
                     path: AppRouteNames.loginPass.subPath,
-                    builder: (_, __) => const EnterPasswordScreen(),
+                    builder: (_, __) {
+                      return BlocProvider(
+                        create: (context) => SignInBloc(),
+                        child: const EnterPasswordScreen(),
+                      );
+                    },
                   )
                 ])
           ])

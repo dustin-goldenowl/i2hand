@@ -20,5 +20,13 @@
     "hello": "Hello, ",
     "typeYourPassword": "Type your password",
     "notYou": "Not you?",
-    "forGotYourPassword": "Forgot your password"
+    "forGotYourPassword": "Forgot your password",
+    "or": "OR",
+    "signUpByGoogle": "Sign up by Google",
+    "thisFieldIsNotEmpty": "This field must not be empty.",
+    "emailInvalid": "Email is invalid",
+    "passwordMustBeSixOrMore": "Password must be six or more",
+    "male": "Male",
+    "female": "Female",
+    "someThingWentWrong": "Something went wrong!"
 }
