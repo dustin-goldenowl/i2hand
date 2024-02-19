@@ -27,4 +27,11 @@ class AppCoordinator {
       );
 
   static void showHomeScreen() => context.goNamed(AppRouteNames.home.name);
+
+  static void showStartScreen() => context.pushNamed(AppRouteNames.start.name);
+
+  static void showSignInEmailScreen() =>
+      context.pushNamed(AppRouteNames.loginEmail.name);
+  static void showSignInPassScreen() =>
+      context.pushNamed(AppRouteNames.loginPass.name);
 }

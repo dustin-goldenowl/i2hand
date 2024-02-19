@@ -10,5 +10,15 @@
     "createYourBuying": "Create your buying and selling account",
     "ourNewServiceMakesItEasy": "Our new service makes it easy for you to work anywhere, there are new features will really help you.",
     "letsGetStarted": "Let's get started",
-    "discoverProductsThatSuitYourNeeds":"Discover products that suit your needs."
+    "discoverProductsThatSuitYourNeeds":"Discover products that suit your needs.",
+    "createAccount": "Create account",
+    "iAlreadyHaveAccount": "I already have an account",
+    "login": "Login",
+    "goodToSeeYouBack": "Good to see you back!",
+    "email": "Email",
+    "cancel": "Cancel",
+    "hello": "Hello, ",
+    "typeYourPassword": "Type your password",
+    "notYou": "Not you?",
+    "forGotYourPassword": "Forgot your password"
 }
