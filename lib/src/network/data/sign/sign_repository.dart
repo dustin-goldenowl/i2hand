@@ -15,7 +15,10 @@ abstract class SignRepository {
 
   // Sign up with email
   Future<MResult<MUser>> signUpWithEmail(
-      {required String email, required String password, required String name});
+      {required String email,
+      required String password,
+      required String phone,
+      required String name});
 
   Future<MResult<bool>> forgotPassword(String email);
 

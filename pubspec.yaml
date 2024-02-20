@@ -33,6 +33,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: 0.18.1
+  http: 1.2.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -79,6 +80,9 @@ dependencies:
   board_datetime_picker: 1.4.0
   lottie: 3.0.0
   flutter_svg: 2.0.9
+  modal_bottom_sheet: 2.1.2
+  image_picker: 1.0.7
+  image_cropper: 5.0.1
 
   equatable: 2.0.5
 

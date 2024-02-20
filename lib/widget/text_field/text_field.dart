@@ -25,6 +25,8 @@ class XTextField extends StatelessWidget {
     this.maxLines = 1,
     this.minLines = 1,
     this.textInputAction,
+    this.cursolHeight,
+    this.cursorColor,
   });
   final String? label;
   final TextStyle? labelStyle;
@@ -44,6 +46,8 @@ class XTextField extends StatelessWidget {
   final int maxLines;
   final int minLines;
   final TextInputAction? textInputAction;
+  final double? cursolHeight;
+  final Color? cursorColor;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +64,8 @@ class XTextField extends StatelessWidget {
             style: AppTextStyle.hintTextStyle.copyWith(color: AppColors.black),
             maxLines: maxLines,
             minLines: minLines,
+            cursorColor: cursorColor,
+            cursorHeight: cursolHeight,
             keyboardType: keyboardType,
             textInputAction: textInputAction,
             onChanged: (value) => onChanged(value),

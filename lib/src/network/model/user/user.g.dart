@@ -11,6 +11,7 @@ MUser _$MUserFromJson(Map<String, dynamic> json) => MUser(
       name: json['name'] as String?,
       avatar: json['avatar'] as String?,
       email: json['email'] as String?,
+      phone: json['phone'] as String?,
       dateOfBirth: json['dateOfBirth'] == null
           ? null
           : DateTime.parse(json['dateOfBirth'] as String),
@@ -24,6 +25,7 @@ Map<String, dynamic> _$MUserToJson(MUser instance) => <String, dynamic>{
       'email': instance.email,
       'dateOfBirth': instance.dateOfBirth?.toIso8601String(),
       'gender': _$GenderEnumMap[instance.gender],
+      'phone': instance.phone,
     };
 
 const _$GenderEnumMap = {

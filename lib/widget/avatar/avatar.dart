@@ -18,6 +18,7 @@ class XAvatar extends StatefulWidget {
   final double? imageSize;
   final Color? borderColor;
   final bool isShadow;
+  final ImageType imageType;
   const XAvatar({
     Key? key,
     this.url,
@@ -28,6 +29,7 @@ class XAvatar extends StatefulWidget {
     this.borderWidth,
     this.imageSize,
     this.borderColor,
+    this.imageType = ImageType.none,
     this.isShadow = true,
   }) : super(key: key);
 
@@ -36,8 +38,6 @@ class XAvatar extends StatefulWidget {
 }
 
 class _XAvatarState extends State<XAvatar> {
-  ImageType _imageType = ImageType.none;
-
   bool isValidUrl(String? url) {
     if (url?.isEmpty ?? true) {
       return false;
@@ -78,7 +78,7 @@ class _XAvatarState extends State<XAvatar> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        _renderImage(_imageType),
+        _renderImage(widget.imageType),
         widget.isEditable
             ? Positioned(
                 bottom: 0,
@@ -100,7 +100,7 @@ class _XAvatarState extends State<XAvatar> {
                       foregroundColor:
                           MaterialStateProperty.all(AppColors.white),
                     ),
-                    icon: Icon(Icons.edit),
+                    icon: const Icon(Icons.edit),
                     color: AppColors.white,
                     alignment: Alignment.topRight,
                     constraints: const BoxConstraints(
@@ -129,9 +129,7 @@ class _XAvatarState extends State<XAvatar> {
           onError: (exception, stackTrace) async {
             await Future.delayed(const Duration(milliseconds: 500));
             if (mounted) {
-              setState(() {
-                _imageType = ImageType.none;
-              });
+              setState(() {});
             }
           },
         ),

@@ -1,17 +1,37 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/dialog/toast_wrapper.dart';
+import 'package:i2hand/src/feature/authentication/sign_up/logic/sign_up_bloc.dart';
+import 'package:i2hand/src/feature/authentication/sign_up/logic/sign_up_state.dart';
+import 'package:i2hand/src/feature/common/country_logic/search_dial_code_bloc.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
+import 'package:i2hand/src/network/model/country/country_code.dart';
+import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
 import 'package:i2hand/src/utils/string_ext.dart';
+import 'package:i2hand/src/utils/string_utils.dart';
+import 'package:i2hand/src/utils/utils.dart';
+import 'package:i2hand/widget/avatar/avatar.dart';
+import 'package:i2hand/widget/bottomsheet/country_code_bottomsheet.dart';
+import 'package:i2hand/widget/bottomsheet/image_picker_bottom_sheet.dart';
 import 'package:i2hand/widget/button/fill_button.dart';
+import 'package:i2hand/widget/image/pick_image_app.dart';
 import 'package:i2hand/widget/text_field/password_field.dart';
+import 'package:i2hand/widget/text_field/phone_input.dart';
 import 'package:i2hand/widget/text_field/text_field.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -49,8 +69,10 @@ class SignUpScreen extends StatelessWidget {
               XPaddingUtils.verticalPadding(height: AppPadding.p135),
               _renderSignUpText(context),
               XPaddingUtils.verticalPadding(height: AppPadding.p20),
-              _renderAddAvatar(),
+              _renderAddAvatar(context),
               XPaddingUtils.verticalPadding(height: AppPadding.p15),
+              _renderNameField(context),
+              XPaddingUtils.verticalPadding(height: AppPadding.p10),
               _renderEmailField(context),
               XPaddingUtils.verticalPadding(height: AppPadding.p10),
               _renderPasswordField(context),
@@ -59,7 +81,7 @@ class SignUpScreen extends StatelessWidget {
               XPaddingUtils.verticalPadding(height: AppPadding.p10),
               _renderNumberPhoneField(context),
               XPaddingUtils.verticalPadding(height: AppPadding.p20),
-              _renderNextButton(context),
+              _renderDoneButton(context),
               XPaddingUtils.verticalPadding(height: AppPadding.p5),
               _renderOrText(context),
               XPaddingUtils.verticalPadding(height: AppPadding.p10),
@@ -80,38 +102,86 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  Widget _renderAddAvatar() {
-    return Container(
-      height: AppSize.s90,
-      width: AppSize.s90,
-      alignment: Alignment.center,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          const Icon(
-            Icons.photo_camera_outlined,
-            color: AppColors.primary,
-            size: AppSize.s40,
+  Widget _renderAddAvatar(BuildContext context) {
+    return BlocSelector<SignUpBloc, SignUpState, Uint8List?>(
+      selector: (state) {
+        return state.avatar;
+      },
+      builder: (context, avatar) {
+        return GestureDetector(
+          onTap: () => _pickImagehandler(context, avatar),
+          child: Container(
+            height: AppSize.s90,
+            width: AppSize.s90,
+            alignment: Alignment.center,
+            child: isNullOrEmpty(avatar)
+                ? Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const Icon(
+                        Icons.photo_camera_outlined,
+                        color: AppColors.primary,
+                        size: AppSize.s40,
+                      ),
+                      CustomPaint(
+                        size: const Size(AppSize.s90, AppSize.s90),
+                        foregroundPainter: MyPainter(
+                            completeColor: AppColors.primary, width: 2),
+                      ),
+                    ],
+                  )
+                : XAvatar(
+                    imageType: ImageType.memory,
+                    memoryData: avatar,
+                  ),
           ),
-          CustomPaint(
-            size: const Size(AppSize.s90, AppSize.s90),
-            foregroundPainter:
-                MyPainter(completeColor: AppColors.primary, width: 2),
-          ),
-        ],
-      ),
+        );
+      },
+    );
+  }
+
+  Widget _renderNameField(BuildContext context) {
+    return BlocBuilder<SignUpBloc, SignUpState>(
+      buildWhen: (previous, current) =>
+          previous.name != current.name ||
+          previous.nameValidated != current.nameValidated,
+      builder: (context, state) {
+        return XTextField(
+            cursorColor: AppColors.primary,
+            label: S.of(context).name,
+            errorText: StringUtils.isNullOrEmpty(state.nameValidated)
+                ? null
+                : state.nameValidated,
+            labelStyle: AppTextStyle.labelStyle,
+            radius: AppRadius.r30,
+            hintText: S.of(context).name,
+            onChanged: (name) {
+              context.read<SignUpBloc>().onChangedName(name);
+            });
+      },
     );
   }
 
   Widget _renderEmailField(BuildContext context) {
-    {
-      return XTextField(
-          label: S.of(context).email,
-          labelStyle: AppTextStyle.labelStyle,
-          radius: AppRadius.r30,
-          hintText: S.of(context).email,
-          onChanged: (email) {});
-    }
+    return BlocBuilder<SignUpBloc, SignUpState>(
+      buildWhen: (previous, current) =>
+          previous.email != current.email ||
+          previous.emailValidated != current.emailValidated,
+      builder: (context, state) {
+        return XTextField(
+            cursorColor: AppColors.primary,
+            label: S.of(context).email,
+            errorText: StringUtils.isNullOrEmpty(state.emailValidated)
+                ? null
+                : state.emailValidated,
+            labelStyle: AppTextStyle.labelStyle,
+            radius: AppRadius.r30,
+            hintText: S.of(context).email,
+            onChanged: (email) {
+              context.read<SignUpBloc>().onChangedEmail(email);
+            });
+      },
+    );
   }
 
   Widget _renderPasswordField(BuildContext context) {
@@ -123,10 +193,19 @@ class SignUpScreen extends StatelessWidget {
           style: AppTextStyle.labelStyle,
         ),
         XPaddingUtils.verticalPadding(height: AppPadding.p10),
-        XPasswordField(
-          passwordLength: 8,
-          onChangedPassword: (pass) {},
-          password: '',
+        BlocBuilder<SignUpBloc, SignUpState>(
+          buildWhen: (previous, current) =>
+              previous.password != current.password ||
+              previous.isWrongPassword != current.isWrongPassword,
+          builder: (context, state) {
+            return XPasswordField(
+              passwordLength: 8,
+              onChangedPassword: (pass) {
+                context.read<SignUpBloc>().onChangedPassword(pass, context);
+              },
+              password: state.password,
+            );
+          },
         ),
       ],
     );
@@ -141,10 +220,22 @@ class SignUpScreen extends StatelessWidget {
           style: AppTextStyle.labelStyle,
         ),
         XPaddingUtils.verticalPadding(height: AppPadding.p10),
-        XPasswordField(
-          passwordLength: 8,
-          onChangedPassword: (pass) {},
-          password: '',
+        BlocBuilder<SignUpBloc, SignUpState>(
+          buildWhen: (previous, current) =>
+              previous.confirmPassword != current.confirmPassword ||
+              previous.isWrongPassword != current.isWrongPassword,
+          builder: (context, state) {
+            return XPasswordField(
+              passwordLength: 8,
+              onChangedPassword: (pass) {
+                context
+                    .read<SignUpBloc>()
+                    .onChangedConfirmPassword(pass, context);
+              },
+              isWrong: state.isWrongPassword ?? false,
+              password: state.confirmPassword,
+            );
+          },
         ),
       ],
     );
@@ -152,22 +243,57 @@ class SignUpScreen extends StatelessWidget {
 
   Widget _renderNumberPhoneField(BuildContext context) {
     {
-      return XTextField(
-          keyboardType: TextInputType.phone,
-          label: S.of(context).yourNumber,
-          labelStyle: AppTextStyle.labelStyle,
-          radius: AppRadius.r30,
-          hintText: S.of(context).yourNumber,
-          onChanged: (phoneNumber) {});
+      return BlocBuilder<SignUpBloc, SignUpState>(
+        buildWhen: (previous, current) =>
+            previous.phone != current.phone ||
+            previous.country != current.country ||
+            previous.phoneValidated != current.phoneValidated,
+        builder: (context, state) {
+          return XPhoneInput(
+            errorText: StringUtils.isNullOrEmpty(state.phoneValidated)
+                ? null
+                : state.phoneValidated,
+            countryCodeDomain: state.country ?? CountryCode(),
+            label: S.of(context).yourNumber,
+            hintText: S.of(context).yourNumber,
+            onPressCountryFlag: () => _onPressCountryFlag(context),
+            onChangedInput: (value) =>
+                context.read<SignUpBloc>().onChangedPhoneNumber(value),
+          );
+        },
+      );
     }
   }
 
-  Widget _renderNextButton(BuildContext context) {
-    return XFillButton(
-      onPressed: () {},
-      label: Text(
-        S.of(context).done,
-        style: AppTextStyle.buttonTextStylePrimary,
+  Widget _renderDoneButton(BuildContext context) {
+    return BlocListener<SignUpBloc, SignUpState>(
+      listener: (context, state) {
+        switch (state.status) {
+          case SignUpStatus.signingIn:
+            XToast.showLoading();
+            break;
+          case SignUpStatus.failed:
+            if (XToast.isShowLoading) XToast.hideLoading();
+            context.read<SignUpBloc>().resetStatus();
+            break;
+          case SignUpStatus.successed:
+            if (XToast.isShowLoading) XToast.hideLoading();
+            XToast.success(S.of(context).createAccount);
+            context.read<SignUpBloc>().resetStatus();
+            break;
+          default:
+            if (XToast.isShowLoading) XToast.hideLoading();
+            break;
+        }
+      },
+      child: XFillButton(
+        onPressed: () async {
+          context.read<SignUpBloc>().signupWithEmail(context);
+        },
+        label: Text(
+          S.of(context).done,
+          style: AppTextStyle.buttonTextStylePrimary,
+        ),
       ),
     );
   }
@@ -203,6 +329,100 @@ class SignUpScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _onPressCountryFlag(BuildContext context) {
+    if (Platform.isIOS) {
+      showCupertinoModalBottomSheet(
+        duration: const Duration(milliseconds: 350),
+        animationCurve: Curves.easeOut,
+        enableDrag: false,
+        context: context,
+        topRadius: const Radius.circular(AppRadius.r16),
+        builder: (context) => BlocProvider.value(
+          value: context.read<SignUpBloc>(),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: searchDialCodeProvider(
+              onCountrySelected: (value) =>
+                  context.read<SignUpBloc>().setCountryCode(value),
+            ),
+          ),
+        ),
+        isDismissible: false,
+        barrierColor: Colors.black.withOpacity(0.5),
+      );
+    } else {
+      showMaterialModalBottomSheet(
+        duration: const Duration(milliseconds: 350),
+        animationCurve: Curves.easeOut,
+        expand: true,
+        enableDrag: false,
+        context: context,
+        builder: (context) => Scaffold(
+          backgroundColor: Colors.transparent,
+          body: searchDialCodeProvider(
+            onCountrySelected: (value) {},
+          ),
+        ),
+        isDismissible: false,
+      ).then((value) {
+        if (isNullOrEmpty(value)) return;
+        context.read<SignUpBloc>().setCountryCode(value);
+      });
+    }
+  }
+
+  Widget searchDialCodeProvider({
+    required ValueChanged<CountryCode> onCountrySelected,
+  }) {
+    return BlocProvider(
+      create: (_) => SearchDialCodeBloc(),
+      child: SearchDialCodeBottomSheet(onCountrySelected: onCountrySelected),
+    );
+  }
+
+  void _pickImagehandler(BuildContext context, Uint8List? avatar) {
+    showCupertinoModalBottomSheet(
+        duration: const Duration(milliseconds: 350),
+        animationCurve: Curves.easeOut,
+        barrierColor: AppColors.black.withOpacity(0.5),
+        context: context,
+        builder: (_) => XImagePickerBottomSheet(
+            isPhotoExisted: !isNullOrEmpty(avatar),
+            onSelectedValue: (value) async {
+              AppCoordinator.pop();
+              switch (value as String) {
+                case 'Take photo':
+                  try {
+                    final image = await PickerImageApp.show(ImageSource.camera);
+                    if (image != null) {
+                      context.read<SignUpBloc>().setAvatar(image.bytes);
+                    }
+                  } catch (error) {
+                    xLog.e("pickImagehandler $error");
+                  }
+                  break;
+                case 'Choose photo':
+                  try {
+                    final image =
+                        await PickerImageApp.show(ImageSource.gallery);
+                    if (image != null) {
+                      context.read<SignUpBloc>().setAvatar(image.bytes);
+                    }
+                  } catch (error) {
+                    xLog.e("pickImagehandler $error");
+                  }
+                  break;
+                case 'Remove photo':
+                  try {
+                    context.read<SignUpBloc>().setAvatar(Uint8List(0));
+                  } catch (error) {
+                    xLog.e("pickImagehandler $error");
+                  }
+                  break;
+              }
+            }));
   }
 }
 
