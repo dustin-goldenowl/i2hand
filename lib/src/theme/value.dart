@@ -9,6 +9,7 @@ class AppSize {
   static const s10 = 10.0;
   static const s14 = 14.0;
   static const s16 = 16.0;
+  static const s17 = 17.0;
   static const s20 = 20.0;
   static const s24 = 24.0;
   static const s30 = 30.0;
@@ -19,7 +20,9 @@ class AppSize {
   static const s60 = 60.0;
   static const s70 = 70.0;
   static const s100 = 100.0;
+  static const s105 = 105.0;
   static const s123 = 123.0;
+  static const s134 = 134.0;
   static const s150 = 150.0;
   static const s200 = 200.0;
   static const s250 = 250.0;
@@ -44,6 +47,7 @@ class AppPadding {
   static const p53 = 53.0;
   static const p59 = 59.0;
   static const p100 = 100.0;
+  static const p135 = 135.0;
 }
 
 class AppMargin {
@@ -71,8 +75,10 @@ class AppFontSize {
   static const f18 = 18.0;
   static const f20 = 20.0;
   static const f24 = 24.0;
+  static const f28 = 28.0;
   static const f30 = 30.0;
   static const f40 = 40.0;
+  static const f52 = 52.0;
   static const f60 = 60.0;
   static const f128 = 128.0;
 }

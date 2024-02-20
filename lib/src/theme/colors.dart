@@ -4,9 +4,9 @@ class AppColors {
   // primary
   static const primary = Color(0xff004CFF);
   static const subPrimary = Color(0xFFFFCDD2);
-  static const secondPrimary = Color(0xFFD97474);
+  static const secondPrimary = Color(0xFF9EB4E8);
   static const errorColor = Color(0xFFEC4E4E);
-  static const text = Color(0xFF404040);
+  static const text = Color(0xFF202020);
   static const textSecondary = Color(0xFF444444);
   static const link = Color(0xFF0064FF);
   static const divider = Color(0xFFEFEFEF);
@@ -35,7 +35,8 @@ class AppColors {
   static const grey2 = Color(0xFF8C8A8A);
   static const grey3 = Color(0xFFAEAEAE);
   static const grey4 = Color(0xFFC7C7C7);
-  static const grey5 = Color(0xFFD1D1D1);
+  static const grey5 = Color(0xFFD2D2D2);
   static const grey6 = Color(0xFFE5E5E5);
   static const grey7 = Color(0xFFF2F2F2);
+  static const grey8 = Color(0xFFF8F8F8);
 }

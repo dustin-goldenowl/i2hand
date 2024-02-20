@@ -10,9 +10,10 @@ class AppTextStyle {
       color: AppColors.black);
 
   static TextStyle hintTextStyle = const TextStyle(
-      fontSize: AppFontSize.f12,
+      fontSize: AppFontSize.f14,
       fontFamily: FontFamily.raleway,
-      color: AppColors.grey4);
+      fontWeight: FontWeight.w500,
+      color: AppColors.secondPrimary);
 
   static TextStyle buttonTextStylePrimary = const TextStyle(
       fontSize: AppFontSize.f16,
@@ -23,6 +24,7 @@ class AppTextStyle {
   static TextStyle titleTextStyle = const TextStyle(
       fontFamily: FontFamily.raleway,
       fontSize: AppFontSize.f24,
+      color: AppColors.text,
       fontWeight: FontWeight.bold);
 
   static TextStyle contentTexStyleBold = const TextStyle(
@@ -34,4 +36,9 @@ class AppTextStyle {
     fontFamily: FontFamily.nunitoSans,
     color: AppColors.hintTextColor,
   );
+
+  static TextStyle textButtonTextStyle = const TextStyle(
+      fontSize: AppFontSize.f16,
+      color: AppColors.text,
+      fontFamily: FontFamily.nunitoSans);
 }

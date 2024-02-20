@@ -10,6 +10,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
@@ -41,8 +42,35 @@ class $AssetsImagesGen {
       [devices, ecommerceShop, logo, shoppingCart3d, splashLogo, thunderSale];
 }
 
+class $AssetsJsonsGen {
+  const $AssetsJsonsGen();
+
+  /// File path: assets/jsons/female-avatar.json
+  LottieGenImage get femaleAvatar =>
+      const LottieGenImage('assets/jsons/female-avatar.json');
+
+  /// File path: assets/jsons/male-avatar.json
+  LottieGenImage get maleAvatar =>
+      const LottieGenImage('assets/jsons/male-avatar.json');
+
+  /// List of all assets
+  List<LottieGenImage> get values => [femaleAvatar, maleAvatar];
+}
+
 class $AssetsSvgGen {
   const $AssetsSvgGen();
+
+  /// File path: assets/svg/bubbles_1.svg
+  SvgGenImage get bubbles1 => const SvgGenImage('assets/svg/bubbles_1.svg');
+
+  /// File path: assets/svg/bubbles_2.svg
+  SvgGenImage get bubbles2 => const SvgGenImage('assets/svg/bubbles_2.svg');
+
+  /// File path: assets/svg/bubbles_3.svg
+  SvgGenImage get bubbles3 => const SvgGenImage('assets/svg/bubbles_3.svg');
+
+  /// File path: assets/svg/bubbles_4.svg
+  SvgGenImage get bubbles4 => const SvgGenImage('assets/svg/bubbles_4.svg');
 
   /// File path: assets/svg/devices.svg
   SvgGenImage get devices => const SvgGenImage('assets/svg/devices.svg');
@@ -60,14 +88,23 @@ class $AssetsSvgGen {
       const SvgGenImage('assets/svg/thunder_sale.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values =>
-      [devices, onBoardingBg, onboardingIllustration, thunderSale];
+  List<SvgGenImage> get values => [
+        bubbles1,
+        bubbles2,
+        bubbles3,
+        bubbles4,
+        devices,
+        onBoardingBg,
+        onboardingIllustration,
+        thunderSale
+      ];
 }
 
 class Assets {
   Assets._();
 
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsJsonsGen jsons = $AssetsJsonsGen();
   static const $AssetsSvgGen svg = $AssetsSvgGen();
 }
 
@@ -190,6 +227,65 @@ class SvgGenImage {
       colorBlendMode: colorBlendMode,
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
+    );
+  }
+
+  String get path => _assetName;
+
+  String get keyName => _assetName;
+}
+
+class LottieGenImage {
+  const LottieGenImage(this._assetName);
+
+  final String _assetName;
+
+  LottieBuilder lottie({
+    Animation<double>? controller,
+    bool? animate,
+    FrameRate? frameRate,
+    bool? repeat,
+    bool? reverse,
+    LottieDelegates? delegates,
+    LottieOptions? options,
+    void Function(LottieComposition)? onLoaded,
+    LottieImageProviderFactory? imageProviderFactory,
+    Key? key,
+    AssetBundle? bundle,
+    Widget Function(BuildContext, Widget, LottieComposition?)? frameBuilder,
+    ImageErrorWidgetBuilder? errorBuilder,
+    double? width,
+    double? height,
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    String? package,
+    bool? addRepaintBoundary,
+    FilterQuality? filterQuality,
+    void Function(String)? onWarning,
+  }) {
+    return Lottie.asset(
+      _assetName,
+      controller: controller,
+      animate: animate,
+      frameRate: frameRate,
+      repeat: repeat,
+      reverse: reverse,
+      delegates: delegates,
+      options: options,
+      onLoaded: onLoaded,
+      imageProviderFactory: imageProviderFactory,
+      key: key,
+      bundle: bundle,
+      frameBuilder: frameBuilder,
+      errorBuilder: errorBuilder,
+      width: width,
+      height: height,
+      fit: fit,
+      alignment: alignment,
+      package: package,
+      addRepaintBoundary: addRepaintBoundary,
+      filterQuality: filterQuality,
+      onWarning: onWarning,
     );
   }
 

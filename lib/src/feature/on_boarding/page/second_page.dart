@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/src/feature/on_boarding/page/item/i2hand_text.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
+import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
@@ -63,6 +64,7 @@ class SecondPageOnBoardingScreen extends StatelessWidget {
     return XFillButton(
       bgColor: AppColors.white,
       borderRadius: AppRadius.r30,
+      onPressed: () => AppCoordinator.showStartScreen(),
       label: Text(
         S.of(context).letsGetStarted,
         style: AppTextStyle.buttonTextStylePrimary
