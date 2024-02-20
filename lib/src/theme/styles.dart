@@ -18,7 +18,7 @@ class AppTextStyle {
       fontSize: AppFontSize.f16,
       color: AppColors.white,
       fontWeight: FontWeight.bold,
-      fontFamily: FontFamily.raleway);
+      fontFamily: FontFamily.nunitoSans);
 
   static TextStyle titleTextStyle = const TextStyle(
       fontFamily: FontFamily.raleway,

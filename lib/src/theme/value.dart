@@ -73,6 +73,8 @@ class AppFontSize {
   static const f24 = 24.0;
   static const f30 = 30.0;
   static const f40 = 40.0;
+  static const f60 = 60.0;
+  static const f128 = 128.0;
 }
 
 class AppRadius {

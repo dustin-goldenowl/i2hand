@@ -12,13 +12,15 @@ class AppColors {
   static const divider = Color(0xFFEFEFEF);
   static const scaffoldBackgroundColor = Color(0xFFF8F6EE);
   static const background = Color.fromARGB(255, 249, 247, 242);
+  static const splashBachground = Color(0xFF053262);
   static const backgroundButton = Color(0xffE5EBFC);
   static const greyScaleLine = Color.fromARGB(255, 188, 194, 203);
   static const hintTextColor = Color(0xFF8C8A8A);
   static const red = Color.fromARGB(255, 248, 103, 103);
   static const green = Color.fromARGB(255, 61, 164, 61);
   static const greenLight = Color.fromARGB(255, 117, 179, 117);
-  static const yellow = Color.fromARGB(255, 237, 221, 116);
+  static const yellow = Color(0xFFF4BD46);
+  static const orange = Color(0xFFFF5500);
   // black
   static const black = Colors.black;
   static const black2 = Color(0xFF1E1E1E);

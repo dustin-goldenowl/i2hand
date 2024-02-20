@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/router/route_name.dart';
 
@@ -9,7 +10,14 @@ class AppRouter {
     navigatorKey: AppCoordinator.navigatorKey,
     initialLocation: AppRouteNames.home.path,
     debugLogDiagnostics: kDebugMode,
-    routes: <RouteBase>[],
+    routes: <RouteBase>[
+      GoRoute(
+        parentNavigatorKey: AppCoordinator.navigatorKey,
+        name: AppRouteNames.home.name,
+        path: AppRouteNames.home.path,
+        builder: (_, __) => const OnBoardingScreen(),
+      )
+    ],
     errorBuilder: (_, __) => Container(),
   );
 

@@ -10,9 +10,15 @@
 class FontFamily {
   FontFamily._();
 
+  /// Font family: Lovelo
+  static const String lovelo = 'Lovelo';
+
   /// Font family: Nunito Sans
   static const String nunitoSans = 'Nunito Sans';
 
   /// Font family: Raleway
   static const String raleway = 'Raleway';
+
+  /// Font family: Shrikhand
+  static const String shrikhand = 'Shrikhand';
 }
