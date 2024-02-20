@@ -82,10 +82,11 @@ class StartScreen extends StatelessWidget {
 
   Widget _renderSignUpButton(BuildContext context) {
     return XFillButton(
+        onPressed: () => AppCoordinator.showSignUpScreen(),
         label: Text(
-      S.of(context).createAccount,
-      style: AppTextStyle.buttonTextStylePrimary,
-    ));
+          S.of(context).createAccount,
+          style: AppTextStyle.buttonTextStylePrimary,
+        ));
   }
 
   Widget _renderSignInButton(BuildContext context) {

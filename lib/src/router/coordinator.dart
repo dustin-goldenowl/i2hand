@@ -32,6 +32,10 @@ class AppCoordinator {
 
   static void showSignInEmailScreen() =>
       context.pushNamed(AppRouteNames.loginEmail.name);
+      
   static void showSignInPassScreen() =>
       context.pushNamed(AppRouteNames.loginPass.name);
+
+  static void showSignUpScreen() =>
+      context.pushNamed(AppRouteNames.signUp.name);
 }
