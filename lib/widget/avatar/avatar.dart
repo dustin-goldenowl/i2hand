@@ -137,7 +137,7 @@ class _XAvatarState extends State<XAvatar> {
           Radius.circular((widget.imageSize ?? AppSize.s70) / 2),
         ),
         border: Border.all(
-          color: AppColors.primary,
+          color: widget.borderColor ?? AppColors.primary,
           width: widget.borderWidth ?? AppSize.s4,
         ),
       ),

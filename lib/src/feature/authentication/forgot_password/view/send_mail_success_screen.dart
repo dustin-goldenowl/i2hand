@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
@@ -23,6 +24,12 @@ class SendMailSuccessScreen extends StatefulWidget {
 }
 
 class _SendMailSuccessScreenState extends State<SendMailSuccessScreen> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    context.read<ResetPasswordBloc>().initial(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,8 +128,18 @@ class _SendMailSuccessScreenState extends State<SendMailSuccessScreen> {
   }
 
   Widget _renderAvatar() {
-    return const XAvatar(
-      imageSize: AppSize.s105,
+    return BlocSelector<ResetPasswordBloc, ResetPasswordState, Uint8List?>(
+      selector: (state) {
+        return state.avatar;
+      },
+      builder: (context, avatar) {
+        return XAvatar(
+          imageSize: AppSize.s105,
+          memoryData: avatar,
+          imageType: avatar == null ? ImageType.none : ImageType.memory,
+          borderColor: AppColors.secondPrimary,
+        );
+      },
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:i2hand/src/network/model/common/social_type.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 
@@ -14,6 +15,7 @@ class SignInState with EquatableMixin {
     this.isWrongPassword,
     this.user,
     this.isShowForgotPass,
+    this.avatar,
   });
 
   final String? email;
@@ -24,6 +26,7 @@ class SignInState with EquatableMixin {
   final SignInStatus status;
   final MSocialType? loginType;
   final MUser? user;
+  final Uint8List? avatar;
 
   @override
   List<Object?> get props => [
@@ -35,6 +38,7 @@ class SignInState with EquatableMixin {
         loginType,
         user,
         isShowForgotPass,
+        avatar,
       ];
 
   SignInState copyWith({
@@ -46,6 +50,7 @@ class SignInState with EquatableMixin {
     SignInStatus? status,
     MUser? user,
     bool? isShowForgotPass,
+    Uint8List? avatar,
   }) {
     return SignInState(
       email: email ?? this.email,
@@ -56,6 +61,7 @@ class SignInState with EquatableMixin {
       status: status ?? this.status,
       user: user ?? this.user,
       isShowForgotPass: isShowForgotPass ?? this.isShowForgotPass,
+      avatar: avatar ?? this.avatar,
     );
   }
 }

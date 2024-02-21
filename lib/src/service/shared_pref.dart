@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/utils/utils.dart';
@@ -10,6 +11,7 @@ class _keys {
   static const String theme = 'app-theme';
   static const String token = 'token';
   static const String user = 'user';
+  static const String userAvatar = "userAvatar";
 }
 
 class SharedPrefs {
@@ -81,5 +83,20 @@ class SharedPrefs {
       xLog.e(e);
       return null;
     }
+  }
+
+  // avatar
+  Uint8List getUserAvatar() {
+    try {
+      final userPref = _prefs.getStringList(_keys.userAvatar) ?? [];
+      List<int> data = userPref.map((e) => int.parse(e)).toList();
+      return Uint8List.fromList(data);
+    } catch (_) {}
+    return Uint8List(0);
+  }
+
+  Future<void> setUserAvatar(Uint8List? avatar) async {
+    await _prefs.setStringList(_keys.userAvatar,
+        (avatar?.toList().map((e) => e.toString()).toList()) ?? []);
   }
 }

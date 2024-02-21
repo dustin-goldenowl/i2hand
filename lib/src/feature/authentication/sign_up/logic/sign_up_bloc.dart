@@ -2,9 +2,11 @@ import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/authentication/sign_up/logic/sign_up_state.dart';
+import 'package:i2hand/src/network/data/user/user_repository.dart';
 import 'package:i2hand/src/network/model/common/result.dart';
 import 'package:i2hand/src/network/model/common/social_type.dart';
 import 'package:i2hand/src/network/model/country/country_code.dart';
@@ -88,6 +90,7 @@ class SignUpBloc extends Cubit<SignUpState> {
   Future loginDecision(MResult<MUser> result, {MSocialType? socialType}) async {
     if (result.isSuccess) {
       emit(state.copyWith(status: SignUpStatus.successed));
+      _syncAvatarToFirebase(result.data!.id);
       // AppCoordinator.showSyncDataScreen();
     } else {
       emit(state.copyWith(status: SignUpStatus.failed));
@@ -140,11 +143,9 @@ class SignUpBloc extends Cubit<SignUpState> {
     ));
   }
 
-  setCountryCode(CountryCode value) {
+  void setCountryCode(CountryCode value) {
     emit(state.copyWith(country: value));
   }
-
-  onChangedCountryCode(String value) {}
 
   void setAvatar(Uint8List avatar) {
     emit(state.copyWith(avatar: avatar));
@@ -152,5 +153,13 @@ class SignUpBloc extends Cubit<SignUpState> {
 
   void resetStatus() {
     emit(state.copyWith(status: SignUpStatus.init));
+  }
+
+  Future<void> _syncAvatarToFirebase(String id) async {
+    try {
+      await GetIt.I.get<UserRepository>().addImage(id, state.avatar!);
+    } catch (e) {
+      xLog.e(e);
+    }
   }
 }

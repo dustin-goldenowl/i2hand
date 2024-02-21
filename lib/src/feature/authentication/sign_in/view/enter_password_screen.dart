@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
@@ -166,7 +167,7 @@ class _EnterPasswordScreenState extends State<EnterPasswordScreen> {
         children: [
           XTextAndIconButton(
             label: S.of(context).notYou,
-            onPressed: () => AppCoordinator.pop(),
+            onPressed: () => AppCoordinator.showSignInEmailScreen(),
           ),
         ],
       ),
@@ -174,8 +175,18 @@ class _EnterPasswordScreenState extends State<EnterPasswordScreen> {
   }
 
   Widget _renderAvatar() {
-    return const XAvatar(
-      imageSize: AppSize.s105,
+    return BlocSelector<SignInBloc, SignInState, Uint8List?>(
+      selector: (state) {
+        return state.avatar;
+      },
+      builder: (context, avatar) {
+        return XAvatar(
+          imageSize: AppSize.s105,
+          memoryData: avatar,
+          imageType: avatar == null ? ImageType.none : ImageType.memory,
+          borderColor: AppColors.secondPrimary,
+        );
+      },
     );
   }
 }

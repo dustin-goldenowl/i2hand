@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/feature/authentication/forgot_password/logic/reset_password_state.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/data/sign/sign_repository.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
+import 'package:i2hand/src/service/shared_pref.dart';
 import 'package:i2hand/src/utils/utils.dart';
 
 class ResetPasswordBloc extends Cubit<ResetPasswordState> {
@@ -35,7 +37,9 @@ class ResetPasswordBloc extends Cubit<ResetPasswordState> {
   }
 
   void initial(BuildContext context) {
-    emit(state.copyWith(selectedOption: S.of(context).sms));
+    Uint8List? avatar = SharedPrefs.I.getUserAvatar();
+    if (avatar == Uint8List(0)) avatar = null;
+    emit(state.copyWith(selectedOption: S.of(context).sms, avatar: avatar));
   }
 
   void emitSendMailFailed() {
