@@ -38,5 +38,12 @@
     "choosePhoto": "Choose photo",
     "removePhoto": "Remove photo",
     "editProfilePicture": "Edit profile picture",
-    "name": "Name"
+    "name": "Name",
+    "passwordRecovery": "Password Recovery",
+    "howYouWouldLikeToRestore": "How you would like to restore your password?",
+    "sms": "SMS",
+    "passwordLinkSend": "Password link send",
+    "youShouldReceiveAnEmail": "You should receive an email shortly with a link to reset your password",
+    "continueToLogin": "Continue to login",
+    "didntReceiveALink": "Didn't receive a link? Send again"
 }

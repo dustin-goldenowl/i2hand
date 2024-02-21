@@ -6,6 +6,8 @@ class AppColors {
   static const subPrimary = Color(0xFFFFCDD2);
   static const secondPrimary = Color(0xFF9EB4E8);
   static const errorColor = Color(0xFFEC4E4E);
+  static const pinkBackground = Color(0xFFF8CECE);
+  static const pinkBackgroundSecondary = Color(0xFFFFEBEB);
   static const text = Color(0xFF202020);
   static const textSecondary = Color(0xFF444444);
   static const link = Color(0xFF0064FF);
