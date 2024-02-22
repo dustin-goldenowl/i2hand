@@ -124,6 +124,7 @@ class SignRepositoryImpl extends SignRepository {
   Future<MResult<MUser>> signUpWithEmail(
       {required String email,
       required String password,
+      required String phone,
       required String name}) async {
     final result =
         await AuthenticationHelper().signUp(email: email, password: password);
@@ -135,6 +136,7 @@ class SignRepositoryImpl extends SignRepository {
         id: user?.uid ?? '',
         email: email,
         name: name,
+        phone: phone,
       );
 
       // save sharepref

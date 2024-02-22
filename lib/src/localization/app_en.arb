@@ -32,5 +32,11 @@
     "password": "Password", 
     "yourNumber": "Your number",
     "done": "Done",
-    "confirmPassword": "Confirm password"
+    "confirmPassword": "Confirm password",
+    "searchCountry": "Search country",
+    "takePhoto": "Take photo",
+    "choosePhoto": "Choose photo",
+    "removePhoto": "Remove photo",
+    "editProfilePicture": "Edit profile picture",
+    "name": "Name"
 }
