@@ -16,7 +16,6 @@ import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/router/route_name.dart';
 import 'package:i2hand/src/service/shared_pref.dart';
-import 'package:i2hand/src/utils/string_utils.dart';
 
 class AppRouter {
   final router = GoRouter(
@@ -64,10 +63,7 @@ class AppRouter {
                           return BlocProvider(
                             create: (context) {
                               final user = SharedPrefs.I.getUser();
-                              return ResetPasswordBloc(user ??
-                                  MUser(
-                                      id: StringUtils.createGenerateRandomText(
-                                          length: 10)));
+                              return ResetPasswordBloc(user ?? MUser.empty());
                             },
                             child: const ResetPasswordScreen(),
                           );
@@ -81,11 +77,8 @@ class AppRouter {
                               return BlocProvider(
                                 create: (context) {
                                   final user = SharedPrefs.I.getUser();
-                                  return ResetPasswordBloc(user ??
-                                      MUser(
-                                          id: StringUtils
-                                              .createGenerateRandomText(
-                                                  length: 10)));
+                                  return ResetPasswordBloc(
+                                      user ?? MUser.empty());
                                 },
                                 child: const SendMailSuccessScreen(),
                               );
