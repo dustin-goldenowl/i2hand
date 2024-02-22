@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/logic/sign_in_bloc.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/view/enter_password_screen.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/view/sign_in_screen.dart';
+import 'package:i2hand/src/feature/authentication/sign_up/view/sign_up_screen.dart';
 import 'package:i2hand/src/feature/authentication/start/view/start_screen.dart';
 import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
 import 'package:i2hand/src/router/coordinator.dart';
@@ -48,7 +49,16 @@ class AppRouter {
                       );
                     },
                   )
-                ])
+                ]),
+            GoRoute(
+              parentNavigatorKey: AppCoordinator.navigatorKey,
+              name: AppRouteNames.signUp.name,
+              path: AppRouteNames.signUp.subPath,
+              builder: (_, __) => BlocProvider(
+                create: (context) => SignInBloc(),
+                child: const SignUpScreen(),
+              ),
+            ),
           ])
     ],
     errorBuilder: (_, __) => Container(),

@@ -15,4 +15,13 @@ extension StringExtension on String {
     }
     return text;
   }
+
+  String capitalizeEachText() {
+    List<String> texts = split(' ');
+    String capitalizeText = '';
+    for (String text in texts) {
+      capitalizeText = "$capitalizeText ${text.capitalize()}";
+    }
+    return capitalizeText.trim();
+  }
 }

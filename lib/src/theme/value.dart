@@ -19,6 +19,7 @@ class AppSize {
   static const s48 = 48.0;
   static const s60 = 60.0;
   static const s70 = 70.0;
+  static const s90 = 90.0;
   static const s100 = 100.0;
   static const s105 = 105.0;
   static const s123 = 123.0;
@@ -78,6 +79,7 @@ class AppFontSize {
   static const f28 = 28.0;
   static const f30 = 30.0;
   static const f40 = 40.0;
+  static const f50 = 50.0;
   static const f52 = 52.0;
   static const f60 = 60.0;
   static const f128 = 128.0;

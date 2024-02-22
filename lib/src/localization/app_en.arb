@@ -28,5 +28,9 @@
     "passwordMustBeSixOrMore": "Password must be six or more",
     "male": "Male",
     "female": "Female",
-    "someThingWentWrong": "Something went wrong!"
+    "someThingWentWrong": "Something went wrong!",
+    "password": "Password", 
+    "yourNumber": "Your number",
+    "done": "Done",
+    "confirmPassword": "Confirm password"
 }
