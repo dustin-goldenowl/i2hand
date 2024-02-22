@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/config/constants/app_const.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/authentication/sign_up/logic/sign_up_state.dart';
 import 'package:i2hand/src/network/model/common/result.dart';
@@ -88,7 +89,7 @@ class SignUpBloc extends Cubit<SignUpState> {
   Future loginDecision(MResult<MUser> result, {MSocialType? socialType}) async {
     if (result.isSuccess) {
       emit(state.copyWith(status: SignUpStatus.successed));
-      // AppCoordinator.showSyncDataScreen();
+      // TODO: Add logic Navigate to Syncing data screen
     } else {
       emit(state.copyWith(status: SignUpStatus.failed));
       XToast.error(result.error);
@@ -125,7 +126,7 @@ class SignUpBloc extends Cubit<SignUpState> {
   }
 
   void onChangedPassword(String pass, BuildContext context) {
-    if (pass.length == 8) hideKeyboard(context);
+    if (pass.length == AppConstantData.passwordLength) hideKeyboard(context);
     emit(state.copyWith(
       password: pass,
       isWrongPassword: false,
@@ -133,7 +134,7 @@ class SignUpBloc extends Cubit<SignUpState> {
   }
 
   void onChangedConfirmPassword(String pass, BuildContext context) {
-    if (pass.length == 8) hideKeyboard(context);
+    if (pass.length == AppConstantData.passwordLength) hideKeyboard(context);
     emit(state.copyWith(
       confirmPassword: pass,
       isWrongPassword: false,
