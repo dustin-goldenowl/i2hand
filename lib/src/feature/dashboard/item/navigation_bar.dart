@@ -40,8 +40,9 @@ class XBottomNavigationBar extends StatelessWidget {
           top: -28,
           animated: false,
           itemStyle: ItemStyle.circle,
-          chipStyle:
-              const ChipStyle(notchSmoothness: NotchSmoothness.smoothEdge),
+          chipStyle: const ChipStyle(
+              notchSmoothness: NotchSmoothness.smoothEdge,
+              background: AppColors.secondPrimary),
         );
       },
     );

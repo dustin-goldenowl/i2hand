@@ -67,9 +67,16 @@ class $AssetsJsonsGen {
   LottieGenImage get maleAvatar =>
       const LottieGenImage('assets/jsons/male-avatar.json');
 
+  /// File path: assets/jsons/post.json
+  LottieGenImage get post => const LottieGenImage('assets/jsons/post.json');
+
+  /// File path: assets/jsons/product.json
+  LottieGenImage get product =>
+      const LottieGenImage('assets/jsons/product.json');
+
   /// List of all assets
   List<LottieGenImage> get values =>
-      [account, cart, femaleAvatar, home, loading, maleAvatar];
+      [account, cart, femaleAvatar, home, loading, maleAvatar, post, product];
 }
 
 class $AssetsSvgGen {
@@ -105,9 +112,6 @@ class $AssetsSvgGen {
   /// File path: assets/svg/home.svg
   SvgGenImage get home => const SvgGenImage('assets/svg/home.svg');
 
-  /// File path: assets/svg/mobile.svg
-  SvgGenImage get mobile => const SvgGenImage('assets/svg/mobile.svg');
-
   /// File path: assets/svg/on_boarding_bg.svg
   SvgGenImage get onBoardingBg =>
       const SvgGenImage('assets/svg/on_boarding_bg.svg');
@@ -115,6 +119,12 @@ class $AssetsSvgGen {
   /// File path: assets/svg/onboarding_illustration.svg
   SvgGenImage get onboardingIllustration =>
       const SvgGenImage('assets/svg/onboarding_illustration.svg');
+
+  /// File path: assets/svg/post.svg
+  SvgGenImage get post => const SvgGenImage('assets/svg/post.svg');
+
+  /// File path: assets/svg/product.svg
+  SvgGenImage get product => const SvgGenImage('assets/svg/product.svg');
 
   /// File path: assets/svg/thunder_sale.svg
   SvgGenImage get thunderSale =>
@@ -132,9 +142,10 @@ class $AssetsSvgGen {
         edit,
         google,
         home,
-        mobile,
         onBoardingBg,
         onboardingIllustration,
+        post,
+        product,
         thunderSale
       ];
 }
