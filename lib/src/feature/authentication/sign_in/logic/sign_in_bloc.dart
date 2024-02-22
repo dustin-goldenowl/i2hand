@@ -97,7 +97,7 @@ class SignInBloc extends Cubit<SignInState> {
   Future loginDecision(MResult<MUser> result, {MSocialType? socialType}) async {
     if (result.isSuccess) {
       emit(state.copyWith(status: SignInStatus.successed));
-      // AppCoordinator.showSyncDataScreen();
+      // TODO: Add logic Navigate to Syncing data screen
     } else {
       emitWrongPass();
       emit(state.copyWith(status: SignInStatus.failed));
