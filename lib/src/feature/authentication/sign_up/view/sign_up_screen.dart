@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
@@ -8,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/config/constants/app_const.dart';
+import 'package:i2hand/src/config/enum/picture_options_enum.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/authentication/sign_up/logic/sign_up_bloc.dart';
 import 'package:i2hand/src/feature/authentication/sign_up/logic/sign_up_state.dart';
@@ -199,7 +199,7 @@ class SignUpScreen extends StatelessWidget {
               previous.isWrongPassword != current.isWrongPassword,
           builder: (context, state) {
             return XPasswordField(
-              passwordLength: 8,
+              passwordLength: AppConstantData.passwordLength,
               onChangedPassword: (pass) {
                 context.read<SignUpBloc>().onChangedPassword(pass, context);
               },
@@ -226,7 +226,7 @@ class SignUpScreen extends StatelessWidget {
               previous.isWrongPassword != current.isWrongPassword,
           builder: (context, state) {
             return XPasswordField(
-              passwordLength: 8,
+              passwordLength: AppConstantData.passwordLength,
               onChangedPassword: (pass) {
                 context
                     .read<SignUpBloc>()
@@ -392,29 +392,31 @@ class SignUpScreen extends StatelessWidget {
             isPhotoExisted: !isNullOrEmpty(avatar),
             onSelectedValue: (value) async {
               AppCoordinator.pop();
-              switch (value as String) {
-                case 'Take photo':
+              switch (value as PictureOptionsEnum) {
+                case PictureOptionsEnum.takePhoto:
                   try {
                     final image = await PickerImageApp.show(ImageSource.camera);
                     if (image != null) {
+                      if (!context.mounted) return;
                       context.read<SignUpBloc>().setAvatar(image.bytes);
                     }
                   } catch (error) {
                     xLog.e("pickImagehandler $error");
                   }
                   break;
-                case 'Choose photo':
+                case PictureOptionsEnum.choosePhoto:
                   try {
                     final image =
                         await PickerImageApp.show(ImageSource.gallery);
                     if (image != null) {
+                      if (!context.mounted) return;
                       context.read<SignUpBloc>().setAvatar(image.bytes);
                     }
                   } catch (error) {
                     xLog.e("pickImagehandler $error");
                   }
                   break;
-                case 'Remove photo':
+                case PictureOptionsEnum.removePhoto:
                   try {
                     context.read<SignUpBloc>().setAvatar(Uint8List(0));
                   } catch (error) {

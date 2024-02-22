@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:i2hand/src/config/constants/app_const.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/value.dart';
 
@@ -26,7 +27,7 @@ class _XPasswordFieldState extends State<XPasswordField> {
     super.initState();
     controller = TextEditingController();
     controller.addListener(() {
-      if (controller.text.length > 8) {
+      if (controller.text.length > AppConstantData.passwordLength) {
         controller.clear();
       }
     });

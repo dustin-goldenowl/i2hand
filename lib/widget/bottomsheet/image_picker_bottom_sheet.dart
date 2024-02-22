@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:i2hand/src/config/enum/picture_options_enum.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
@@ -7,11 +8,8 @@ import 'package:i2hand/widget/button/fill_button.dart';
 import 'package:i2hand/widget/separate/dash_separate.dart';
 
 class XImagePickerBottomSheet extends StatelessWidget {
-  List<String> _getOptions(BuildContext context) => [
-        S.of(context).takePhoto,
-        S.of(context).choosePhoto,
-        S.of(context).removePhoto
-      ];
+  List<PictureOptionsEnum> _getOptions(BuildContext context) =>
+      PictureOptionsEnum.values;
 
   final bool isPhotoExisted;
   final Function? onSelectedValue;
@@ -44,7 +42,8 @@ class XImagePickerBottomSheet extends StatelessWidget {
                 constraints: const BoxConstraints(maxHeight: 400),
                 child: ListView.separated(
                   shrinkWrap: true,
-                  itemBuilder: (context, index) => _renderCell(options[index]),
+                  itemBuilder: (context, index) =>
+                      _renderCell(context, value: options[index]),
                   itemCount: options.length,
                   separatorBuilder: (context, index) {
                     return const XDashSeparator();
@@ -69,9 +68,10 @@ class XImagePickerBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _renderCell(String value) {
+  Widget _renderCell(BuildContext context,
+      {required PictureOptionsEnum value}) {
     return ListTile(
-      title: Text(value, style: AppTextStyle.labelStyle),
+      title: Text(value.getText(context), style: AppTextStyle.labelStyle),
       onTap: () {
         onSelectedValue?.call(value);
       },
