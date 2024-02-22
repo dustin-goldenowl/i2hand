@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/config/constants/app_const.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/logic/sign_in_state.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
@@ -101,7 +102,7 @@ class SignInBloc extends Cubit<SignInState> {
   Future loginDecision(MResult<MUser> result, {MSocialType? socialType}) async {
     if (result.isSuccess) {
       emit(state.copyWith(status: SignInStatus.successed));
-      // AppCoordinator.showSyncDataScreen();
+      // TODO: Add logic Navigate to Syncing data screen
     } else {
       emitWrongPass();
       emit(state.copyWith(status: SignInStatus.failed));
@@ -135,7 +136,7 @@ class SignInBloc extends Cubit<SignInState> {
       password: pass,
       isWrongPassword: false,
     ));
-    if (pass.length == 8) {
+    if (pass.length == AppConstantData.passwordLength) {
       hideKeyboard(context);
       loginWithEmail();
     }
