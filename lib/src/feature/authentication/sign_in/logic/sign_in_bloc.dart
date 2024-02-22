@@ -22,8 +22,13 @@ class SignInBloc extends Cubit<SignInState> {
   DomainManager get domain => DomainManager();
 
   Future<void> initialData() async {
+    XToast.showLoading();
     final user = SharedPrefs.I.getUser();
-    emit(state.copyWith(user: user));
+    final avatarResult =
+        await GetIt.I.get<UserRepository>().getImage(user?.id ?? '');
+    SharedPrefs.I.setUserAvatar(avatarResult.data);
+    emit(state.copyWith(user: user, avatar: avatarResult.data));
+    XToast.hideLoading();
   }
 
   Future checkEmailIsValidInServer(BuildContext context) async {
@@ -97,7 +102,7 @@ class SignInBloc extends Cubit<SignInState> {
   Future loginDecision(MResult<MUser> result, {MSocialType? socialType}) async {
     if (result.isSuccess) {
       emit(state.copyWith(status: SignInStatus.successed));
-      // AppCoordinator.showSyncDataScreen();
+      // TODO: Add logic Navigate to Syncing data screen
     } else {
       emitWrongPass();
       emit(state.copyWith(status: SignInStatus.failed));

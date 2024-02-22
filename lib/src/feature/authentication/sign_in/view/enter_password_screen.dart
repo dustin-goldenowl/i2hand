@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/config/constants/app_const.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/logic/sign_in_bloc.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/logic/sign_in_state.dart';
@@ -127,7 +129,7 @@ class _EnterPasswordScreenState extends State<EnterPasswordScreen> {
           previous.status != current.status,
       builder: (context, state) {
         return XPasswordField(
-          passwordLength: 8,
+          passwordLength: AppConstantData.passwordLength,
           isWrong: state.isWrongPassword ?? false,
           onChangedPassword: (pass) =>
               context.read<SignInBloc>().onChangedPassword(context, pass),
@@ -166,7 +168,7 @@ class _EnterPasswordScreenState extends State<EnterPasswordScreen> {
         children: [
           XTextAndIconButton(
             label: S.of(context).notYou,
-            onPressed: () => AppCoordinator.pop(),
+            onPressed: () => AppCoordinator.showSignInEmailScreen(),
           ),
         ],
       ),
@@ -174,8 +176,18 @@ class _EnterPasswordScreenState extends State<EnterPasswordScreen> {
   }
 
   Widget _renderAvatar() {
-    return const XAvatar(
-      imageSize: AppSize.s105,
+    return BlocSelector<SignInBloc, SignInState, Uint8List?>(
+      selector: (state) {
+        return state.avatar;
+      },
+      builder: (context, avatar) {
+        return XAvatar(
+          imageSize: AppSize.s105,
+          memoryData: avatar,
+          imageType: avatar == null ? ImageType.none : ImageType.memory,
+          borderColor: AppColors.secondPrimary,
+        );
+      },
     );
   }
 }

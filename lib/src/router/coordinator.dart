@@ -28,13 +28,13 @@ class AppCoordinator {
 
   static void showHomeScreen() => context.goNamed(AppRouteNames.home.name);
 
-  static void showStartScreen() => context.pushNamed(AppRouteNames.start.name);
+  static void showStartScreen() => context.goNamed(AppRouteNames.start.name);
 
   static void showSignInEmailScreen() =>
       context.pushNamed(AppRouteNames.loginEmail.name);
 
   static void showSignInPassScreen() =>
-      context.pushNamed(AppRouteNames.loginPass.name);
+      context.pushReplacementNamed(AppRouteNames.loginPass.name);
 
   static void showResetPassScreen() =>
       context.pushNamed(AppRouteNames.forgotPassword.name);
