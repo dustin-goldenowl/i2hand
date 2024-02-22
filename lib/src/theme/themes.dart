@@ -7,6 +7,11 @@ class AppTheme {
   static const String fontFamily = FontFamily.raleway;
 
   static ThemeData light() => ThemeData(
+        textSelectionTheme: const TextSelectionThemeData(
+          selectionColor: Colors.transparent,
+          cursorColor: Colors.transparent,
+          selectionHandleColor: Colors.transparent,
+        ),
         fontFamily: fontFamily,
         scaffoldBackgroundColor: AppColors.scaffoldBackgroundColor,
 
