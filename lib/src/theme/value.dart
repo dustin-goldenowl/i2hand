@@ -35,6 +35,7 @@ class AppPadding {
   static const p2 = 2.0;
   static const p5 = 5.0;
   static const p6 = 6.0;
+  static const p7 = 7.0;
   static const p8 = 8.0;
   static const p10 = 10.0;
   static const p12 = 12.0;
@@ -75,6 +76,7 @@ class AppFontSize {
   static const f16 = 16.0;
   static const f18 = 18.0;
   static const f20 = 20.0;
+  static const f21 = 21.0;
   static const f24 = 24.0;
   static const f28 = 28.0;
   static const f30 = 30.0;
@@ -92,6 +94,7 @@ class AppRadius {
   static const r5 = 5.0;
   static const r8 = 8.0;
   static const r10 = 10.0;
+  static const r12 = 12.0;
   static const r16 = 16.0;
   static const r20 = 20.0;
   static const r30 = 30.0;

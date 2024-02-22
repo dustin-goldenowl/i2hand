@@ -4,6 +4,8 @@ enum AppRouteNames {
   start(path: '/start'),
   loginEmail(path: '/loginEmail'),
   loginPass(path: '/loginPass'),
+  forgotPassword(path: '/forgotPassword'),
+  sendMailSuccess(path: '/sendMailSuccess'),
   signUp(path: '/signUp');
 
   const AppRouteNames({

@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:i2hand/src/feature/authentication/forgot_password/logic/reset_password_bloc.dart';
+import 'package:i2hand/src/feature/authentication/forgot_password/view/reset_password_screen.dart';
+import 'package:i2hand/src/feature/authentication/forgot_password/view/send_mail_success_screen.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/logic/sign_in_bloc.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/view/enter_password_screen.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/view/sign_in_screen.dart';
@@ -9,8 +12,10 @@ import 'package:i2hand/src/feature/authentication/sign_up/logic/sign_up_bloc.dar
 import 'package:i2hand/src/feature/authentication/sign_up/view/sign_up_screen.dart';
 import 'package:i2hand/src/feature/authentication/start/view/start_screen.dart';
 import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
+import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/router/route_name.dart';
+import 'package:i2hand/src/service/shared_pref.dart';
 
 class AppRouter {
   final router = GoRouter(
@@ -49,6 +54,39 @@ class AppRouter {
                         child: const EnterPasswordScreen(),
                       );
                     },
+                    routes: [
+                      GoRoute(
+                        parentNavigatorKey: AppCoordinator.navigatorKey,
+                        name: AppRouteNames.forgotPassword.name,
+                        path: AppRouteNames.forgotPassword.subPath,
+                        builder: (_, __) {
+                          return BlocProvider(
+                            create: (context) {
+                              final user = SharedPrefs.I.getUser();
+                              return ResetPasswordBloc(user ?? MUser.empty());
+                            },
+                            child: const ResetPasswordScreen(),
+                          );
+                        },
+                        routes: [
+                          GoRoute(
+                            parentNavigatorKey: AppCoordinator.navigatorKey,
+                            name: AppRouteNames.sendMailSuccess.name,
+                            path: AppRouteNames.sendMailSuccess.subPath,
+                            builder: (_, __) {
+                              return BlocProvider(
+                                create: (context) {
+                                  final user = SharedPrefs.I.getUser();
+                                  return ResetPasswordBloc(
+                                      user ?? MUser.empty());
+                                },
+                                child: const SendMailSuccessScreen(),
+                              );
+                            },
+                          )
+                        ],
+                      )
+                    ],
                   )
                 ]),
             GoRoute(

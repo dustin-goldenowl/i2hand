@@ -102,6 +102,7 @@ class SignInScreen extends StatelessWidget {
           previous.emailValidated != current.emailValidated,
       builder: (context, state) {
         return XTextField(
+            cursorColor: AppColors.primary,
             radius: AppRadius.r30,
             errorText: StringUtils.isNullOrEmpty(state.emailValidated)
                 ? null

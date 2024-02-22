@@ -130,7 +130,7 @@ class _EnterPasswordScreenState extends State<EnterPasswordScreen> {
           passwordLength: 8,
           isWrong: state.isWrongPassword ?? false,
           onChangedPassword: (pass) =>
-              context.read<SignInBloc>().onChangedPassword(pass),
+              context.read<SignInBloc>().onChangedPassword(context, pass),
           password: state.password ?? '',
         );
       },
@@ -146,12 +146,12 @@ class _EnterPasswordScreenState extends State<EnterPasswordScreen> {
         return forgotPass
             ? TextButton(
                 onPressed: () {
-                  //TODO: ForgotPassword logic
+                  AppCoordinator.showResetPassScreen();
                 },
                 child: Text(
                   S.of(context).forGotYourPassword,
-                  style: AppTextStyle.textButtonTextStyle
-                      .copyWith(fontSize: AppFontSize.f14),
+                  style: AppTextStyle.textButtonTextStyle.copyWith(
+                      fontSize: AppFontSize.f14, color: AppColors.primary),
                 ))
             : const SizedBox.shrink();
       },

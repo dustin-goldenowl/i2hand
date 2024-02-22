@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/config/constants/app_const.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/logic/sign_in_state.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
@@ -124,11 +126,14 @@ class SignInBloc extends Cubit<SignInState> {
     emit(state.copyWith(email: email, emailValidated: ''));
   }
 
-  void onChangedPassword(String pass) {
-    if (pass.length == 8) loginWithEmail();
+  void onChangedPassword(BuildContext context, String pass) {
     emit(state.copyWith(
       password: pass,
       isWrongPassword: false,
     ));
+    if (pass.length == AppConstantData.passwordLength) {
+      hideKeyboard(context);
+      loginWithEmail();
+    }
   }
 }

@@ -32,10 +32,16 @@ class AppCoordinator {
 
   static void showSignInEmailScreen() =>
       context.pushNamed(AppRouteNames.loginEmail.name);
-      
+
   static void showSignInPassScreen() =>
       context.pushNamed(AppRouteNames.loginPass.name);
 
+  static void showResetPassScreen() =>
+      context.pushNamed(AppRouteNames.forgotPassword.name);
+
   static void showSignUpScreen() =>
       context.pushNamed(AppRouteNames.signUp.name);
+
+  static void showSendMailSuccess() =>
+      context.pushReplacementNamed(AppRouteNames.sendMailSuccess.name);
 }
