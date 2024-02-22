@@ -49,12 +49,16 @@ class $AssetsJsonsGen {
   LottieGenImage get femaleAvatar =>
       const LottieGenImage('assets/jsons/female-avatar.json');
 
+  /// File path: assets/jsons/loading.json
+  LottieGenImage get loading =>
+      const LottieGenImage('assets/jsons/loading.json');
+
   /// File path: assets/jsons/male-avatar.json
   LottieGenImage get maleAvatar =>
       const LottieGenImage('assets/jsons/male-avatar.json');
 
   /// List of all assets
-  List<LottieGenImage> get values => [femaleAvatar, maleAvatar];
+  List<LottieGenImage> get values => [femaleAvatar, loading, maleAvatar];
 }
 
 class $AssetsSvgGen {
@@ -75,6 +79,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/devices.svg
   SvgGenImage get devices => const SvgGenImage('assets/svg/devices.svg');
 
+  /// File path: assets/svg/google.svg
+  SvgGenImage get google => const SvgGenImage('assets/svg/google.svg');
+
   /// File path: assets/svg/on_boarding_bg.svg
   SvgGenImage get onBoardingBg =>
       const SvgGenImage('assets/svg/on_boarding_bg.svg');
@@ -94,6 +101,7 @@ class $AssetsSvgGen {
         bubbles3,
         bubbles4,
         devices,
+        google,
         onBoardingBg,
         onboardingIllustration,
         thunderSale
