@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:i2hand/src/config/constants/app_const.dart';
+import 'package:i2hand/src/utils/string_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:i2hand/src/config/enum/gender.dart';
 
@@ -22,6 +24,10 @@ class MUser with EquatableMixin {
       this.phone,
       this.dateOfBirth,
       this.gender});
+
+  factory MUser.empty() => MUser(
+      id: StringUtils.createGenerateRandomText(
+          length: AppConstantData.userIdGenerateRandom));
 
   @override
   String toString() {

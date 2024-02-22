@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/config/constants/app_const.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/logic/sign_in_bloc.dart';
 import 'package:i2hand/src/feature/authentication/sign_in/logic/sign_in_state.dart';
@@ -129,7 +130,7 @@ class _EnterPasswordScreenState extends State<EnterPasswordScreen> {
           previous.status != current.status,
       builder: (context, state) {
         return XPasswordField(
-          passwordLength: 8,
+          passwordLength: AppConstantData.passwordLength,
           isWrong: state.isWrongPassword ?? false,
           onChangedPassword: (pass) =>
               context.read<SignInBloc>().onChangedPassword(context, pass),
