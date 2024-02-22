@@ -45,9 +45,19 @@ class $AssetsImagesGen {
 class $AssetsJsonsGen {
   const $AssetsJsonsGen();
 
+  /// File path: assets/jsons/account.json
+  LottieGenImage get account =>
+      const LottieGenImage('assets/jsons/account.json');
+
+  /// File path: assets/jsons/cart.json
+  LottieGenImage get cart => const LottieGenImage('assets/jsons/cart.json');
+
   /// File path: assets/jsons/female-avatar.json
   LottieGenImage get femaleAvatar =>
       const LottieGenImage('assets/jsons/female-avatar.json');
+
+  /// File path: assets/jsons/home.json
+  LottieGenImage get home => const LottieGenImage('assets/jsons/home.json');
 
   /// File path: assets/jsons/loading.json
   LottieGenImage get loading =>
@@ -58,11 +68,15 @@ class $AssetsJsonsGen {
       const LottieGenImage('assets/jsons/male-avatar.json');
 
   /// List of all assets
-  List<LottieGenImage> get values => [femaleAvatar, loading, maleAvatar];
+  List<LottieGenImage> get values =>
+      [account, cart, femaleAvatar, home, loading, maleAvatar];
 }
 
 class $AssetsSvgGen {
   const $AssetsSvgGen();
+
+  /// File path: assets/svg/account.svg
+  SvgGenImage get account => const SvgGenImage('assets/svg/account.svg');
 
   /// File path: assets/svg/bubbles_1.svg
   SvgGenImage get bubbles1 => const SvgGenImage('assets/svg/bubbles_1.svg');
@@ -76,11 +90,23 @@ class $AssetsSvgGen {
   /// File path: assets/svg/bubbles_4.svg
   SvgGenImage get bubbles4 => const SvgGenImage('assets/svg/bubbles_4.svg');
 
+  /// File path: assets/svg/cart.svg
+  SvgGenImage get cart => const SvgGenImage('assets/svg/cart.svg');
+
   /// File path: assets/svg/devices.svg
   SvgGenImage get devices => const SvgGenImage('assets/svg/devices.svg');
 
+  /// File path: assets/svg/edit.svg
+  SvgGenImage get edit => const SvgGenImage('assets/svg/edit.svg');
+
   /// File path: assets/svg/google.svg
   SvgGenImage get google => const SvgGenImage('assets/svg/google.svg');
+
+  /// File path: assets/svg/home.svg
+  SvgGenImage get home => const SvgGenImage('assets/svg/home.svg');
+
+  /// File path: assets/svg/mobile.svg
+  SvgGenImage get mobile => const SvgGenImage('assets/svg/mobile.svg');
 
   /// File path: assets/svg/on_boarding_bg.svg
   SvgGenImage get onBoardingBg =>
@@ -96,12 +122,17 @@ class $AssetsSvgGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [
+        account,
         bubbles1,
         bubbles2,
         bubbles3,
         bubbles4,
+        cart,
         devices,
+        edit,
         google,
+        home,
+        mobile,
         onBoardingBg,
         onboardingIllustration,
         thunderSale

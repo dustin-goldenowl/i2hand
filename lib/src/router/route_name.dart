@@ -1,5 +1,9 @@
 enum AppRouteNames {
   home(path: '/'),
+  post(path: '/post'),
+  cart(path: '/cart'),
+  account(path: '/account'),
+  product(path: '/product'),
   onBoarding(path: '/onBoarding'),
   start(path: '/start'),
   loginEmail(path: '/loginEmail'),

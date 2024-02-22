@@ -113,6 +113,7 @@ class _EnterPasswordScreenState extends State<EnterPasswordScreen> {
           case SignInStatus.successed:
             if (XToast.isShowLoading) XToast.hideLoading();
             XToast.success(S.of(context).goodToSeeYouBack);
+            
             return;
           case SignInStatus.failed:
             if (XToast.isShowLoading) XToast.hideLoading();
