@@ -6,7 +6,7 @@ import 'package:i2hand/src/network/model/user/user.dart';
 class AccountBloc extends Cubit<AccountState> {
   AccountBloc() : super(AccountState());
 
-  void inital(BuildContext context, MUser user) async {
+  Future<void> inital(BuildContext context, MUser user) async {
     _getUser(user);
   }
 
