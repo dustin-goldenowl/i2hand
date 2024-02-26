@@ -14,6 +14,7 @@ import 'package:i2hand/src/network/model/country/country_code.dart';
 import 'package:i2hand/src/network/model/domain_manager.dart';
 import 'package:i2hand/src/network/model/social_user/social_user.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
+import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/utils/string_utils.dart';
 import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/src/utils/validated.dart';
@@ -91,8 +92,8 @@ class SignUpBloc extends Cubit<SignUpState> {
   Future loginDecision(MResult<MUser> result, {MSocialType? socialType}) async {
     if (result.isSuccess) {
       emit(state.copyWith(status: SignUpStatus.successed));
-      _syncAvatarToFirebase(result.data!.id);
-      // TODO: Add logic Navigate to Syncing data screen
+      await _syncAvatarToFirebase(result.data!.id);
+      AppCoordinator.showSyncingDataScreen();
     } else {
       emit(state.copyWith(status: SignUpStatus.failed));
       XToast.error(result.error);

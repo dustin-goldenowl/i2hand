@@ -47,5 +47,7 @@
     "continueToLogin": "Continue to login",
     "didntReceiveALink": "Didn't receive a link? Send again",
     "search": "Search",
-    "categories": "Categories"
+    "categories": "Categories",
+    "loadingData": "Loading data...",
+    "yourSignInIsSInvalid": "Your sign in is invalid"
 }

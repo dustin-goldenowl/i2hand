@@ -44,4 +44,7 @@ class AppCoordinator {
 
   static void showSendMailSuccess() =>
       context.pushReplacementNamed(AppRouteNames.sendMailSuccess.name);
+
+  static void showSyncingDataScreen() =>
+      context.goNamed(AppRouteNames.syncingData.name);
 }

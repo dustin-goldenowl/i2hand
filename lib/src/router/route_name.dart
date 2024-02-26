@@ -8,6 +8,7 @@ enum AppRouteNames {
   start(path: '/start'),
   loginEmail(path: '/loginEmail'),
   loginPass(path: '/loginPass'),
+  syncingData(path: '/syncingData'),
   forgotPassword(path: '/forgotPassword'),
   sendMailSuccess(path: '/sendMailSuccess'),
   signUp(path: '/signUp');

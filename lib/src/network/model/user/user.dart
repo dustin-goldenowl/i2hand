@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:i2hand/src/config/constants/app_const.dart';
+import 'package:i2hand/src/config/enum/account.dart';
 import 'package:i2hand/src/utils/string_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:i2hand/src/config/enum/gender.dart';
@@ -10,11 +11,12 @@ part 'user.g.dart';
 class MUser with EquatableMixin {
   final String id;
   final String? name;
-  final String? avatar;
+  final List<String>? avatar;
   final String? email;
   final DateTime? dateOfBirth;
   final Gender? gender;
   final String? phone;
+  final AccountRole? role;
 
   MUser(
       {required this.id,
@@ -23,6 +25,7 @@ class MUser with EquatableMixin {
       this.email,
       this.phone,
       this.dateOfBirth,
+      this.role,
       this.gender});
 
   factory MUser.empty() => MUser(
@@ -31,7 +34,7 @@ class MUser with EquatableMixin {
 
   @override
   String toString() {
-    return 'MUser{id=$id, name=$name, avatar=$avatar, email=$email, dateOfBirth=$dateOfBirth, gender=$gender, phone=$phone}';
+    return 'MUser{id=$id, name=$name, avatar=$avatar, email=$email, dateOfBirth=$dateOfBirth, gender=$gender, phone=$phone, role=$role}';
   }
 
   Map<String, dynamic> toJson() => _$MUserToJson(this);
@@ -40,13 +43,14 @@ class MUser with EquatableMixin {
 
   @override
   List<Object?> get props =>
-      [id, name, avatar, email, dateOfBirth, gender, phone];
+      [id, name, avatar, email, dateOfBirth, gender, phone, role];
   MUser copyWith(
       {String? id,
       String? name,
-      String? avatar,
+      List<String>? avatar,
       String? email,
       String? phone,
+      AccountRole? role,
       DateTime? dateOfBirth,
       Gender? gender}) {
     return MUser(
@@ -56,6 +60,7 @@ class MUser with EquatableMixin {
         email: email ?? this.email,
         dateOfBirth: dateOfBirth ?? this.dateOfBirth,
         phone: phone ?? this.phone,
+        role: role ?? this.role,
         gender: gender ?? this.gender);
   }
 }
