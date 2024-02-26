@@ -75,4 +75,15 @@ class AppConstantData {
           Assets.jsons.account.lottie(fit: BoxFit.contain, width: AppSize.s30),
     ),
   ];
+
+  static List<Widget> listNotificationBanner = [
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
+      child: Assets.images.discountBanner.image(),
+    ),
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
+      child: Assets.images.discountBanner2.image(),
+    ),
+  ];
 }
