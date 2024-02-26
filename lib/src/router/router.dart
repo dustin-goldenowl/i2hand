@@ -11,6 +11,9 @@ import 'package:i2hand/src/feature/authentication/sign_in/view/sign_in_screen.da
 import 'package:i2hand/src/feature/authentication/sign_up/logic/sign_up_bloc.dart';
 import 'package:i2hand/src/feature/authentication/sign_up/view/sign_up_screen.dart';
 import 'package:i2hand/src/feature/authentication/start/view/start_screen.dart';
+import 'package:i2hand/src/feature/dashboard/logic/dashboard_state.dart';
+import 'package:i2hand/src/feature/dashboard/view/dash_board_screen.dart';
+import 'package:i2hand/src/feature/home/view/home_screen.dart';
 import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
@@ -25,8 +28,8 @@ class AppRouter {
     routes: <RouteBase>[
       GoRoute(
         parentNavigatorKey: AppCoordinator.navigatorKey,
-        name: AppRouteNames.home.name,
-        path: AppRouteNames.home.path,
+        name: AppRouteNames.onBoarding.name,
+        path: AppRouteNames.onBoarding.path,
         builder: (_, __) => const OnBoardingScreen(),
       ),
       GoRoute(
@@ -98,7 +101,23 @@ class AppRouter {
                 child: const SignUpScreen(),
               ),
             ),
-          ])
+          ]),
+      ShellRoute(
+        navigatorKey: AppCoordinator.shellKey,
+        builder: (context, state, child) => DashBoardScreen(
+          currentItem: XNavigationBarItems.fromLocation(state.uri.toString()),
+          body: child,
+        ),
+        routes: <RouteBase>[
+          GoRoute(
+            path: AppRouteNames.home.path,
+            name: AppRouteNames.home.name,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: const HomeScreen(),
+            ),
+          )
+        ],
+      ),
     ],
     errorBuilder: (_, __) => Container(),
   );

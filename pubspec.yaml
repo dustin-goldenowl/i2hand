@@ -83,6 +83,7 @@ dependencies:
   modal_bottom_sheet: 2.1.2
   image_picker: 1.0.7
   image_cropper: 5.0.1
+  awesome_bottom_bar: 1.2.4
 
   equatable: 2.0.5
 
