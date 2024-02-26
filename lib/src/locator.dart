@@ -6,6 +6,8 @@ import 'package:get_it/get_it.dart';
 import 'package:i2hand/firebase_options.dart';
 import 'package:i2hand/src/config/device/app_infor.dart';
 import 'package:i2hand/src/local/database_app.dart';
+import 'package:i2hand/src/network/data/category/category_repository.dart';
+import 'package:i2hand/src/network/data/category/category_repository_impl.dart';
 import 'package:i2hand/src/network/data/sign/sign_repository.dart';
 import 'package:i2hand/src/network/data/sign/sign_repository_impl.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
@@ -40,6 +42,8 @@ void _locator() {
   GetIt.I.registerLazySingleton(() => AppRouter());
   GetIt.I.registerLazySingleton<SignRepository>(() => SignRepositoryImpl());
   GetIt.I.registerLazySingleton<UserRepository>(() => UserRepositoryImpl());
+  GetIt.I.registerLazySingleton<CategoryRepository>(
+      () => CategoryRepositoryImpl());
 
   GetIt.I.registerLazySingleton<DatabaseApp>((() => DatabaseApp()));
 }

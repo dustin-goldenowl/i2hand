@@ -16,7 +16,7 @@ class BaseStorageReference<T> {
         ? subRef!.child(item)
         : ref.child(item);
     try {
-      const oneMegabyte = 1024 * 1024;
+      const oneMegabyte = 1024 * 1024 * 10;
       final Uint8List? data = await itemRef.getData(oneMegabyte);
       return MResult.success(data);
     } on FirebaseException catch (e) {
