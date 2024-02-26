@@ -23,6 +23,7 @@ class AppColors {
   static const greenLight = Color.fromARGB(255, 117, 179, 117);
   static const yellow = Color(0xFFF4BD46);
   static const orange = Color(0xFFFF5500);
+  static const blue = Color(0xFF0042E0);
   // black
   static const black = Colors.black;
   static const black2 = Color(0xFF1E1E1E);

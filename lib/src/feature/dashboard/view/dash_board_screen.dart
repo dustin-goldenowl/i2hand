@@ -39,7 +39,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 index: state.index,
                 style: ItemStyle.circle,
                 color: AppColors.black,
-                bgColor: AppColors.white,
+                bgColor: AppColors.grey6,
                 onChangedTab: (index) =>
                     context.read<DashboardBloc>().onDestinationSelected(index),
               ),

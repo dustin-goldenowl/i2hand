@@ -45,5 +45,6 @@
     "passwordLinkSend": "Password link send",
     "youShouldReceiveAnEmail": "You should receive an email shortly with a link to reset your password",
     "continueToLogin": "Continue to login",
-    "didntReceiveALink": "Didn't receive a link? Send again"
+    "didntReceiveALink": "Didn't receive a link? Send again",
+    "search": "Search"
 }
