@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/feature/account/bloc/account_bloc.dart';
+import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/locator.dart';
 import 'package:i2hand/src/router/router.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AccountBloc()),
+        BlocProvider(create: (context) => GlobalBloc()),
       ],
       child: MediaQuery(
         data: data.copyWith(textScaler: TextScaler.noScaling),

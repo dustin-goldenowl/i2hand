@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 extension StringExtension on String {
   String capitalize() {
     return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
@@ -23,5 +25,11 @@ extension StringExtension on String {
       capitalizeText = "$capitalizeText ${text.capitalize()}";
     }
     return capitalizeText.trim();
+  }
+}
+
+extension ListStringExtension on List<String> {
+  Uint8List convertToUint8List() {
+    return Uint8List.fromList(map((e) => int.parse(e)).toList());
   }
 }

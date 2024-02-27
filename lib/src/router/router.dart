@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:i2hand/src/feature/admin/dashboard/logic/dashboard_state.dart';
 import 'package:i2hand/src/feature/admin/dashboard/view/admin_dashboard_screen.dart';
+import 'package:i2hand/src/feature/admin/home/logic/admin_home_bloc.dart';
 import 'package:i2hand/src/feature/admin/home/view/admin_home.dart';
 import 'package:i2hand/src/feature/authentication/forgot_password/logic/reset_password_bloc.dart';
 import 'package:i2hand/src/feature/authentication/forgot_password/view/reset_password_screen.dart';
@@ -28,7 +29,7 @@ import 'package:i2hand/src/service/shared_pref.dart';
 class AppRouter {
   final router = GoRouter(
     navigatorKey: AppCoordinator.navigatorKey,
-    initialLocation: AppRouteNames.start.path,
+    initialLocation: AppRouteNames.syncingData.path,
     debugLogDiagnostics: kDebugMode,
     routes: <RouteBase>[
       GoRoute(
@@ -143,8 +144,11 @@ class AppRouter {
           GoRoute(
             path: AppRouteNames.adminHome.path,
             name: AppRouteNames.adminHome.name,
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: AdminHomeScreen(),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (context) => AdminHomeBloc(),
+                child: const AdminHomeScreen(),
+              ),
             ),
           )
         ],

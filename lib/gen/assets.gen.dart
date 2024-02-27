@@ -94,6 +94,10 @@ class $AssetsJsonsGen {
   LottieGenImage get product =>
       const LottieGenImage('assets/jsons/product.json');
 
+  /// File path: assets/jsons/sync_data.json
+  LottieGenImage get syncData =>
+      const LottieGenImage('assets/jsons/sync_data.json');
+
   /// File path: assets/jsons/verified.json
   LottieGenImage get verified =>
       const LottieGenImage('assets/jsons/verified.json');
@@ -109,6 +113,7 @@ class $AssetsJsonsGen {
         maleAvatar,
         post,
         product,
+        syncData,
         verified
       ];
 }
@@ -131,6 +136,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/bubbles_4.svg
   SvgGenImage get bubbles4 => const SvgGenImage('assets/svg/bubbles_4.svg');
 
+  /// File path: assets/svg/bubbles_5.svg
+  SvgGenImage get bubbles5 => const SvgGenImage('assets/svg/bubbles_5.svg');
+
   /// File path: assets/svg/cart.svg
   SvgGenImage get cart => const SvgGenImage('assets/svg/cart.svg');
 
@@ -139,6 +147,9 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/devices.svg
   SvgGenImage get devices => const SvgGenImage('assets/svg/devices.svg');
+
+  /// File path: assets/svg/empty-data.svg
+  SvgGenImage get emptyData => const SvgGenImage('assets/svg/empty-data.svg');
 
   /// File path: assets/svg/google.svg
   SvgGenImage get google => const SvgGenImage('assets/svg/google.svg');
@@ -174,9 +185,11 @@ class $AssetsSvgGen {
         bubbles2,
         bubbles3,
         bubbles4,
+        bubbles5,
         cart,
         category,
         devices,
+        emptyData,
         google,
         home,
         onBoardingBg,
