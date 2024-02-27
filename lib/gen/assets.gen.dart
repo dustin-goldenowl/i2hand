@@ -68,6 +68,10 @@ class $AssetsJsonsGen {
   /// File path: assets/jsons/cart.json
   LottieGenImage get cart => const LottieGenImage('assets/jsons/cart.json');
 
+  /// File path: assets/jsons/category.json
+  LottieGenImage get category =>
+      const LottieGenImage('assets/jsons/category.json');
+
   /// File path: assets/jsons/female-avatar.json
   LottieGenImage get femaleAvatar =>
       const LottieGenImage('assets/jsons/female-avatar.json');
@@ -90,9 +94,23 @@ class $AssetsJsonsGen {
   LottieGenImage get product =>
       const LottieGenImage('assets/jsons/product.json');
 
+  /// File path: assets/jsons/verified.json
+  LottieGenImage get verified =>
+      const LottieGenImage('assets/jsons/verified.json');
+
   /// List of all assets
-  List<LottieGenImage> get values =>
-      [account, cart, femaleAvatar, home, loading, maleAvatar, post, product];
+  List<LottieGenImage> get values => [
+        account,
+        cart,
+        category,
+        femaleAvatar,
+        home,
+        loading,
+        maleAvatar,
+        post,
+        product,
+        verified
+      ];
 }
 
 class $AssetsSvgGen {
@@ -115,6 +133,9 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/cart.svg
   SvgGenImage get cart => const SvgGenImage('assets/svg/cart.svg');
+
+  /// File path: assets/svg/category.svg
+  SvgGenImage get category => const SvgGenImage('assets/svg/category.svg');
 
   /// File path: assets/svg/devices.svg
   SvgGenImage get devices => const SvgGenImage('assets/svg/devices.svg');
@@ -143,6 +164,9 @@ class $AssetsSvgGen {
   SvgGenImage get thunderSale =>
       const SvgGenImage('assets/svg/thunder_sale.svg');
 
+  /// File path: assets/svg/verified.svg
+  SvgGenImage get verified => const SvgGenImage('assets/svg/verified.svg');
+
   /// List of all assets
   List<SvgGenImage> get values => [
         account,
@@ -151,6 +175,7 @@ class $AssetsSvgGen {
         bubbles3,
         bubbles4,
         cart,
+        category,
         devices,
         google,
         home,
@@ -158,7 +183,8 @@ class $AssetsSvgGen {
         onboardingIllustration,
         post,
         product,
-        thunderSale
+        thunderSale,
+        verified
       ];
 }
 

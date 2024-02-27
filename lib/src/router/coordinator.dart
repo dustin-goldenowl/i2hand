@@ -47,4 +47,7 @@ class AppCoordinator {
 
   static void showSyncingDataScreen() =>
       context.goNamed(AppRouteNames.syncingData.name);
+
+  static void showAdminHomeScreen() =>
+      context.goNamed(AppRouteNames.adminHome.name);
 }

@@ -133,11 +133,12 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
         avatar: sharePrefUserAvatar.toList().map((e) => e.toString()).toList());
     if (!context.mounted) return;
     await context.read<AccountBloc>().inital(context, userData);
-    if (userData.role == AccountRole.user) {
-      AppCoordinator.showHomeScreen();
+    xLog.e(userData.role);
+    if (userData.role == AccountRole.admin) {
+      AppCoordinator.showAdminHomeScreen();
       return;
     }
-    // TODO: Show home screen of admin
+    AppCoordinator.showHomeScreen();
   }
 
   Future<void> _syncingUserAvatar() async {
