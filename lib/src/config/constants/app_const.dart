@@ -1,6 +1,7 @@
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:i2hand/gen/assets.gen.dart';
+import 'package:i2hand/src/config/enum/options.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/value.dart';
 
@@ -85,5 +86,49 @@ class AppConstantData {
       padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
       child: Assets.images.discountBanner2.image(),
     ),
+  ];
+
+  static List<TabItem> listDefaultAdminBottomBarItems = [
+    TabItem<Widget>(
+      icon: Assets.svg.category.svg(
+          fit: BoxFit.contain,
+          width: AppSize.s24,
+          colorFilter:
+              const ColorFilter.mode(AppColors.black, BlendMode.srcIn)),
+    ),
+    TabItem<Widget>(
+      icon: Assets.svg.verified.svg(
+        fit: BoxFit.contain,
+        width: AppSize.s24,
+        colorFilter: const ColorFilter.mode(AppColors.black, BlendMode.srcIn),
+      ),
+    ),
+    TabItem<Widget>(
+      icon: Assets.svg.account.svg(
+          fit: BoxFit.contain,
+          width: AppSize.s24,
+          colorFilter:
+              const ColorFilter.mode(AppColors.black, BlendMode.srcIn)),
+    ),
+  ];
+
+  static List<TabItem> listSelectedAdminBottomBarItems = [
+    TabItem<Widget>(
+      icon:
+          Assets.jsons.category.lottie(fit: BoxFit.contain, width: AppSize.s30),
+    ),
+    TabItem<Widget>(
+      icon:
+          Assets.jsons.verified.lottie(fit: BoxFit.contain, width: AppSize.s44),
+    ),
+    TabItem<Widget>(
+      icon:
+          Assets.jsons.account.lottie(fit: BoxFit.contain, width: AppSize.s30),
+    ),
+  ];
+
+  static List<OptionsEnum> categorysOptions = [
+    OptionsEnum.edit,
+    OptionsEnum.remove,
   ];
 }

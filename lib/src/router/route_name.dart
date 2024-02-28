@@ -1,5 +1,8 @@
 enum AppRouteNames {
   home(path: '/'),
+  adminHome(path: '/adminHome'),
+  adminAccount(path: '/adminAccount'),
+  adminVerified(path: '/adminVerified'),
   post(path: '/post'),
   cart(path: '/cart'),
   account(path: '/account'),

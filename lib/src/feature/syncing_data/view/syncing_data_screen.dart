@@ -6,8 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/gen/fonts.gen.dart';
+import 'package:i2hand/src/config/enum/account.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/account/bloc/account_bloc.dart';
+import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
 import 'package:i2hand/src/local/database_app.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
@@ -96,7 +98,6 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
       final result = await FirebaseAuth.instance.currentUser?.getIdToken();
       if (result != null && result == token) {
         await _syncDataFromFirebase();
-        AppCoordinator.showHomeScreen();
         return;
       }
       if (!context.mounted) return;
@@ -111,6 +112,7 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
 
   Future<void> _syncDataFromFirebase() async {
     await GetIt.I.get<DatabaseApp>().deleteAll();
+    await _getListCategories();
     await _syncingUserAvatar();
     await _syncingUserData();
   }
@@ -132,7 +134,12 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
     final userData = sharePrefUser!.copyWith(
         avatar: sharePrefUserAvatar.toList().map((e) => e.toString()).toList());
     if (!context.mounted) return;
-    context.read<AccountBloc>().inital(context, userData);
+    await context.read<AccountBloc>().inital(context, userData);
+    if (userData.role == AccountRole.admin) {
+      AppCoordinator.showAdminHomeScreen();
+      return;
+    }
+    AppCoordinator.showHomeScreen();
   }
 
   Future<void> _syncingUserAvatar() async {
@@ -148,5 +155,9 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
         xLog.e(e);
       }
     }
+  }
+
+  Future<void> _getListCategories() async {
+    await context.read<GlobalBloc>().getListCategories();
   }
 }

@@ -49,5 +49,9 @@
     "search": "Search",
     "categories": "Categories",
     "loadingData": "Loading data...",
-    "yourSignInIsSInvalid": "Your sign in is invalid"
+    "yourSignInIsSInvalid": "Your sign in is invalid",
+    "noCreatedCategory": "No created category",
+    "select": "Select",
+    "edit": "Edit",
+    "remove": "Remove"
 }
