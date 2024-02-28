@@ -18,6 +18,14 @@ class $AssetsImagesGen {
   /// File path: assets/images/devices.png
   AssetGenImage get devices => const AssetGenImage('assets/images/devices.png');
 
+  /// File path: assets/images/discount-banner.png
+  AssetGenImage get discountBanner =>
+      const AssetGenImage('assets/images/discount-banner.png');
+
+  /// File path: assets/images/discount-banner2.png
+  AssetGenImage get discountBanner2 =>
+      const AssetGenImage('assets/images/discount-banner2.png');
+
   /// File path: assets/images/ecommerce_shop.png
   AssetGenImage get ecommerceShop =>
       const AssetGenImage('assets/images/ecommerce_shop.png');
@@ -38,8 +46,16 @@ class $AssetsImagesGen {
       const AssetGenImage('assets/images/thunder_sale.png');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [devices, ecommerceShop, logo, shoppingCart3d, splashLogo, thunderSale];
+  List<AssetGenImage> get values => [
+        devices,
+        discountBanner,
+        discountBanner2,
+        ecommerceShop,
+        logo,
+        shoppingCart3d,
+        splashLogo,
+        thunderSale
+      ];
 }
 
 class $AssetsJsonsGen {
@@ -103,9 +119,6 @@ class $AssetsSvgGen {
   /// File path: assets/svg/devices.svg
   SvgGenImage get devices => const SvgGenImage('assets/svg/devices.svg');
 
-  /// File path: assets/svg/edit.svg
-  SvgGenImage get edit => const SvgGenImage('assets/svg/edit.svg');
-
   /// File path: assets/svg/google.svg
   SvgGenImage get google => const SvgGenImage('assets/svg/google.svg');
 
@@ -139,7 +152,6 @@ class $AssetsSvgGen {
         bubbles4,
         cart,
         devices,
-        edit,
         google,
         home,
         onBoardingBg,

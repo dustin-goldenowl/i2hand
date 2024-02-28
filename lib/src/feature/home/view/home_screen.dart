@@ -4,6 +4,7 @@ import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/widget/appbar/app_bar.dart';
+import 'package:i2hand/widget/carousel/default_carousel.dart';
 import 'package:i2hand/widget/text_field/search_input.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisSize: MainAxisSize.max,
             children: [
               _renderAppBar(),
+              _renderNotificationBanner(context),
             ],
           ),
         ),
@@ -66,5 +68,9 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           ],
         ));
+  }
+
+  Widget _renderNotificationBanner(BuildContext context) {
+    return const XCarousel();
   }
 }

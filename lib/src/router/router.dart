@@ -112,8 +112,8 @@ class AppRouter {
           GoRoute(
             path: AppRouteNames.home.path,
             name: AppRouteNames.home.name,
-            pageBuilder: (context, state) => NoTransitionPage(
-              child: const HomeScreen(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: HomeScreen(),
             ),
           )
         ],
