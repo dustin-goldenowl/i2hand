@@ -7,6 +7,7 @@ import 'package:i2hand/src/network/model/common/result.dart';
 import 'package:i2hand/src/network/model/domain_manager.dart';
 import 'package:i2hand/src/network/model/social_user/social_user.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
+import 'package:i2hand/src/service/shared_pref.dart';
 import 'package:i2hand/src/utils/utils.dart';
 
 class SignRepositoryImpl extends SignRepository {
@@ -68,7 +69,7 @@ class SignRepositoryImpl extends SignRepository {
 
     if (result != null) {
       final user = result.user;
-      // final token = await result.user?.getIdToken();
+      final token = await result.user?.getIdToken();
       final newUser = MUser(
         id: user?.uid ?? '',
         email: email,
@@ -77,9 +78,9 @@ class SignRepositoryImpl extends SignRepository {
 
       final userResult = await DomainManager().user.getOrAddUser(newUser);
 
-      // // save sharepref
-      // SharedPrefs.I.setToken(token);
-      // SharedPrefs.I.setUser(userResult.data);
+      // save sharepref
+      SharedPrefs.I.setToken(token);
+      SharedPrefs.I.setUser(userResult.data);
 
       return MResult.success(userResult.data ?? newUser);
     } else {
@@ -131,7 +132,7 @@ class SignRepositoryImpl extends SignRepository {
 
     if (result != null) {
       final user = result.user;
-      // final token = await result.user?.getIdToken();
+      final token = await result.user?.getIdToken();
       final newUser = MUser(
         id: user?.uid ?? '',
         email: email,
@@ -140,8 +141,8 @@ class SignRepositoryImpl extends SignRepository {
       );
 
       // save sharepref
-      // SharedPrefs.I.setUser(newUser);
-      // SharedPrefs.I.setToken(token);
+      SharedPrefs.I.setUser(newUser);
+      SharedPrefs.I.setToken(token);
 
       final userResult = await DomainManager().user.getOrAddUser(newUser);
       return MResult.success(userResult.data ?? newUser);

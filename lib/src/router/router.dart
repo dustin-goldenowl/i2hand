@@ -16,6 +16,7 @@ import 'package:i2hand/src/feature/dashboard/view/dash_board_screen.dart';
 import 'package:i2hand/src/feature/home/logic/home_bloc.dart';
 import 'package:i2hand/src/feature/home/view/home_screen.dart';
 import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
+import 'package:i2hand/src/feature/syncing_data/view/syncing_data_screen.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/router/route_name.dart';
@@ -32,6 +33,12 @@ class AppRouter {
         name: AppRouteNames.onBoarding.name,
         path: AppRouteNames.onBoarding.path,
         builder: (_, __) => const OnBoardingScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: AppCoordinator.navigatorKey,
+        name: AppRouteNames.syncingData.name,
+        path: AppRouteNames.syncingData.path,
+        builder: (_, __) => const SyncDataScreen(),
       ),
       GoRoute(
           parentNavigatorKey: AppCoordinator.navigatorKey,
