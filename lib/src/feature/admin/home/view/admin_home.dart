@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/src/feature/admin/home/logic/admin_home_bloc.dart';
 import 'package:i2hand/src/feature/admin/home/logic/admin_home_state.dart';
-import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
-import 'package:i2hand/src/feature/global/logic/global_state.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/model/category/category.dart';
 import 'package:i2hand/src/theme/colors.dart';
@@ -15,8 +13,24 @@ import 'package:i2hand/src/utils/string_ext.dart';
 import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/appbar/app_bar.dart';
 
-class AdminHomeScreen extends StatelessWidget {
+class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
+
+  @override
+  State<AdminHomeScreen> createState() => _AdminHomeScreenState();
+}
+
+class _AdminHomeScreenState extends State<AdminHomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AdminHomeBloc>().initListCategories(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,17 +62,20 @@ class AdminHomeScreen extends StatelessWidget {
   Widget _renderAppBar(BuildContext context) {
     return XAppBar(
       titlePage: S.of(context).categories,
+      fontColor: AppColors.white,
       actions: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => context
+                .read<AdminHomeBloc>()
+                .showAttributesDetailBottomsheet(context),
             icon: const Icon(Icons.add),
             color: AppColors.primary,
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
-                AppColors.secondPrimary,
+                AppColors.backgroundButton,
               ),
               shape: MaterialStateProperty.all(
                 const CircleBorder(
@@ -92,11 +109,11 @@ class AdminHomeScreen extends StatelessWidget {
   }
 
   Widget _renderLoadingScreen() {
-    return Assets.jsons.syncData.lottie();
+    return Assets.jsons.syncData.lottie(width: AppSize.s300);
   }
 
   Widget _renderListCategoriesSuccess(BuildContext context) {
-    return BlocBuilder<GlobalBloc, GlobalState>(
+    return BlocBuilder<AdminHomeBloc, AdminHomeState>(
       buildWhen: (previous, current) =>
           previous.listCategories != current.listCategories,
       builder: (context, state) {
@@ -141,7 +158,7 @@ class AdminHomeScreen extends StatelessWidget {
         child: Ink(
           height: AppSize.s123,
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: AppColors.grey8,
             borderRadius: BorderRadius.circular(AppRadius.r10),
             border: Border.all(color: AppColors.grey6, width: AppSize.s0_5),
           ),
@@ -156,7 +173,7 @@ class AdminHomeScreen extends StatelessWidget {
               ),
               XPaddingUtils.verticalPadding(height: AppPadding.p10),
               Text(
-                category.name,
+                category.name.capitalizeEachText(),
                 style: AppTextStyle.contentTexStyleBold.copyWith(
                   color: AppColors.black,
                 ),

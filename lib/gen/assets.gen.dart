@@ -148,6 +148,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/devices.svg
   SvgGenImage get devices => const SvgGenImage('assets/svg/devices.svg');
 
+  /// File path: assets/svg/empty-attributes.svg
+  SvgGenImage get emptyAttributes =>
+      const SvgGenImage('assets/svg/empty-attributes.svg');
+
   /// File path: assets/svg/empty-data.svg
   SvgGenImage get emptyData => const SvgGenImage('assets/svg/empty-data.svg');
 
@@ -189,6 +193,7 @@ class $AssetsSvgGen {
         cart,
         category,
         devices,
+        emptyAttributes,
         emptyData,
         google,
         home,

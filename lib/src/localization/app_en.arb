@@ -53,5 +53,21 @@
     "noCreatedCategory": "No created category",
     "select": "Select",
     "edit": "Edit",
-    "remove": "Remove"
+    "remove": "Remove",
+    "createAttributes": "Create attributes",
+    "status" : "Status",
+    "images": "Images",
+    "videos": "Videos",
+    "agency": "Agency",
+    "microProcessor": "Micro processor",
+    "ram": "Ram",
+    "hardWare": "HardWare",
+    "phoneLine": "Phone line",
+    "hardWareType": "Hardware type",
+    "graphicsCard": "Graphics card",
+    "screenSize": "Screen size",
+    "warrantyPolicy": "Warranty policy",
+    "origin": "Origin",
+    "price": "Price",
+    "isRequired": "Required"
 }

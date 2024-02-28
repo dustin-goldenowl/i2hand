@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i2hand/src/config/enum/picture_options_enum.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
+import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
@@ -13,16 +14,21 @@ class XImagePickerBottomSheet extends StatelessWidget {
 
   final bool isPhotoExisted;
   final Function? onSelectedValue;
+  final String? title;
 
   const XImagePickerBottomSheet(
-      {Key? key, required this.isPhotoExisted, required this.onSelectedValue})
+      {Key? key,
+      required this.isPhotoExisted,
+      required this.onSelectedValue,
+      this.title})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final options = _getOptions(context);
+    var listOptions = options.take(100).toList();
     if (!isPhotoExisted) {
-      options.removeLast();
+      listOptions.removeLast();
     }
     return Material(
       child: SafeArea(
@@ -33,7 +39,7 @@ class XImagePickerBottomSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                S.of(context).editProfilePicture,
+                title ?? S.of(context).editProfilePicture,
                 style: AppTextStyle.titleTextStyle
                     .copyWith(fontSize: AppFontSize.f20),
               ),
@@ -43,10 +49,13 @@ class XImagePickerBottomSheet extends StatelessWidget {
                 child: ListView.separated(
                   shrinkWrap: true,
                   itemBuilder: (context, index) =>
-                      _renderCell(context, value: options[index]),
-                  itemCount: options.length,
+                      _renderCell(context, value: listOptions[index]),
+                  itemCount: listOptions.length,
                   separatorBuilder: (context, index) {
-                    return const XDashSeparator();
+                    return const XDashSeparator(
+                      color: AppColors.text,
+                      height: AppSize.s0_5,
+                    );
                   },
                 ),
               ),
