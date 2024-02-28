@@ -13,6 +13,7 @@ import 'package:i2hand/src/feature/authentication/sign_up/view/sign_up_screen.da
 import 'package:i2hand/src/feature/authentication/start/view/start_screen.dart';
 import 'package:i2hand/src/feature/dashboard/logic/dashboard_state.dart';
 import 'package:i2hand/src/feature/dashboard/view/dash_board_screen.dart';
+import 'package:i2hand/src/feature/home/logic/home_bloc.dart';
 import 'package:i2hand/src/feature/home/view/home_screen.dart';
 import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
@@ -112,8 +113,11 @@ class AppRouter {
           GoRoute(
             path: AppRouteNames.home.path,
             name: AppRouteNames.home.name,
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: HomeScreen(),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (context) => HomeBloc(),
+                child: const HomeScreen(),
+              ),
             ),
           )
         ],
