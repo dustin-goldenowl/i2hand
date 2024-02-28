@@ -9,6 +9,7 @@ import 'package:i2hand/gen/fonts.gen.dart';
 import 'package:i2hand/src/config/enum/account.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/account/bloc/account_bloc.dart';
+import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
 import 'package:i2hand/src/local/database_app.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
@@ -111,6 +112,7 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
 
   Future<void> _syncDataFromFirebase() async {
     await GetIt.I.get<DatabaseApp>().deleteAll();
+    await _getListCategories();
     await _syncingUserAvatar();
     await _syncingUserData();
   }
@@ -133,7 +135,6 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
         avatar: sharePrefUserAvatar.toList().map((e) => e.toString()).toList());
     if (!context.mounted) return;
     await context.read<AccountBloc>().inital(context, userData);
-    xLog.e(userData.role);
     if (userData.role == AccountRole.admin) {
       AppCoordinator.showAdminHomeScreen();
       return;
@@ -154,5 +155,9 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
         xLog.e(e);
       }
     }
+  }
+
+  Future<void> _getListCategories() async {
+    await context.read<GlobalBloc>().getListCategories();
   }
 }
