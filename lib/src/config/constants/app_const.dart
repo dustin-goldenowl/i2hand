@@ -86,4 +86,43 @@ class AppConstantData {
       child: Assets.images.discountBanner2.image(),
     ),
   ];
+
+  static List<TabItem> listDefaultAdminBottomBarItems = [
+    TabItem<Widget>(
+      icon: Assets.svg.category.svg(
+          fit: BoxFit.contain,
+          width: AppSize.s24,
+          colorFilter:
+              const ColorFilter.mode(AppColors.black, BlendMode.srcIn)),
+    ),
+    TabItem<Widget>(
+      icon: Assets.svg.verified.svg(
+        fit: BoxFit.contain,
+        width: AppSize.s24,
+        colorFilter: const ColorFilter.mode(AppColors.black, BlendMode.srcIn),
+      ),
+    ),
+    TabItem<Widget>(
+      icon: Assets.svg.account.svg(
+          fit: BoxFit.contain,
+          width: AppSize.s24,
+          colorFilter:
+              const ColorFilter.mode(AppColors.black, BlendMode.srcIn)),
+    ),
+  ];
+
+  static List<TabItem> listSelectedAdminBottomBarItems = [
+    TabItem<Widget>(
+      icon:
+          Assets.jsons.category.lottie(fit: BoxFit.contain, width: AppSize.s30),
+    ),
+    TabItem<Widget>(
+      icon:
+          Assets.jsons.verified.lottie(fit: BoxFit.contain, width: AppSize.s44),
+    ),
+    TabItem<Widget>(
+      icon:
+          Assets.jsons.account.lottie(fit: BoxFit.contain, width: AppSize.s30),
+    ),
+  ];
 }
