@@ -55,8 +55,6 @@ class AdminHomeBloc extends Cubit<AdminHomeState> {
       {required OptionsEnum option, required MCategory category}) {
     switch (option) {
       case OptionsEnum.edit:
-        showAttributesDetailBottomsheet(context,
-            isEdit: true, category: category);
         break;
       case OptionsEnum.remove:
         _removeCategory(context, category);
