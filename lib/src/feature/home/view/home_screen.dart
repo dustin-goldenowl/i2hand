@@ -48,6 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 _renderCategoriesSection(context),
                 XPaddingUtils.verticalPadding(height: AppPadding.p10),
                 _renderNewProductSection(context),
+                XPaddingUtils.verticalPadding(height: AppPadding.p10),
+                _renderMostViewedProductSection(context),
                 XPaddingUtils.verticalPadding(height: AppPadding.p45),
               ],
             ),
@@ -241,6 +243,50 @@ class _HomeScreenState extends State<HomeScreen> {
                             vertical: AppPadding.p6),
                         child: XProductCard(
                           product: state.listNewProducts![index],
+                        )),
+                  ));
+      },
+    );
+  }
+
+  Widget _renderMostViewedProductSection(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: AppPadding.p10),
+      padding: const EdgeInsets.symmetric(vertical: AppPadding.p10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppRadius.r16),
+        color: AppColors.white,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _renderTitleSection(context, title: S.of(context).mostViewesProduct),
+          XPaddingUtils.verticalPadding(height: AppPadding.p10),
+          _renderListMostViewedItems(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _renderListMostViewedItems(BuildContext context) {
+    return BlocBuilder<HomeBloc, HomeState>(
+      buildWhen: (previous, current) =>
+          !listEquals(previous.listMostViewedProduct, current.listMostViewedProduct),
+      builder: (context, state) {
+        return SizedBox(
+            height: AppSize.s250,
+            child: (isNullOrEmpty(state.listMostViewedProduct))
+                ? const SizedBox.shrink()
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.listMostViewedProduct!.length,
+                    itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppPadding.p12,
+                            vertical: AppPadding.p6),
+                        child: XProductCard(
+                          product: state.listMostViewedProduct![index],
                         )),
                   ));
       },
