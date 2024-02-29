@@ -12,6 +12,7 @@ import 'package:i2hand/src/feature/account/bloc/account_bloc.dart';
 import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
 import 'package:i2hand/src/local/database_app.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
+import 'package:i2hand/src/network/data/product/product_repository.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
@@ -113,6 +114,7 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
   Future<void> _syncDataFromFirebase() async {
     await GetIt.I.get<DatabaseApp>().deleteAll();
     await _getListCategories();
+    await _getListNewProducts();
     await _syncingUserAvatar();
     await _syncingUserData();
   }
@@ -159,5 +161,9 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
 
   Future<void> _getListCategories() async {
     await context.read<GlobalBloc>().getListCategories();
+  }
+
+  Future<void> _getListNewProducts() async {
+    await GetIt.I.get<ProductRepository>().getProducts();
   }
 }

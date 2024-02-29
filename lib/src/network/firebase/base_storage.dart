@@ -71,4 +71,14 @@ class BaseStorageReference<T> {
       return MResult.exception(e);
     }
   }
+
+  Future<MResult<List>> getAllInSubFolder({required String subFolderText}) async {
+    try {
+      final ListResult listAll = await ref.child(subFolderText).listAll().timeout(const Duration(seconds: 5));
+
+      return MResult.success([listAll.items, listAll.prefixes]);
+    } catch (e) {
+      return MResult.exception(e);
+    }
+  }
 }

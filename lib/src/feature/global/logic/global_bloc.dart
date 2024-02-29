@@ -34,4 +34,13 @@ class GlobalBloc extends Cubit<GlobalState> {
   void updateListCategories(List<MCategory> listCategories) {
     emit(state.copyWith(listCategories: listCategories));
   }
+
+  int getNumberColumns() {
+    return state.listCategories.length ~/ 2 +
+        state.listCategories.length.remainder(2);
+  }
+
+  bool checkInvalidIndex(int index) {
+    return (2 * index + 1) >= state.listCategories.length;
+  }
 }
