@@ -21,7 +21,7 @@ class XProductCard extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       elevation: AppElevation.ev3,
       child: InkWell(
-        onTap: () => AppCoordinator.showProductDetailScreen(),
+        onTap: () => AppCoordinator.showProductDetailScreen(id: product.id),
         child: Ink(
           width: AppSize.s150,
           padding: const EdgeInsets.all(AppPadding.p10),

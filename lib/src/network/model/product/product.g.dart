@@ -21,6 +21,7 @@ MProduct _$MProductFromJson(Map<String, dynamic> json) => MProduct(
           (json['image'] as List<dynamic>?)?.map((e) => e as String).toList(),
       isNew: json['isNew'] as bool? ?? false,
       viewed: json['viewed'] as int? ?? 0,
+      owner: json['owner'] as String? ?? '',
     );
 
 Map<String, dynamic> _$MProductToJson(MProduct instance) => <String, dynamic>{
@@ -38,4 +39,5 @@ Map<String, dynamic> _$MProductToJson(MProduct instance) => <String, dynamic>{
           .toList(),
       'time': instance.time,
       'description': instance.description,
+      'owner': instance.owner,
     };

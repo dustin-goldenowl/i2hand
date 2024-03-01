@@ -1,28 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/gen/fonts.gen.dart';
+import 'package:i2hand/src/feature/product/logic/detail_product_bloc.dart';
+import 'package:i2hand/src/feature/product/logic/detail_product_state.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
-import 'package:i2hand/src/network/model/product/product.dart';
+import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/decorations.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
+import 'package:i2hand/src/utils/string_ext.dart';
 import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/avatar/avatar.dart';
 import 'package:i2hand/widget/button/fill_button.dart';
 import 'package:i2hand/widget/carousel/default_carousel.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({super.key, required this.product});
-  final MProduct product;
+  const ProductDetailScreen({super.key});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<DetailProductBloc>().initial(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,41 +121,54 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
-        _renderTitleText(
-          widget.product.title,
-        ),
+        _renderTitleText(),
         _renderSavePostButton(),
       ],
     );
   }
 
-  Widget _renderTitleText(String title) {
+  Widget _renderTitleText() {
     return Expanded(
-      child: Text(
-        title,
-        style: AppTextStyle.titleTextStyle,
+      child: BlocBuilder<DetailProductBloc, DetailProductState>(
+        buildWhen: (previous, current) => previous.product != current.product,
+        builder: (context, state) {
+          return Text(
+            state.product.title,
+            style: AppTextStyle.titleTextStyle,
+          );
+        },
       ),
     );
   }
 
   Widget _renderDescription(BuildContext context) {
-    return Text(
-      widget.product.description,
-      style: AppTextStyle.contentTexStyle.copyWith(
-        fontSize: AppFontSize.f15,
-        color: AppColors.black,
-      ),
+    return BlocBuilder<DetailProductBloc, DetailProductState>(
+      buildWhen: (previous, current) => previous.product != current.product,
+      builder: (context, state) {
+        return Text(
+          state.product.description,
+          style: AppTextStyle.contentTexStyle.copyWith(
+            fontSize: AppFontSize.f15,
+            color: AppColors.black,
+          ),
+        );
+      },
     );
   }
 
   Widget _renderPrice(BuildContext context) {
-    return Text(
-      Utils.createPriceText(widget.product.price),
-      style: AppTextStyle.contentTexStyleBold.copyWith(
-        color: AppColors.errorColor,
-        fontSize: AppFontSize.f26,
-        fontWeight: FontWeight.w900,
-      ),
+    return BlocBuilder<DetailProductBloc, DetailProductState>(
+      buildWhen: (previous, current) => previous.product != current.product,
+      builder: (context, state) {
+        return Text(
+          Utils.createPriceText(state.product.price),
+          style: AppTextStyle.contentTexStyleBold.copyWith(
+            color: AppColors.errorColor,
+            fontSize: AppFontSize.f26,
+            fontWeight: FontWeight.w900,
+          ),
+        );
+      },
     );
   }
 
@@ -224,14 +246,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _renderUser(BuildContext context) {
-    return Row(
-      children: [
-        _renderUserAvatar(null),
-        XPaddingUtils.horizontalPadding(width: AppPadding.p5),
-        //TODO: Fetch user data here
-        _renderUserName('User Name'),
-        _renderViewPageButton(context),
-      ],
+    return BlocBuilder<DetailProductBloc, DetailProductState>(
+      buildWhen: (previous, current) => previous.user != current.user,
+      builder: (context, state) {
+        return Row(
+          children: [
+            _renderUserAvatar(
+              (isNullOrEmpty(state.user)
+                  ? null
+                  : (state.user!.avatar ?? []).convertToUint8List()),
+            ),
+            XPaddingUtils.horizontalPadding(width: AppPadding.p10),
+            _renderUserName((state.user ?? MUser.empty()).name ?? ''),
+            _renderViewPageButton(context),
+          ],
+        );
+      },
     );
   }
 

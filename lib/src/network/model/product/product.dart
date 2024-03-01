@@ -18,6 +18,7 @@ class MProduct with EquatableMixin {
   final List<MAttributeData>? attributes;
   final String time;
   final String description;
+  final String owner;
 
   MProduct({
     required this.id,
@@ -30,6 +31,7 @@ class MProduct with EquatableMixin {
     this.image,
     this.isNew = false,
     this.viewed = 0,
+    this.owner = '',
   });
 
   factory MProduct.empty() => MProduct(id: '');
@@ -44,6 +46,7 @@ class MProduct with EquatableMixin {
     List<MAttributeData>? attributes,
     String? time,
     String? description,
+    String? owner,
   }) {
     return MProduct(
       title: title ?? this.title,
@@ -56,6 +59,7 @@ class MProduct with EquatableMixin {
       attributes: attributes ?? this.attributes,
       time: time ?? this.time,
       description: description ?? this.description,
+      owner: owner ?? this.owner,
     );
   }
 
@@ -70,7 +74,8 @@ class MProduct with EquatableMixin {
         isNew,
         attributes,
         time,
-        description
+        description,
+        owner,
       ];
 
   @override
