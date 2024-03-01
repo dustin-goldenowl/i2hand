@@ -31,6 +31,7 @@ class AppSize {
   static const s220 = 220.0;
   static const s250 = 250.0;
   static const s300 = 300.0;
+  static const s350 = 350.0;
   static const s500 = 500.0;
 }
 
@@ -77,11 +78,13 @@ class AppFontSize {
   static const f12 = 12.0;
   static const f13 = 13.0;
   static const f14 = 14.0;
+  static const f15 = 15.0;
   static const f16 = 16.0;
   static const f18 = 18.0;
   static const f20 = 20.0;
   static const f21 = 21.0;
   static const f24 = 24.0;
+  static const f26 = 26.0;
   static const f28 = 28.0;
   static const f30 = 30.0;
   static const f40 = 40.0;
@@ -102,6 +105,7 @@ class AppRadius {
   static const r16 = 16.0;
   static const r20 = 20.0;
   static const r30 = 30.0;
+  static const r40 = 40.0;
 }
 
 class AppElevation {
@@ -109,4 +113,12 @@ class AppElevation {
   static const ev1 = 1.0;
   static const ev2 = 2.0;
   static const ev3 = 3.0;
+}
+
+class AppOpacity {
+  static const o0 = 0.0;
+  static const o025 = 0.25;
+  static const o05 = 0.5;
+  static const o075 = 0.75;
+  static const o1 = 1.0;
 }

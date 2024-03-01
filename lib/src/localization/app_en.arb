@@ -71,5 +71,8 @@
     "price": "Price",
     "isRequired": "Required",
     "newProduct": "New products",
-    "mostViewesProduct": "Most viewed products"
+    "mostViewesProduct": "Most viewed products",
+    "buyNow": "Buy now",
+    "addToCart": "Add to cart",
+    "viewPage": "View page"
 }

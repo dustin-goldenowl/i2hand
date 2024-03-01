@@ -50,4 +50,7 @@ class AppCoordinator {
 
   static void showAdminHomeScreen() =>
       context.goNamed(AppRouteNames.adminHome.name);
+
+  static void showProductDetailScreen() =>
+      context.pushNamed(AppRouteNames.productDetail.name);
 }
