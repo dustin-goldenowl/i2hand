@@ -17,6 +17,7 @@ import 'package:i2hand/src/feature/authentication/sign_up/view/sign_up_screen.da
 import 'package:i2hand/src/feature/authentication/start/view/start_screen.dart';
 import 'package:i2hand/src/feature/dashboard/logic/dashboard_state.dart';
 import 'package:i2hand/src/feature/dashboard/view/dash_board_screen.dart';
+import 'package:i2hand/src/feature/home/feature/search/view/search_screen.dart';
 import 'package:i2hand/src/feature/home/logic/home_bloc.dart';
 import 'package:i2hand/src/feature/home/view/home_screen.dart';
 import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
@@ -135,15 +136,23 @@ class AppRouter {
         ),
         routes: <RouteBase>[
           GoRoute(
-            path: AppRouteNames.home.path,
-            name: AppRouteNames.home.name,
-            pageBuilder: (context, state) => NoTransitionPage(
-              child: BlocProvider(
-                create: (context) => HomeBloc(),
-                child: const HomeScreen(),
-              ),
-            ),
-          )
+              path: AppRouteNames.home.path,
+              name: AppRouteNames.home.name,
+              pageBuilder: (context, state) => NoTransitionPage(
+                    child: BlocProvider(
+                      create: (context) => HomeBloc(),
+                      child: const HomeScreen(),
+                    ),
+                  ),
+              routes: [
+                GoRoute(
+                    parentNavigatorKey: AppCoordinator.navigatorKey,
+                    name: AppRouteNames.search.name,
+                    path: AppRouteNames.search.subPath,
+                    builder: (__, _) {
+                      return const SearchScreen();
+                    }),
+              ])
         ],
       ),
       ShellRoute(

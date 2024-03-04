@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/common/country_logic/search_dial_code_state.dart';
-import 'package:i2hand/src/network/model/country/api_services.dart';
+import 'package:i2hand/src/network/data/country/api_services.dart';
 import 'package:i2hand/src/network/model/country/country_code.dart';
+import 'package:i2hand/src/utils/base_cubit.dart';
 
-class SearchDialCodeBloc extends Cubit<SearchDialCodeState> {
+class SearchDialCodeBloc extends BaseCubit<SearchDialCodeState> {
   SearchDialCodeBloc() : super(SearchDialCodeState());
   List<CountryCode>? _countryCodes;
 

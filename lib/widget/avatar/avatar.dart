@@ -18,6 +18,7 @@ class XAvatar extends StatefulWidget {
   final double? imageSize;
   final Color? borderColor;
   final bool isShadow;
+  final bool isSelected;
   final ImageType imageType;
   const XAvatar({
     Key? key,
@@ -31,6 +32,7 @@ class XAvatar extends StatefulWidget {
     this.borderColor,
     this.imageType = ImageType.none,
     this.isShadow = true,
+    this.isSelected = false,
   }) : super(key: key);
 
   @override
@@ -69,7 +71,7 @@ class _XAvatarState extends State<XAvatar> {
             color: widget.borderColor ?? Colors.transparent,
             width: widget.borderWidth ?? AppSize.s0,
           ),
-          boxShadow: widget.isShadow ? AppDecorations.shadow : [],
+          boxShadow: widget.isShadow ? AppDecorations.fullShadow : [],
         ),
         child: Center(child: Assets.jsons.maleAvatar.lottie()));
   }
@@ -113,6 +115,40 @@ class _XAvatarState extends State<XAvatar> {
                 ),
               )
             : const SizedBox.shrink(),
+        widget.isSelected
+            ? Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppPadding.p5, vertical: AppPadding.p6),
+                  decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      border: Border.all(
+                          color: widget.borderColor ?? AppColors.white,
+                          width: widget.borderWidth ?? AppSize.s4),
+                      borderRadius: BorderRadius.circular(AppRadius.r40),
+                      boxShadow:
+                          widget.isShadow ? AppDecorations.fullShadow : null),
+                  child: IconButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all(EdgeInsets.zero),
+                      minimumSize: MaterialStateProperty.all(Size.zero),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      iconColor: MaterialStateProperty.all(AppColors.white),
+                      foregroundColor:
+                          MaterialStateProperty.all(AppColors.white),
+                    ),
+                    icon: Assets.svg.iconCheck.svg(fit: BoxFit.contain),
+                    color: AppColors.white,
+                    alignment: Alignment.topRight,
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }
@@ -140,6 +176,7 @@ class _XAvatarState extends State<XAvatar> {
           color: widget.borderColor ?? AppColors.primary,
           width: widget.borderWidth ?? AppSize.s4,
         ),
+        boxShadow: widget.isShadow ? AppDecorations.fullShadow : [],
       ),
       child: null,
     );

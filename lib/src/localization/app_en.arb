@@ -74,5 +74,12 @@
     "mostViewesProduct": "Most viewed products",
     "buyNow": "Buy now",
     "addToCart": "Add to cart",
-    "viewPage": "View page"
+    "viewPage": "View page",
+    "country": "Country",
+    "state": "State",
+    "city": "City", 
+    "selectLocation": "Select location",
+    "nearYou": "Near you",
+    "allProducts": "All products",
+    "noProductFound": "No product found"
 }

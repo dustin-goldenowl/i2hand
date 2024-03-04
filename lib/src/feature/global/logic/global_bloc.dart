@@ -1,11 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/feature/global/logic/global_state.dart';
 import 'package:i2hand/src/network/data/category/category_repository.dart';
 import 'package:i2hand/src/network/model/category/category.dart';
+import 'package:i2hand/src/utils/base_cubit.dart';
 import 'package:i2hand/src/utils/utils.dart';
 
-class GlobalBloc extends Cubit<GlobalState> {
+class GlobalBloc extends BaseCubit<GlobalState> {
   GlobalBloc() : super(GlobalState(listCategories: List.empty(growable: true)));
 
   Future<void> getListCategories() async {

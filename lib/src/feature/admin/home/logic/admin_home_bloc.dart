@@ -16,6 +16,7 @@ import 'package:i2hand/src/network/model/category/category.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
+import 'package:i2hand/src/utils/base_cubit.dart';
 import 'package:i2hand/src/utils/string_ext.dart';
 import 'package:i2hand/src/utils/string_utils.dart';
 import 'package:i2hand/src/utils/utils.dart';
@@ -25,7 +26,7 @@ import 'package:i2hand/widget/image/pick_image_app.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-class AdminHomeBloc extends Cubit<AdminHomeState> {
+class AdminHomeBloc extends BaseCubit<AdminHomeState> {
   AdminHomeBloc()
       : super(AdminHomeState(
           listAttributes: List.empty(growable: true),

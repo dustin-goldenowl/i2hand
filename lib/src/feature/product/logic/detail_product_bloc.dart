@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_state.dart';
 import 'package:i2hand/src/network/data/product/product_repository.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
 import 'package:i2hand/src/network/model/product/product.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
+import 'package:i2hand/src/utils/base_cubit.dart';
 import 'package:i2hand/src/utils/utils.dart';
 
-class DetailProductBloc extends Cubit<DetailProductState> {
+class DetailProductBloc extends BaseCubit<DetailProductState> {
   DetailProductBloc(String id)
       : super(DetailProductState(
           id: id,
