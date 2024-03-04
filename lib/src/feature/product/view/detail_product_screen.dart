@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,49 +38,65 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Scaffold(
       bottomNavigationBar: _renderBottomButtonSection(context),
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              flexibleSpace: FlexibleSpaceBar(
-                background: _renderImageCarousel(),
-                stretchModes: const [StretchMode.zoomBackground],
-              ),
-              backgroundColor: Colors.transparent,
-              pinned: true,
-              expandedHeight: AppSize.s350,
-              stretch: true,
-              elevation: 0,
-              centerTitle: false,
-            ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: _renderDetailProductSection(context),
-            ),
-          ],
+        child: BlocBuilder<DetailProductBloc, DetailProductState>(
+          buildWhen: (pre, cur) => pre.status != cur.status,
+          builder: (context, state) {
+            if (state.status == DetailProductScreenStatus.loading) {
+              return _loadingScreen();
+            }
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: _renderImageCarousel(),
+                    stretchModes: const [StretchMode.zoomBackground],
+                  ),
+                  backgroundColor: Colors.transparent,
+                  pinned: true,
+                  expandedHeight: AppSize.s350,
+                  stretch: true,
+                  elevation: 0,
+                  centerTitle: false,
+                ),
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: _renderDetailProductSection(context),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
+  Widget _loadingScreen() {
+    return Center(
+      child: Assets.jsons.syncData
+          .lottie(width: AppSize.s220, alignment: Alignment.center),
+    );
+  }
+
   Widget _renderImageCarousel() {
-    return XCarousel(
-      height: AppSize.s350,
-      isIndicatorInside: true,
-      padBottom: AppSize.s24,
-      items: [
-        Assets.images.shoppingCart3d.image(
-          fit: BoxFit.cover,
-          width: double.infinity,
-        ),
-        Assets.images.devices.image(
-          fit: BoxFit.cover,
-          width: double.infinity,
-        ),
-        Assets.images.logo.image(
-          fit: BoxFit.cover,
-          width: double.infinity,
-        )
-      ],
+    return BlocBuilder<DetailProductBloc, DetailProductState>(
+      buildWhen: (previous, current) =>
+          previous.assetsStatus != current.assetsStatus ||
+          listEquals(previous.listImage, current.listImage),
+      builder: (context, state) {
+        return state.assetsStatus == FetchAssetsStatus.success ||
+                !isNullOrEmpty(state.listImage)
+            ? XCarousel(
+                height: AppSize.s350,
+                isIndicatorInside: true,
+                autoPlay: false,
+                padBottom: AppSize.s24,
+                items: [
+                  for (Uint8List? image in state.listImage!)
+                    Image.memory(image ?? Uint8List(0))
+                ],
+              )
+            : Assets.jsons.loadingPicture.lottie(fit: BoxFit.contain);
+      },
     );
   }
 
@@ -173,24 +190,36 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _renderBottomButtonSection(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(
-          bottom: AppMargin.m10, left: AppMargin.m20, right: AppMargin.m20),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppRadius.r16),
-          color: AppColors.backgroundButton,
-          boxShadow: AppDecorations.shadow
-              .followedBy(AppDecorations.shadowReverse)
-              .toList()),
-      padding: const EdgeInsets.all(AppPadding.p8),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          _renderAddCartButton(context),
-          XPaddingUtils.horizontalPadding(width: AppPadding.p16),
-          _renderBuyButton(context),
-        ],
-      ),
+    return BlocSelector<DetailProductBloc, DetailProductState,
+        DetailProductScreenStatus>(
+      selector: (state) {
+        return state.status;
+      },
+      builder: (context, status) {
+        return status == DetailProductScreenStatus.loading
+            ? const SizedBox.shrink()
+            : Container(
+                margin: const EdgeInsets.only(
+                    bottom: AppMargin.m10,
+                    left: AppMargin.m20,
+                    right: AppMargin.m20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppRadius.r16),
+                    color: AppColors.backgroundButton,
+                    boxShadow: AppDecorations.shadow
+                        .followedBy(AppDecorations.shadowReverse)
+                        .toList()),
+                padding: const EdgeInsets.all(AppPadding.p8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    _renderAddCartButton(context),
+                    XPaddingUtils.horizontalPadding(width: AppPadding.p16),
+                    _renderBuyButton(context),
+                  ],
+                ),
+              );
+      },
     );
   }
 
@@ -269,6 +298,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return XAvatar(
       imageSize: AppSize.s60,
       memoryData: memoryImage,
+      borderColor: AppColors.secondPrimary,
       imageType: memoryImage != null ? ImageType.memory : ImageType.none,
     );
   }
@@ -287,6 +317,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       clipBehavior: Clip.hardEdge,
       borderRadius: BorderRadius.circular(AppRadius.r30),
       child: InkWell(
+        onTap: () {
+          //TODO: Add logic go to user page
+        },
         child: Ink(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.r30),
@@ -306,6 +339,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _renderUserRate(BuildContext context) {
+    // TODO: Add logic fetch user's rate
     return SizedBox(
       height: AppFontSize.f24,
       child: ListView.builder(

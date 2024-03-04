@@ -15,13 +15,15 @@ class DetailProductBloc extends Cubit<DetailProductState> {
           product: MProduct.empty(),
         ));
 
-  void fetchStatusFail() =>
+  void _fetchStatusFail() =>
       emit(state.copyWith(status: DetailProductScreenStatus.fail));
 
-  void fetchStatusSuccess() =>
+  void _fetchStatusSuccess() =>
       emit(state.copyWith(status: DetailProductScreenStatus.success));
+
   Future<void> initial(BuildContext context) async {
     await _fetchProductData(state.id);
+    await _fetchProductImage(state.id);
   }
 
   Future<void> _fetchProductData(String id) async {
@@ -30,11 +32,11 @@ class DetailProductBloc extends Cubit<DetailProductState> {
       final result = await GetIt.I
           .get<ProductRepository>()
           .getOrAddProduct(MProduct(id: id));
-      if (result.data == null) return fetchStatusFail();
+      if (result.data == null) return _fetchStatusFail();
       emit(state.copyWith(product: result.data));
       await _fetchOwnerData(ownerId: result.data!.owner);
     } catch (e) {
-      fetchStatusFail();
+      _fetchStatusFail();
       xLog.e(e);
     }
   }
@@ -43,9 +45,8 @@ class DetailProductBloc extends Cubit<DetailProductState> {
     try {
       final result =
           await GetIt.I.get<UserRepository>().getOrAddUser(MUser(id: ownerId));
-      if (result.data == null) return fetchStatusFail();
+      if (result.data == null) return _fetchStatusFail();
       await _fetchOwnerAvatar(user: result.data!);
-      // emit(state.copyWith(user: result.data));
     } catch (e) {
       xLog.e(e);
       rethrow;
@@ -59,9 +60,26 @@ class DetailProductBloc extends Cubit<DetailProductState> {
       final userData =
           user.copyWith(avatar: result.data!.map((e) => e.toString()).toList());
       emit(state.copyWith(user: userData));
+      _fetchStatusSuccess();
     } catch (e) {
       xLog.e(e);
       rethrow;
+    }
+  }
+
+  Future<void> _fetchProductImage(String id) async {
+    emit(state.copyWith(assetsStatus: FetchAssetsStatus.loading));
+    try {
+      final images = await GetIt.I.get<ProductRepository>().getImage(id);
+      if (isNullOrEmpty(images.data)) {
+        emit(state.copyWith(assetsStatus: FetchAssetsStatus.fail));
+        return;
+      }
+      emit(state.copyWith(
+          listImage: images.data, assetsStatus: FetchAssetsStatus.success));
+    } catch (e) {
+      xLog.e(e);
+      emit(state.copyWith(assetsStatus: FetchAssetsStatus.fail));
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:i2hand/src/network/model/product/product.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 
@@ -13,6 +14,7 @@ class DetailProductState with EquatableMixin {
     required this.product,
     this.user,
     this.assetsStatus = FetchAssetsStatus.init,
+    this.listImage,
   });
 
   final String id;
@@ -20,12 +22,14 @@ class DetailProductState with EquatableMixin {
   final FetchAssetsStatus assetsStatus;
   final MProduct product;
   final MUser? user;
+  final List<Uint8List?>? listImage;
 
   DetailProductState copyWith(
       {String? id,
       DetailProductScreenStatus? status,
       FetchAssetsStatus? assetsStatus,
       MProduct? product,
+      List<Uint8List?>? listImage,
       MUser? user}) {
     return DetailProductState(
       id: id ?? this.id,
@@ -33,11 +37,13 @@ class DetailProductState with EquatableMixin {
       product: product ?? this.product,
       user: user ?? this.user,
       assetsStatus: assetsStatus ?? this.assetsStatus,
+      listImage: listImage ?? this.listImage,
     );
   }
 
   @override
-  List<Object?> get props => [id, status, product, user, assetsStatus];
+  List<Object?> get props =>
+      [id, status, product, user, assetsStatus, listImage];
 
   @override
   String toString() {

@@ -79,6 +79,10 @@ class $AssetsJsonsGen {
   /// File path: assets/jsons/home.json
   LottieGenImage get home => const LottieGenImage('assets/jsons/home.json');
 
+  /// File path: assets/jsons/loading-picture.json
+  LottieGenImage get loadingPicture =>
+      const LottieGenImage('assets/jsons/loading-picture.json');
+
   /// File path: assets/jsons/loading.json
   LottieGenImage get loading =>
       const LottieGenImage('assets/jsons/loading.json');
@@ -109,6 +113,7 @@ class $AssetsJsonsGen {
         category,
         femaleAvatar,
         home,
+        loadingPicture,
         loading,
         maleAvatar,
         post,
