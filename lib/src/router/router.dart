@@ -17,6 +17,7 @@ import 'package:i2hand/src/feature/authentication/sign_up/view/sign_up_screen.da
 import 'package:i2hand/src/feature/authentication/start/view/start_screen.dart';
 import 'package:i2hand/src/feature/dashboard/logic/dashboard_state.dart';
 import 'package:i2hand/src/feature/dashboard/view/dash_board_screen.dart';
+import 'package:i2hand/src/feature/home/feature/search/logic/search_bloc.dart';
 import 'package:i2hand/src/feature/home/feature/search/view/search_screen.dart';
 import 'package:i2hand/src/feature/home/logic/home_bloc.dart';
 import 'package:i2hand/src/feature/home/view/home_screen.dart';
@@ -150,7 +151,10 @@ class AppRouter {
                     name: AppRouteNames.search.name,
                     path: AppRouteNames.search.subPath,
                     builder: (__, _) {
-                      return const SearchScreen();
+                      return BlocProvider(
+                        create: (context) => SearchBloc(),
+                        child: const SearchScreen(),
+                      );
                     }),
               ])
         ],
