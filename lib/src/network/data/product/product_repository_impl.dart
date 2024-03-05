@@ -1,6 +1,5 @@
 import 'package:drift/drift.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/local/database_app.dart';
 import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo.dart';
@@ -47,8 +46,22 @@ class ProductRepositoryImpl extends ProductRepository {
   }
 
   @override
-  Future<MResult<Uint8List>> getImage(String id) async {
-    return await productRefStorage.getProductImage(id);
+  Future<MResult<List<Uint8List?>?>> getImage(String id) async {
+    try {
+      final images =
+          await productRefStorage.getAllInSubFolder(subFolderText: id);
+      if (isNullOrEmpty(images.data)) {
+        return MResult.error(S.text.someThingWentWrong);
+      }
+      List<Uint8List?> listImage = [];
+      for (Reference image in images.data!.first) {
+        listImage.add(await image.getData());
+      }
+      return MResult.success(listImage);
+    } catch (e) {
+      xLog.e(e);
+      return MResult.error(S.text.someThingWentWrong);
+    }
   }
 
   @override

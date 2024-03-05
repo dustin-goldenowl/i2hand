@@ -12,7 +12,7 @@ abstract class ProductRepository {
 
   Future<MResult<bool>> deleteProduct(MProduct category);
 
-  Future<MResult<Uint8List>> getImage(String id);
+  Future<MResult<List<Uint8List?>?>> getImage(String id);
 
   Future<MResult<bool>> addImage(String id, Uint8List data);
 }

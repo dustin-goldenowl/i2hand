@@ -11,11 +11,13 @@ class XCarousel extends StatefulWidget {
     this.height,
     this.isIndicatorInside = false,
     this.padBottom,
+    this.autoPlay = true,
   });
   final List<Widget> items;
   final double? height;
   final bool isIndicatorInside;
   final double? padBottom;
+  final bool autoPlay;
 
   @override
   State<XCarousel> createState() => _XCarouselState();
@@ -48,7 +50,7 @@ class _XCarouselState extends State<XCarousel> {
           options: CarouselOptions(
               viewportFraction: AppSize.s1,
               height: widget.height,
-              autoPlay: true,
+              autoPlay: widget.autoPlay,
               onPageChanged: (index, reason) {
                 setState(() {
                   _currentIndex = index;
