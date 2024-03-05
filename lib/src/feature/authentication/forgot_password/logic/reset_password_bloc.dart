@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -7,9 +6,10 @@ import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/data/sign/sign_repository.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/service/shared_pref.dart';
+import 'package:i2hand/src/utils/base_cubit.dart';
 import 'package:i2hand/src/utils/utils.dart';
 
-class ResetPasswordBloc extends Cubit<ResetPasswordState> {
+class ResetPasswordBloc extends BaseCubit<ResetPasswordState> {
   ResetPasswordBloc(MUser user) : super(ResetPasswordState(user: user));
 
   void onChangedOption(String value) {

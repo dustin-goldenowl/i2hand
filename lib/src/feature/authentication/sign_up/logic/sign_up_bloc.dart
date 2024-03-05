@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
@@ -15,11 +14,12 @@ import 'package:i2hand/src/network/model/domain_manager.dart';
 import 'package:i2hand/src/network/model/social_user/social_user.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
+import 'package:i2hand/src/utils/base_cubit.dart';
 import 'package:i2hand/src/utils/string_utils.dart';
 import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/src/utils/validated.dart';
 
-class SignUpBloc extends Cubit<SignUpState> {
+class SignUpBloc extends BaseCubit<SignUpState> {
   SignUpBloc() : super(SignUpState());
 
   DomainManager get domain => DomainManager();

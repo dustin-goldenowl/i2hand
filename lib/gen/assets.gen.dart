@@ -166,6 +166,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/home.svg
   SvgGenImage get home => const SvgGenImage('assets/svg/home.svg');
 
+  /// File path: assets/svg/icon-check.svg
+  SvgGenImage get iconCheck => const SvgGenImage('assets/svg/icon-check.svg');
+
   /// File path: assets/svg/on_boarding_bg.svg
   SvgGenImage get onBoardingBg =>
       const SvgGenImage('assets/svg/on_boarding_bg.svg');
@@ -202,6 +205,7 @@ class $AssetsSvgGen {
         emptyData,
         google,
         home,
+        iconCheck,
         onBoardingBg,
         onboardingIllustration,
         post,

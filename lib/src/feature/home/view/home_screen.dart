@@ -9,6 +9,7 @@ import 'package:i2hand/src/feature/home/logic/home_bloc.dart';
 import 'package:i2hand/src/feature/home/logic/home_state.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/model/category/category.dart';
+import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
@@ -17,7 +18,6 @@ import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/appbar/app_bar.dart';
 import 'package:i2hand/widget/card/product_card.dart';
 import 'package:i2hand/widget/carousel/default_carousel.dart';
-import 'package:i2hand/widget/text_field/search_input.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -69,32 +69,19 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(
-                child: XSearchInput(
-                  onChanged: (searchText) {},
-                  bgColor: AppColors.grey8,
-                  suffix: const Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.camera_alt_outlined,
-                        size: AppSize.s24,
-                        color: AppColors.blue,
-                      ),
-                    ],
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.r30),
-                    borderSide: const BorderSide(
-                        width: AppSize.s0, color: Colors.transparent),
-                  ),
-                  focusBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.r30),
-                    borderSide: const BorderSide(
-                        width: AppSize.s0, color: Colors.transparent),
+                  child: GestureDetector(
+                onTap: () => AppCoordinator.showSearchScreen(),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: AppColors.grey8,
+                      borderRadius: BorderRadius.circular(AppRadius.r30)),
+                  padding: const EdgeInsets.all(AppPadding.p10),
+                  child: Text(
+                    S.of(context).search,
+                    style: AppTextStyle.hintTextStyle,
                   ),
                 ),
-              )
+              ))
             ],
           )),
     );

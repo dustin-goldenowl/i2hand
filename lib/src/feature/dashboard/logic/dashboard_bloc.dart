@@ -1,10 +1,10 @@
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/src/config/constants/app_const.dart';
 import 'package:i2hand/src/feature/dashboard/logic/dashboard_state.dart';
 import 'package:i2hand/src/router/coordinator.dart';
+import 'package:i2hand/src/utils/base_cubit.dart';
 
-class DashboardBloc extends Cubit<XNavigationBarItems> {
+class DashboardBloc extends BaseCubit<XNavigationBarItems> {
   DashboardBloc(super.current);
 
   void onDestinationSelected(int index) {

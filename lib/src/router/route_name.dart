@@ -15,6 +15,7 @@ enum AppRouteNames {
   forgotPassword(path: '/forgotPassword'),
   sendMailSuccess(path: '/sendMailSuccess'),
   signUp(path: '/signUp'),
+  search(path: '/search'),
   productDetail(path: '/productDetail', param: 'id');
 
   const AppRouteNames({
