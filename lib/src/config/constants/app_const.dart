@@ -1,8 +1,10 @@
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:i2hand/gen/assets.gen.dart';
+import 'package:i2hand/src/config/enum/attribute.dart';
 import 'package:i2hand/src/config/enum/options.dart';
 import 'package:i2hand/src/theme/colors.dart';
+import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 
 class AppConstantData {
@@ -131,4 +133,18 @@ class AppConstantData {
     OptionsEnum.edit,
     OptionsEnum.remove,
   ];
+
+  static List<DropdownMenuItem<AttributeEnum>> getAllDropdownAttributes(
+      BuildContext context) {
+    return AttributeEnum.values
+        .map((e) => DropdownMenuItem<AttributeEnum>(
+              value: e,
+              child: Text(
+                e.getAttributeText(context),
+                style: AppTextStyle.contentTexStyle,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ))
+        .toList();
+  }
 }

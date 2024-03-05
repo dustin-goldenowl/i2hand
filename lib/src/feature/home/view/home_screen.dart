@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
+import 'package:i2hand/src/feature/global/logic/global_state.dart';
 import 'package:i2hand/src/feature/home/logic/home_bloc.dart';
 import 'package:i2hand/src/feature/home/logic/home_state.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
@@ -12,6 +14,7 @@ import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
 import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/appbar/app_bar.dart';
+import 'package:i2hand/widget/card/product_card.dart';
 import 'package:i2hand/widget/carousel/default_carousel.dart';
 import 'package:i2hand/widget/text_field/search_input.dart';
 
@@ -35,14 +38,19 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppColors.grey7,
       body: DismissKeyBoard(
         child: SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              _renderAppBar(),
-              XPaddingUtils.verticalPadding(height: AppPadding.p10),
-              _renderNotificationBanner(context),
-              _renderCategoriesSection(context),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                _renderAppBar(),
+                XPaddingUtils.verticalPadding(height: AppPadding.p10),
+                _renderNotificationBanner(context),
+                _renderCategoriesSection(context),
+                XPaddingUtils.verticalPadding(height: AppPadding.p10),
+                _renderNewProductSection(context),
+                XPaddingUtils.verticalPadding(height: AppPadding.p45),
+              ],
+            ),
           ),
         ),
       ),
@@ -112,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _renderTitleSection(context),
+          _renderTitleSection(context, title: S.of(context).categories),
           XPaddingUtils.verticalPadding(height: AppPadding.p10),
           _renderListCategories(),
         ],
@@ -120,11 +128,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _renderTitleSection(BuildContext context) {
+  Widget _renderTitleSection(BuildContext context, {required String title}) {
     return Padding(
       padding: const EdgeInsets.only(left: AppPadding.p16),
       child: Text(
-        S.of(context).categories,
+        title,
         style:
             AppTextStyle.contentTexStyleBold.copyWith(color: AppColors.black),
       ),
@@ -132,22 +140,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _renderListCategories() {
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<GlobalBloc, GlobalState>(
       buildWhen: (previous, current) =>
-          previous.listCategory != current.listCategory,
+          !listEquals(previous.listCategories, current.listCategories),
       builder: (context, state) {
         return SizedBox(
           height: AppSize.s200,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: context.read<HomeBloc>().getNumberColumns(),
+              itemCount: context.read<GlobalBloc>().getNumberColumns(),
               itemBuilder: (context, index) {
                 return _renderCategoryInOneColumn(
-                    firstCategory: state.listCategory[2 * index],
+                    firstCategory: state.listCategories[2 * index],
                     secondCategory:
-                        context.read<HomeBloc>().checkInvalidIndex(index)
+                        context.read<GlobalBloc>().checkInvalidIndex(index)
                             ? null
-                            : state.listCategory[2 * index + 1]);
+                            : state.listCategories[2 * index + 1]);
               }),
         );
       },
@@ -159,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _renderCategory(firstCategory),
+        Expanded(child: _renderCategory(firstCategory)),
         XPaddingUtils.verticalPadding(height: AppPadding.p12),
         isNullOrEmpty(secondCategory)
             ? const SizedBox.shrink()
@@ -192,6 +200,50 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _renderNewProductSection(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: AppPadding.p10),
+      padding: const EdgeInsets.symmetric(vertical: AppPadding.p10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppRadius.r16),
+        color: AppColors.white,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _renderTitleSection(context, title: S.of(context).newProduct),
+          XPaddingUtils.verticalPadding(height: AppPadding.p10),
+          _renderListNewItems(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _renderListNewItems(BuildContext context) {
+    return BlocBuilder<HomeBloc, HomeState>(
+      buildWhen: (previous, current) =>
+          !listEquals(previous.listNewProducts, current.listNewProducts),
+      builder: (context, state) {
+        return SizedBox(
+            height: AppSize.s250,
+            child: (isNullOrEmpty(state.listNewProducts))
+                ? const SizedBox.shrink()
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.listNewProducts!.length,
+                    itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppPadding.p12,
+                            vertical: AppPadding.p6),
+                        child: XProductCard(
+                          product: state.listNewProducts![index],
+                        )),
+                  ));
+      },
     );
   }
 }
