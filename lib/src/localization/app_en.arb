@@ -69,5 +69,6 @@
     "warrantyPolicy": "Warranty policy",
     "origin": "Origin",
     "price": "Price",
-    "isRequired": "Required"
+    "isRequired": "Required",
+    "newProduct": "New products"
 }

@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
 Logger xLog = Logger();
@@ -82,6 +83,11 @@ class Utils {
     if (value == null) return false;
     return value is int ||
         num.parse(value.toStringAsFixed(1)) == value.roundToDouble();
+  }
+
+  static String createPriceText(double price) {
+    final formatter = NumberFormat('#,##0.###');
+    return "\$${formatter.format(price)}";
   }
 }
 
