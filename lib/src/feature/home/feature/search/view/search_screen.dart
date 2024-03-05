@@ -300,6 +300,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Future<void> _selectLocationBottomsheet(BuildContext context,
       {required String location}) async {
+    final isLocation = StringUtils.isNullOrEmpty(location);
     await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -310,7 +311,8 @@ class _SearchScreenState extends State<SearchScreen> {
           body: LayoutBuilder(
             builder: (context, constraints) => XLocationPicker(
               bottomsheetHeight: constraints.maxHeight,
-              initCountry: location,
+              initCountry: isLocation ? '' : location.split(', ')[1],
+              initState: isLocation ? '' : location.split(', ')[0],
             ),
           ),
         ),
