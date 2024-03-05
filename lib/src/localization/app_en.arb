@@ -70,5 +70,6 @@
     "origin": "Origin",
     "price": "Price",
     "isRequired": "Required",
-    "newProduct": "New products"
+    "newProduct": "New products",
+    "mostViewesProduct": "Most viewed products"
 }

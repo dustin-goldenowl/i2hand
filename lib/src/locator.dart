@@ -6,6 +6,8 @@ import 'package:get_it/get_it.dart';
 import 'package:i2hand/firebase_options.dart';
 import 'package:i2hand/src/config/device/app_infor.dart';
 import 'package:i2hand/src/local/database_app.dart';
+import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo.dart';
+import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo_impl.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo_impl.dart';
 import 'package:i2hand/src/network/data/category/category_repository.dart';
@@ -54,4 +56,6 @@ void _locator() {
   GetIt.I.registerLazySingleton<DatabaseApp>((() => DatabaseApp()));
   GetIt.I.registerLazySingleton<NewProductsLocalRepo>(
       (() => NewProductsLocalRepoImpl(GetIt.I())));
+  GetIt.I.registerLazySingleton<MostViewedProductsLocalRepo>(
+      (() => MostViewedProductsLocalRepoImpl(GetIt.I())));
 }

@@ -13,6 +13,7 @@ class MProduct with EquatableMixin {
   final String province;
   final List<String>? image;
   final bool isNew;
+  final int viewed;
 
   MProduct({
     required this.id,
@@ -21,6 +22,7 @@ class MProduct with EquatableMixin {
     this.province = '',
     this.image,
     this.isNew = false,
+    this.viewed = 0,
   });
 
   factory MProduct.empty() => MProduct(id: '');
@@ -30,6 +32,7 @@ class MProduct with EquatableMixin {
       double? price,
       String? province,
       bool? isNew,
+      int? viewed,
       List<String>? image}) {
     return MProduct(
       title: title ?? this.title,
@@ -38,15 +41,16 @@ class MProduct with EquatableMixin {
       province: province ?? this.province,
       image: image ?? this.image,
       isNew: isNew ?? this.isNew,
+      viewed: viewed ?? this.viewed,
     );
   }
 
   @override
-  List<Object?> get props => [title, id, price, province, image];
+  List<Object?> get props => [title, id, price, province, image, viewed, isNew];
 
   @override
   String toString() {
-    return 'MProduct{title=$title, id=$id, price=$price, province=$province, image=$image, isNew=$isNew}';
+    return 'MProduct{title=$title, id=$id, price=$price, province=$province, image=$image, isNew=$isNew, viewed=$viewed}';
   }
 
   Map<String, dynamic> toJson() => _$MProductToJson(this);
@@ -56,9 +60,15 @@ class MProduct with EquatableMixin {
 }
 
 extension MProductExt on MProduct {
-  NewProductsEntityData convertToLocalData() {
+  NewProductsEntityData convertToNewProductLocalData() {
     final jsonData = toJson();
     jsonData['image'] = (image ?? []).convertToUint8List();
     return NewProductsEntityData.fromJson(jsonData);
+  }
+
+  MostViewProductsEntityData convertToMostViewedProductLocalData() {
+    final jsonData = toJson();
+    jsonData['image'] = (image ?? []).convertToUint8List();
+    return MostViewProductsEntityData.fromJson(jsonData);
   }
 }

@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/local/database_app.dart';
+import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/data/product/product_reference.dart';
@@ -27,6 +28,7 @@ class ProductRepositoryImpl extends ProductRepository {
       final result = await productRef.getProducts();
       if (isNullOrEmpty(result.data)) return MResult.success([]);
       await _syncNewProductToLocal(result.data!);
+      await _syncMostViewedProductToLocal(result.data!);
       return result;
     } catch (e) {
       xLog.e(e);
@@ -59,8 +61,8 @@ class ProductRepositoryImpl extends ProductRepository {
       if (product.isNew) {
         await GetIt.I
             .get<NewProductsLocalRepo>()
-            .upsert(product.convertToLocalData());
-        await _syncImageData(product.convertToLocalData());
+            .upsert(product.convertToNewProductLocalData());
+        await _syncImageData(product.convertToNewProductLocalData());
       }
     }
   }
@@ -75,6 +77,39 @@ class ProductRepositoryImpl extends ProductRepository {
       if (thumbnailImage == null) return;
       await GetIt.I
           .get<NewProductsLocalRepo>()
+          .upsert(product.copyWith(image: Value(thumbnailImage)));
+    } catch (e) {
+      xLog.e(e);
+    }
+  }
+
+  Future<void> _syncMostViewedProductToLocal(List<MProduct> listProduct) async {
+    listProduct.sort((product, compareProduct) =>
+        compareProduct.viewed.compareTo(product.viewed));
+    int countProduct = 0;
+    for (int i = 0; i < listProduct.length; i++) {
+      // Get 100 most viewed product
+      if (countProduct >= 100) return;
+      if (listProduct[i].viewed >= 1000) {
+        await GetIt.I
+            .get<MostViewedProductsLocalRepo>()
+            .upsert(listProduct[i].convertToMostViewedProductLocalData());
+        await _syncImageMostView(
+            listProduct[i].convertToMostViewedProductLocalData());
+      }
+    }
+  }
+
+  Future<void> _syncImageMostView(MostViewProductsEntityData product) async {
+    try {
+      final images =
+          await productRefStorage.getAllInSubFolder(subFolderText: product.id);
+      if (isNullOrEmpty(images.data)) return;
+      final thumbnailImage =
+          await (images.data!.first as List<Reference>).first.getData();
+      if (thumbnailImage == null) return;
+      await GetIt.I
+          .get<MostViewedProductsLocalRepo>()
           .upsert(product.copyWith(image: Value(thumbnailImage)));
     } catch (e) {
       xLog.e(e);
