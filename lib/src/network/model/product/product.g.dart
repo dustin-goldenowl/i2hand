@@ -9,6 +9,12 @@ part of 'product.dart';
 MProduct _$MProductFromJson(Map<String, dynamic> json) => MProduct(
       id: json['id'] as String,
       title: json['title'] as String? ?? '',
+      time: json['time'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      attributes: (json['attributes'] as List<dynamic>?)
+          ?.map((e) => MAttributeData<dynamic>.fromJson(
+              e as Map<String, dynamic>, (value) => value))
+          .toList(),
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
       province: json['province'] as String? ?? '',
       image:
@@ -25,4 +31,11 @@ Map<String, dynamic> _$MProductToJson(MProduct instance) => <String, dynamic>{
       'image': instance.image,
       'isNew': instance.isNew,
       'viewed': instance.viewed,
+      'attributes': instance.attributes
+          ?.map((e) => e.toJson(
+                (value) => value,
+              ))
+          .toList(),
+      'time': instance.time,
+      'description': instance.description,
     };

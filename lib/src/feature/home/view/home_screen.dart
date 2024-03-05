@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/config/constants/app_const.dart';
 import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
 import 'package:i2hand/src/feature/global/logic/global_state.dart';
 import 'package:i2hand/src/feature/home/logic/home_bloc.dart';
@@ -106,7 +107,9 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(AppRadius.r16),
         color: AppColors.white,
       ),
-      child: const XCarousel(),
+      child: XCarousel(
+        items: AppConstantData.listNotificationBanner,
+      ),
     );
   }
 
@@ -271,8 +274,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _renderListMostViewedItems(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
-      buildWhen: (previous, current) =>
-          !listEquals(previous.listMostViewedProduct, current.listMostViewedProduct),
+      buildWhen: (previous, current) => !listEquals(
+          previous.listMostViewedProduct, current.listMostViewedProduct),
       builder: (context, state) {
         return SizedBox(
             height: AppSize.s250,

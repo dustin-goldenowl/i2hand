@@ -1,4 +1,5 @@
 import 'package:i2hand/src/local/database_app.dart';
+import 'package:i2hand/src/network/model/product/attribute/attribute.dart';
 import 'package:i2hand/src/utils/string_ext.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:equatable/equatable.dart';
@@ -14,10 +15,16 @@ class MProduct with EquatableMixin {
   final List<String>? image;
   final bool isNew;
   final int viewed;
+  final List<MAttributeData>? attributes;
+  final String time;
+  final String description;
 
   MProduct({
     required this.id,
     this.title = '',
+    this.time = '',
+    this.description = '',
+    this.attributes,
     this.price = 0.0,
     this.province = '',
     this.image,
@@ -26,14 +33,18 @@ class MProduct with EquatableMixin {
   });
 
   factory MProduct.empty() => MProduct(id: '');
-  MProduct copyWith(
-      {String? title,
-      String? id,
-      double? price,
-      String? province,
-      bool? isNew,
-      int? viewed,
-      List<String>? image}) {
+  MProduct copyWith({
+    String? title,
+    String? id,
+    double? price,
+    String? province,
+    bool? isNew,
+    int? viewed,
+    List<String>? image,
+    List<MAttributeData>? attributes,
+    String? time,
+    String? description,
+  }) {
     return MProduct(
       title: title ?? this.title,
       id: id ?? this.id,
@@ -42,15 +53,29 @@ class MProduct with EquatableMixin {
       image: image ?? this.image,
       isNew: isNew ?? this.isNew,
       viewed: viewed ?? this.viewed,
+      attributes: attributes ?? this.attributes,
+      time: time ?? this.time,
+      description: description ?? this.description,
     );
   }
 
   @override
-  List<Object?> get props => [title, id, price, province, image, viewed, isNew];
+  List<Object?> get props => [
+        title,
+        id,
+        price,
+        province,
+        image,
+        viewed,
+        isNew,
+        attributes,
+        time,
+        description
+      ];
 
   @override
   String toString() {
-    return 'MProduct{title=$title, id=$id, price=$price, province=$province, image=$image, isNew=$isNew, viewed=$viewed}';
+    return 'MProduct{title=$title, id=$id, price=$price, province=$province, image=$image, isNew=$isNew, viewed=$viewed, attributes=$attributes, time=$time, description=$description}';
   }
 
   Map<String, dynamic> toJson() => _$MProductToJson(this);

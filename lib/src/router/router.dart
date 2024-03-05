@@ -20,7 +20,9 @@ import 'package:i2hand/src/feature/dashboard/view/dash_board_screen.dart';
 import 'package:i2hand/src/feature/home/logic/home_bloc.dart';
 import 'package:i2hand/src/feature/home/view/home_screen.dart';
 import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
+import 'package:i2hand/src/feature/product/view/detail_product_screen.dart';
 import 'package:i2hand/src/feature/syncing_data/view/syncing_data_screen.dart';
+import 'package:i2hand/src/network/model/product/product.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/router/route_name.dart';
@@ -114,6 +116,12 @@ class AppRouter {
               ),
             ),
           ]),
+      GoRoute(
+        parentNavigatorKey: AppCoordinator.navigatorKey,
+        name: AppRouteNames.productDetail.name,
+        path: AppRouteNames.productDetail.path,
+        builder: (_, __) => ProductDetailScreen(product: MProduct.empty()),
+      ),
       ShellRoute(
         navigatorKey: AppCoordinator.shellKey,
         builder: (context, state, child) => DashBoardScreen(

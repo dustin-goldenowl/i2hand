@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:i2hand/src/network/model/product/product.dart';
+import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
@@ -20,6 +21,7 @@ class XProductCard extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       elevation: AppElevation.ev3,
       child: InkWell(
+        onTap: () => AppCoordinator.showProductDetailScreen(),
         child: Ink(
           width: AppSize.s150,
           padding: const EdgeInsets.all(AppPadding.p10),

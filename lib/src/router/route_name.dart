@@ -14,7 +14,8 @@ enum AppRouteNames {
   syncingData(path: '/syncingData'),
   forgotPassword(path: '/forgotPassword'),
   sendMailSuccess(path: '/sendMailSuccess'),
-  signUp(path: '/signUp');
+  signUp(path: '/signUp'),
+  productDetail(path: '/productDetail');
 
   const AppRouteNames({
     required this.path,
