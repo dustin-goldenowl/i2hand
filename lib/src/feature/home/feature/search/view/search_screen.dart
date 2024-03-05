@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
 import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
 import 'package:i2hand/src/feature/global/logic/global_state.dart';
+import 'package:i2hand/src/feature/home/feature/search/logic/search_bloc.dart';
+import 'package:i2hand/src/feature/home/feature/search/logic/search_state.dart';
 import 'package:i2hand/src/feature/home/feature/search/widget/location_picker.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/model/category/category.dart';
@@ -12,6 +14,7 @@ import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
+import 'package:i2hand/src/utils/string_utils.dart';
 import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/appbar/app_bar.dart';
 import 'package:i2hand/widget/avatar/avatar.dart';
@@ -59,47 +62,47 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _renderAppBar() {
     return Container(
       color: AppColors.white,
-      child: XAppBar(
-          titlePage: S.of(context).i2hand,
-          leading: IconButton(
-            onPressed: () => AppCoordinator.pop(),
-            icon: const Icon(
-              Icons.arrow_back,
-              size: AppSize.s24,
-            ),
-          ),
-          actions: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: XSearchInput(
-                  onChanged: (searchText) {},
-                  bgColor: AppColors.grey8,
-                  suffix: const Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.camera_alt_outlined,
-                        size: AppSize.s24,
-                        color: AppColors.blue,
-                      ),
-                    ],
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.r30),
-                    borderSide: const BorderSide(
-                        width: AppSize.s0, color: Colors.transparent),
-                  ),
-                  focusBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.r30),
-                    borderSide: const BorderSide(
-                        width: AppSize.s0, color: Colors.transparent),
-                  ),
+      child: BlocSelector<SearchBloc, SearchState, String>(
+        selector: (state) {
+          return state.searchText;
+        },
+        builder: (context, searchText) {
+          return XAppBar(
+              titlePage: !StringUtils.isNullOrEmpty(searchText)
+                  ? ''
+                  : S.of(context).i2hand,
+              leading: IconButton(
+                onPressed: () => AppCoordinator.pop(),
+                icon: const Icon(
+                  Icons.arrow_back,
+                  size: AppSize.s24,
                 ),
-              )
-            ],
-          )),
+              ),
+              actions: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: XSearchInput(
+                      onChanged: (searchText) => context
+                          .read<SearchBloc>()
+                          .onChangedSearchText(searchText),
+                      bgColor: AppColors.grey8,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.r30),
+                        borderSide: const BorderSide(
+                            width: AppSize.s0, color: Colors.transparent),
+                      ),
+                      focusBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.r30),
+                        borderSide: const BorderSide(
+                            width: AppSize.s0, color: Colors.transparent),
+                      ),
+                    ),
+                  )
+                ],
+              ));
+        },
+      ),
     );
   }
 
@@ -180,30 +183,41 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _renderCategory(MCategory category) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppPadding.p12),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          XAvatar(
-            imageSize: AppSize.s70,
-            isSelected: true,
-            memoryData: Uint8List.fromList(
-              category.image?.map((e) => int.parse(e)).toList() ?? [],
+    return BlocBuilder<SearchBloc, SearchState>(
+      buildWhen: (previous, current) =>
+          !listEquals(previous.selectedCategories, current.selectedCategories),
+      builder: (context, state) {
+        return GestureDetector(
+          onTap: () =>
+              context.read<SearchBloc>().onChangedFilterCategories(category),
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: AppPadding.p12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                XAvatar(
+                  imageSize: AppSize.s70,
+                  isSelected:
+                      context.read<SearchBloc>().isSelectedCategory(category),
+                  memoryData: Uint8List.fromList(
+                    category.image?.map((e) => int.parse(e)).toList() ?? [],
+                  ),
+                  imageType: ImageType.memory,
+                  borderColor: AppColors.white,
+                ),
+                Text(
+                  category.name,
+                  style: AppTextStyle.contentTexStyle
+                      .copyWith(color: AppColors.black),
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                )
+              ],
             ),
-            imageType: ImageType.memory,
-            borderColor: AppColors.white,
           ),
-          Text(
-            category.name,
-            style:
-                AppTextStyle.contentTexStyle.copyWith(color: AppColors.black),
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -238,18 +252,26 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _renderSelectPosition(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _selectLocationBottomsheet(context),
-      child: Padding(
-        padding: const EdgeInsets.only(left: AppPadding.p15),
-        child: Row(
-          children: [
-            _renderLocationIcon(),
-            _renderYourPosition(context),
-            _renderDownArrow()
-          ],
-        ),
-      ),
+    return BlocSelector<SearchBloc, SearchState, String?>(
+      selector: (state) {
+        return state.location;
+      },
+      builder: (context, location) {
+        return GestureDetector(
+          onTap: () =>
+              _selectLocationBottomsheet(context, location: location ?? ''),
+          child: Padding(
+            padding: const EdgeInsets.only(left: AppPadding.p15),
+            child: Row(
+              children: [
+                _renderLocationIcon(),
+                _renderYourPosition(context, location ?? ''),
+                _renderDownArrow()
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -261,8 +283,11 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _renderYourPosition(BuildContext context) {
-    return const Text('TP. HoChiMinh');
+  Widget _renderYourPosition(BuildContext context, String location) {
+    return Text(
+      location,
+      style: AppTextStyle.contentTexStyleBold,
+    );
   }
 
   Widget _renderDownArrow() {
@@ -273,7 +298,8 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Future<void> _selectLocationBottomsheet(BuildContext context) async {
+  Future<void> _selectLocationBottomsheet(BuildContext context,
+      {required String location}) async {
     await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -284,10 +310,7 @@ class _SearchScreenState extends State<SearchScreen> {
           body: LayoutBuilder(
             builder: (context, constraints) => XLocationPicker(
               bottomsheetHeight: constraints.maxHeight,
-              // TODO: add init country data
-              initCountry: '50',
-              initState: '50',
-              initCity: 'a',
+              initCountry: location,
             ),
           ),
         ),
@@ -295,9 +318,11 @@ class _SearchScreenState extends State<SearchScreen> {
       isScrollControlled: true,
       barrierColor: AppColors.black.withOpacity(0.6),
       enableDrag: true,
-      isDismissible: true,
+      isDismissible: false,
     ).then((value) {
-      if (value != null) {}
+      if (value != null) {
+        context.read<SearchBloc>().onChangedLocation(value);
+      }
     });
   }
 

@@ -2,24 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/data/country/api_services.dart';
+import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
-import 'package:i2hand/src/utils/debounce.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
 import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/button/fill_button.dart';
 
 class XLocationPicker extends StatefulWidget {
   final String initCountry;
-  final String initState;
-  final String initCity;
   final double bottomsheetHeight;
   const XLocationPicker({
     Key? key,
     required this.initCountry,
-    required this.initState,
-    required this.initCity,
     this.bottomsheetHeight = 0,
   }) : super(key: key);
 
@@ -30,15 +26,10 @@ class XLocationPicker extends StatefulWidget {
 class _XLocationPickerState extends State<XLocationPicker> {
   final double _buttonHeight = 150;
   final double _headerHeight = 50;
-  final Debounce _debounce = Debounce(const Duration(milliseconds: 500));
 
   late List<String> listCountry = [];
-  late List<String> listState = [];
-  late List<String> listCity = [];
 
   late String _country;
-  late String _state;
-  late String _city;
 
   @override
   void initState() {
@@ -48,7 +39,6 @@ class _XLocationPickerState extends State<XLocationPicker> {
 
   @override
   void dispose() {
-    _debounce.dispose();
     super.dispose();
   }
 
@@ -59,7 +49,6 @@ class _XLocationPickerState extends State<XLocationPicker> {
       listCountry = listCountries.map((e) => e.name).toList();
       _country = listCountry.first;
       setState(() {});
-      await _getListState(listCountry.first);
     } catch (e) {
       xLog.e(e);
       return;
@@ -67,50 +56,7 @@ class _XLocationPickerState extends State<XLocationPicker> {
   }
 
   void _onChangeCountry(String country) {
-    _debounce.call(() {
-      _country = country;
-      _getListState(country);
-    });
-  }
-
-  Future<void> _getListState(String country) async {
-    try {
-      final listStates = await ApiServices.fetchStateData(country);
-      if (isNullOrEmpty(listStates)) return;
-      listState = listStates.map((e) => e.name).toList();
-      _state = listState.first;
-      setState(() {});
-      await _getListCity(listState.first);
-    } catch (e) {
-      xLog.e(e);
-      return;
-    }
-  }
-
-  void _onChangeState(String state) {
-    _debounce.call(() {
-      _state = state;
-      _getListCity(state);
-    });
-  }
-
-  Future<void> _getListCity(String state) async {
-    try {
-      final listCities = await ApiServices.fetchCityData(state);
-      if (isNullOrEmpty(listCities)) return;
-      listCity = listCities.map((e) => e.name).toList();
-      _city = listCity.first;
-      setState(() {});
-    } catch (e) {
-      xLog.e(e);
-      return;
-    }
-  }
-
-  void _onChangeCity(String city) {
-    _debounce.call(() {
-      _city = city;
-    });
+    _country = country;
   }
 
   Widget _renderFadedContainer(
@@ -134,64 +80,49 @@ class _XLocationPickerState extends State<XLocationPicker> {
     );
   }
 
-  Widget _renderListItemAndroid(
-      {required List<String> list,
-      required Function(String) onChangeValue,
-      required int index,
-      required String label}) {
+  Widget _renderListItem({
+    required List<String> list,
+    required Function(String) onChangeValue,
+    required int index,
+  }) {
     return Expanded(
-      child: Column(
+      child: Stack(
         children: [
-          Text(
-            label,
-            style: AppTextStyle.labelStyle.copyWith(
-              color: AppColors.black,
-              fontSize: AppFontSize.f18,
-              fontWeight: FontWeight.bold,
+          Picker(
+            height: widget.bottomsheetHeight - _buttonHeight - _headerHeight,
+            adapter: PickerDataAdapter<String>(
+              pickerData: list,
             ),
+            diameterRatio: 20,
+            hideHeader: true,
+            onSelect: (Picker picker, int index, List<int> selected) {
+              onChangeValue(picker.adapter.text
+                  .substring(1, picker.adapter.text.length - 1));
+            },
+            selecteds: [index == -1 ? 0 : index],
+            selectedTextStyle: AppTextStyle.contentTexStyleBold,
+            selectionOverlay: Container(
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.065),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(AppRadius.r4),
+                ),
+              ),
+            ),
+            squeeze: 1,
+            textStyle: AppTextStyle.contentTexStyle,
+          ).makePicker(),
+          _renderFadedContainer(
+            Alignment.bottomCenter,
+            Alignment.topCenter,
           ),
-          Expanded(
-            child: Stack(
-              children: [
-                Picker(
-                  height:
-                      widget.bottomsheetHeight - _buttonHeight - _headerHeight,
-                  adapter: PickerDataAdapter<String>(
-                    pickerData: list,
-                  ),
-                  diameterRatio: 20,
-                  hideHeader: true,
-                  onSelect: (Picker picker, int index, List<int> selected) {
-                    onChangeValue(picker.adapter.text
-                        .substring(1, picker.adapter.text.length - 1));
-                  },
-                  selecteds: [index == -1 ? 0 : index],
-                  selectedTextStyle: AppTextStyle.contentTexStyleBold,
-                  selectionOverlay: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.065),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(AppRadius.r4),
-                      ),
-                    ),
-                  ),
-                  squeeze: 1,
-                  textStyle: AppTextStyle.contentTexStyle,
-                ).makePicker(),
-                _renderFadedContainer(
-                  Alignment.bottomCenter,
-                  Alignment.topCenter,
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: _renderFadedContainer(
-                    Alignment.topCenter,
-                    Alignment.bottomCenter,
-                  ),
-                ),
-              ],
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: _renderFadedContainer(
+              Alignment.topCenter,
+              Alignment.bottomCenter,
             ),
           ),
         ],
@@ -199,7 +130,7 @@ class _XLocationPickerState extends State<XLocationPicker> {
     );
   }
 
-  Widget _renderAndroidBloodPressurePicker(
+  Widget _renderScrollPicker(
     BuildContext context,
     double width,
   ) {
@@ -210,30 +141,11 @@ class _XLocationPickerState extends State<XLocationPicker> {
         children: [
           Row(
             children: [
-              _renderListItemAndroid(
+              _renderListItem(
                 list: listCountry,
                 onChangeValue: (country) => _onChangeCountry(country),
                 index: listCountry.indexWhere((element) => element == _country),
-                label: S.of(context).country,
               ),
-              const SizedBox(
-                width: AppPadding.p14,
-              ),
-              _renderListItemAndroid(
-                list: listState,
-                onChangeValue: (state) => _onChangeState(state),
-                index: listState.indexWhere((element) => element == _state),
-                label: S.of(context).state,
-              ),
-              const SizedBox(
-                width: AppPadding.p14,
-              ),
-              _renderListItemAndroid(
-                list: listCity,
-                onChangeValue: (city) => _onChangeCity(city),
-                index: listCity.indexWhere((element) => element == _city),
-                label: S.of(context).city,
-              )
             ],
           ),
         ],
@@ -256,7 +168,7 @@ class _XLocationPickerState extends State<XLocationPicker> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
-            child: _renderAndroidBloodPressurePicker(
+            child: _renderScrollPicker(
               context,
               width,
             ),
@@ -289,17 +201,18 @@ class _XLocationPickerState extends State<XLocationPicker> {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
-          _renderAddCartButton(context),
+          _renderCancelButton(context),
           XPaddingUtils.horizontalPadding(width: AppPadding.p16),
-          _renderBuyButton(context),
+          _renderDoneButton(context),
         ],
       ),
     );
   }
 
-  Widget _renderAddCartButton(BuildContext context) {
+  Widget _renderCancelButton(BuildContext context) {
     return Expanded(
       child: XFillButton(
+          onPressed: () => AppCoordinator.pop(),
           bgColor: AppColors.black3,
           label: Text(
             S.of(context).cancel,
@@ -309,13 +222,14 @@ class _XLocationPickerState extends State<XLocationPicker> {
     );
   }
 
-  Widget _renderBuyButton(BuildContext context) {
+  Widget _renderDoneButton(BuildContext context) {
     return Expanded(
       child: XFillButton(
+          onPressed: () => AppCoordinator.pop(_country),
           label: Text(
-        S.of(context).next,
-        style: AppTextStyle.buttonTextStylePrimary,
-      )),
+            S.of(context).done,
+            style: AppTextStyle.buttonTextStylePrimary,
+          )),
     );
   }
 }
