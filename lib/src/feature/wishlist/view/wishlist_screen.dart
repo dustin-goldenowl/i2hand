@@ -148,9 +148,6 @@ class _WishlistScreenState extends State<WishlistScreen> {
       child: Column(
         children: [
           _renderProduct(context),
-          _renderProduct(context),
-          _renderProduct(context),
-          _renderProduct(context),
         ],
       ),
     );

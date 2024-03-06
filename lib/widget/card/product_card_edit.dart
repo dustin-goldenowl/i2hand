@@ -8,7 +8,9 @@ import 'package:i2hand/src/utils/padding_utils.dart';
 import 'package:i2hand/widget/button/fill_button.dart';
 
 class XProductCartEdit extends StatelessWidget {
-  const XProductCartEdit({super.key});
+  const XProductCartEdit({super.key, this.title = '', this.price = ''});
+  final String title;
+  final String price;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +73,7 @@ class XProductCartEdit extends StatelessWidget {
 
   Widget _renderProductName(BuildContext context) {
     return Text(
-      'Lorem ipsum dolor sit amet consectetur.',
+      title,
       style: AppTextStyle.contentTexStyle.copyWith(
         color: AppColors.black,
         fontSize: AppFontSize.f12,
@@ -83,7 +85,7 @@ class XProductCartEdit extends StatelessWidget {
 
   Widget _renderProductPrice(BuildContext context) {
     return Text(
-      '\$17,00',
+      price,
       style: AppTextStyle.titleTextStyle.copyWith(fontSize: AppFontSize.f18),
     );
   }
