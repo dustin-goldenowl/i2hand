@@ -15,6 +15,10 @@ import 'package:i2hand/src/feature/authentication/sign_in/view/sign_in_screen.da
 import 'package:i2hand/src/feature/authentication/sign_up/logic/sign_up_bloc.dart';
 import 'package:i2hand/src/feature/authentication/sign_up/view/sign_up_screen.dart';
 import 'package:i2hand/src/feature/authentication/start/view/start_screen.dart';
+import 'package:i2hand/src/feature/cart/logic/cart_bloc.dart';
+import 'package:i2hand/src/feature/cart/logic/select_location_bloc.dart';
+import 'package:i2hand/src/feature/cart/view/cart_screen.dart';
+import 'package:i2hand/src/feature/cart/widget/select_location_page.dart';
 import 'package:i2hand/src/feature/dashboard/logic/dashboard_state.dart';
 import 'package:i2hand/src/feature/dashboard/view/dash_board_screen.dart';
 import 'package:i2hand/src/feature/home/feature/search/logic/search_bloc.dart';
@@ -154,6 +158,29 @@ class AppRouter {
                       return BlocProvider(
                         create: (context) => SearchBloc(),
                         child: const SearchScreen(),
+                      );
+                    }),
+              ]),
+          GoRoute(
+              path: AppRouteNames.cart.path,
+              name: AppRouteNames.cart.name,
+              pageBuilder: (context, state) => NoTransitionPage(
+                    child: BlocProvider(
+                      create: (context) => CartBloc(),
+                      child: const CartScreen(),
+                    ),
+                  ),
+              routes: [
+                GoRoute(
+                    parentNavigatorKey: AppCoordinator.navigatorKey,
+                    name: AppRouteNames.selectLocation.name,
+                    path: AppRouteNames.selectLocation.buildSubPathParam,
+                    builder: (__, state) {
+                      final address = state
+                          .pathParameters[AppRouteNames.selectLocation.param]!;
+                      return BlocProvider(
+                        create: (context) => SelectLocationBloc(address),
+                        child: const XSelectLocationPage(),
                       );
                     }),
               ])

@@ -56,4 +56,10 @@ class AppCoordinator {
 
   static void showSearchScreen() =>
       context.pushNamed(AppRouteNames.search.name);
+
+  static Future<String?> showSelectLocationPage({required String address}) async =>
+      await context.pushNamed(AppRouteNames.selectLocation.name,
+          pathParameters: {'address': address}).then((value) {
+        return value as String?;
+      });
 }

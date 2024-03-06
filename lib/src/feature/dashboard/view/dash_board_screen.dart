@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/src/feature/dashboard/item/navigation_bar.dart';
 import 'package:i2hand/src/feature/dashboard/logic/dashboard_bloc.dart';
 import 'package:i2hand/src/feature/dashboard/logic/dashboard_state.dart';
+import 'package:i2hand/src/service/life_cycle_mixin.dart';
 import 'package:i2hand/src/theme/colors.dart';
 
 class DashBoardScreen extends StatefulWidget {
@@ -20,7 +21,7 @@ class DashBoardScreen extends StatefulWidget {
   State<DashBoardScreen> createState() => _DashBoardScreenState();
 }
 
-class _DashBoardScreenState extends State<DashBoardScreen> {
+class _DashBoardScreenState extends State<DashBoardScreen> with LifecycleMixin {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -49,4 +50,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       ),
     );
   }
+
+  @override
+  void onPause() {}
+
+  @override
+  void onResume() {}
 }
