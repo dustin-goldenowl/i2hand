@@ -29,6 +29,7 @@ import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_bloc.dart';
 import 'package:i2hand/src/feature/product/view/detail_product_screen.dart';
 import 'package:i2hand/src/feature/syncing_data/view/syncing_data_screen.dart';
+import 'package:i2hand/src/feature/wishlist/view/wishlist_screen.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/router/route_name.dart';
@@ -183,7 +184,17 @@ class AppRouter {
                         child: const XSelectLocationPage(),
                       );
                     }),
-              ])
+              ]),
+          GoRoute(
+            path: AppRouteNames.wishlist.path,
+            name: AppRouteNames.wishlist.name,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (context) => CartBloc(),
+                child: const WishlistScreen(),
+              ),
+            ),
+          )
         ],
       ),
       ShellRoute(
