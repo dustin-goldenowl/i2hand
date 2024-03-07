@@ -41,8 +41,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> with LifecycleMixin {
                 style: ItemStyle.circle,
                 color: AppColors.black,
                 bgColor: AppColors.grey6,
-                onChangedTab: (index) =>
-                    context.read<DashboardBloc>().onDestinationSelected(index),
+                onChangedTab: (index) {
+                  if (index == 2) {
+                    return context
+                        .read<DashboardBloc>()
+                        .showListCategoriesBts(context);
+                  }
+                  context.read<DashboardBloc>().onDestinationSelected(index);
+                },
               ),
             ),
           );
