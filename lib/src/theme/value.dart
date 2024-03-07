@@ -5,6 +5,7 @@ class AppSize {
   static const s2 = 2.0;
   static const s3 = 3.0;
   static const s4 = 4.0;
+  static const s5 = 5.0;
   static const s6 = 6.0;
   static const s8 = 8.0;
   static const s10 = 10.0;
@@ -28,6 +29,7 @@ class AppSize {
   static const s130 = 130.0;
   static const s134 = 134.0;
   static const s150 = 150.0;
+  static const s170 = 170.0;
   static const s200 = 200.0;
   static const s220 = 220.0;
   static const s250 = 250.0;
@@ -38,6 +40,7 @@ class AppSize {
 
 class AppPadding {
   static const p0 = 0.0;
+  static const p1 = 1.0;
   static const p2 = 2.0;
   static const p4 = 4.0;
   static const p5 = 5.0;
@@ -62,6 +65,7 @@ class AppPadding {
 
 class AppMargin {
   static const m0 = 0.0;
+  static const m2 = 2.0;
   static const m4 = 4.0;
   static const m8 = 8.0;
   static const m10 = 10.0;
@@ -117,6 +121,7 @@ class AppElevation {
   static const ev1 = 1.0;
   static const ev2 = 2.0;
   static const ev3 = 3.0;
+  static const ev12 = 12.0;
 }
 
 class AppOpacity {

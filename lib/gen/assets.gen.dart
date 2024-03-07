@@ -131,6 +131,9 @@ class $AssetsJsonsGen {
 class $AssetsSvgGen {
   const $AssetsSvgGen();
 
+  /// File path: assets/svg/Check.svg
+  SvgGenImage get check => const SvgGenImage('assets/svg/Check.svg');
+
   /// File path: assets/svg/Favorites_empty.svg
   SvgGenImage get favoritesEmpty =>
       const SvgGenImage('assets/svg/Favorites_empty.svg');
@@ -204,6 +207,7 @@ class $AssetsSvgGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [
+        check,
         favoritesEmpty,
         account,
         bubbles1,

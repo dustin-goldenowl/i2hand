@@ -28,6 +28,8 @@ import 'package:i2hand/src/feature/home/view/home_screen.dart';
 import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_bloc.dart';
 import 'package:i2hand/src/feature/product/view/detail_product_screen.dart';
+import 'package:i2hand/src/feature/recently_viewed/logic/recently_viewed_bloc.dart';
+import 'package:i2hand/src/feature/recently_viewed/view/recently_viewed_screen.dart';
 import 'package:i2hand/src/feature/syncing_data/view/syncing_data_screen.dart';
 import 'package:i2hand/src/feature/wishlist/view/wishlist_screen.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
@@ -192,6 +194,16 @@ class AppRouter {
               child: BlocProvider(
                 create: (context) => CartBloc(),
                 child: const WishlistScreen(),
+              ),
+            ),
+          ),
+          GoRoute(
+            path: AppRouteNames.recentlyViewed.path,
+            name: AppRouteNames.recentlyViewed.name,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (context) => RecentlyViewedBloc(),
+                child: const RecentlyViewedScreen(),
               ),
             ),
           )

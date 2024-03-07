@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
+import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/decorations.dart';
 import 'package:i2hand/src/theme/styles.dart';
@@ -116,7 +117,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
       style: ButtonStyle(
         padding: MaterialStateProperty.all(EdgeInsets.zero),
       ),
-      onPressed: () {},
+      onPressed: () => AppCoordinator.showRecentlyViewed(),
       iconSize: AppFontSize.f20,
       icon: const Icon(
         Icons.arrow_forward,
