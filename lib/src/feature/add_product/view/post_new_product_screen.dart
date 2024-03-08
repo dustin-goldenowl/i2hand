@@ -65,7 +65,6 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
       child: XDropdownTextField(
         label: S.of(context).categories,
         isRequired: true,
-        value: 'Laptop',
       ),
     );
   }
