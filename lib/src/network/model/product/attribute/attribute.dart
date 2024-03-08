@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter/material.dart';
-import 'package:i2hand/src/config/enum/attribute.dart';
+import 'package:i2hand/src/config/enum/attribute_enum.dart';
 import 'package:equatable/equatable.dart';
 
 part 'attribute.g.dart';

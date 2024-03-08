@@ -18,7 +18,8 @@ enum AppRouteNames {
   search(path: '/search'),
   productDetail(path: '/productDetail', param: 'id'),
   selectLocation(path: 'selectLocation', param: 'address'),
-  recentlyViewed(path: '/recentlyViewed');
+  recentlyViewed(path: '/recentlyViewed'),
+  newPost(path: '/newPost', param: 'category');
 
   const AppRouteNames({
     required this.path,

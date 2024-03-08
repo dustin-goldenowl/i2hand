@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
-import 'package:i2hand/src/config/enum/attribute.dart';
+import 'package:i2hand/src/config/enum/attribute_enum.dart';
 import 'package:i2hand/src/feature/admin/home/logic/admin_home_bloc.dart';
 import 'package:i2hand/src/feature/admin/home/logic/admin_home_state.dart';
 import 'package:i2hand/src/feature/admin/home/widget/items/attribute_field.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
-import 'package:i2hand/src/network/model/attribute/attribute.dart';
+import 'package:i2hand/src/network/model/attribute/attribute_model.dart';
 import 'package:i2hand/src/network/model/category/category.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
@@ -208,13 +208,13 @@ class _XCategoryAttributesBottomSheetState
     return Padding(
       padding: const EdgeInsets.only(bottom: AppPadding.p12),
       child: XAttributeField(
-        attribute: attribute.attribute,
+        attribute: attribute.name,
         items: listAllAttribute,
         isRequired: attribute.isRequired,
         onChangedAttribute: (newAttribute) {
           context.read<AdminHomeBloc>().onChangedAttributes(
                 context,
-                oldAttribute: attribute.attribute,
+                oldAttribute: attribute.name,
                 attribute: newAttribute,
               );
         },
@@ -227,7 +227,7 @@ class _XCategoryAttributesBottomSheetState
         onChangedAttributeRequired: (isRequired) => context
             .read<AdminHomeBloc>()
             .onChangedAttributeRequired(
-                isRequired: isRequired, attribute: attribute.attribute),
+                isRequired: isRequired, attribute: attribute.name),
       ),
     );
   }

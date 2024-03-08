@@ -66,4 +66,8 @@ class AppCoordinator {
 
   static void showRecentlyViewed() =>
       context.pushNamed(AppRouteNames.recentlyViewed.name);
+
+  static void showAddNewProductScreen({required String category}) =>
+      context.pushNamed(AppRouteNames.newPost.name,
+          pathParameters: {'category': category});
 }

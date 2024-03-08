@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/config/constants/app_const.dart';
-import 'package:i2hand/src/config/enum/attribute.dart';
+import 'package:i2hand/src/config/enum/attribute_enum.dart';
 import 'package:i2hand/src/config/enum/options.dart';
 import 'package:i2hand/src/config/enum/picture_options_enum.dart';
 import 'package:i2hand/src/feature/admin/home/logic/admin_home_state.dart';
@@ -11,7 +11,7 @@ import 'package:i2hand/src/feature/admin/home/widget/admin_edit_category_bts.dar
 import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/data/category/category_repository.dart';
-import 'package:i2hand/src/network/model/attribute/attribute.dart';
+import 'package:i2hand/src/network/model/attribute/attribute_model.dart';
 import 'package:i2hand/src/network/model/category/category.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
@@ -150,7 +150,7 @@ class AdminHomeBloc extends BaseCubit<AdminHomeState> {
     List<MAttribute> listAttributes = [];
     for (String attribute in category.attributes) {
       listAttributes.add(
-        MAttribute(attribute: AttributeEnum.getAttributeEnum(attribute)),
+        MAttribute(name: AttributeEnum.getAttributeEnum(attribute)),
       );
     }
     emit(state.copyWith(listAttributes: listAttributes));
@@ -194,7 +194,7 @@ class AdminHomeBloc extends BaseCubit<AdminHomeState> {
         name: state.name.toLowerCase(),
         image: bytes,
         attributes: state.listAttributes
-            .map((e) => e.attribute.getAttributeText(context).toLowerCase())
+            .map((e) => e.name.getAttributeText(context).toLowerCase())
             .toList());
   }
 
@@ -220,19 +220,18 @@ class AdminHomeBloc extends BaseCubit<AdminHomeState> {
 
   MAttribute? _getNewAttribute() {
     if (state.listAttributes.isEmpty) {
-      return MAttribute(attribute: AttributeEnum.status);
+      return MAttribute(name: AttributeEnum.status);
     }
     for (int index = 0; index < state.listAllAttributes.length; index++) {
       bool isExist = false;
       for (MAttribute attribute in state.listAttributes) {
-        if (state.listAllAttributes[index].value == attribute.attribute) {
+        if (state.listAllAttributes[index].value == attribute.name) {
           isExist = true;
         }
       }
       if (!isExist) {
         return MAttribute(
-            attribute:
-                state.listAllAttributes[index].value ?? AttributeEnum.status);
+            name: state.listAllAttributes[index].value ?? AttributeEnum.status);
       }
     }
     return null;
@@ -244,7 +243,7 @@ class AdminHomeBloc extends BaseCubit<AdminHomeState> {
     final List<MAttribute> listAttributes = state.listAttributes;
     List<MAttribute> listAdd = listAttributes.take(100).toList();
     final index = _getAttributeIndex(oldAttribute);
-    listAdd.replaceRange(index, index + 1, [MAttribute(attribute: attribute!)]);
+    listAdd.replaceRange(index, index + 1, [MAttribute(name: attribute!)]);
     emit(state.copyWith(listAttributes: listAdd));
     _updateListAllAttributes(context);
   }
@@ -255,13 +254,13 @@ class AdminHomeBloc extends BaseCubit<AdminHomeState> {
     List<MAttribute> listAdd = listAttributes.take(100).toList();
     final index = _getAttributeIndex(attribute);
     listAdd.replaceRange(index, index + 1,
-        [MAttribute(attribute: attribute, isRequired: isRequired)]);
+        [MAttribute(name: attribute, isRequired: isRequired)]);
     emit(state.copyWith(listAttributes: listAdd));
   }
 
   int _getAttributeIndex(AttributeEnum attribute) {
     return state.listAttributes
-        .indexWhere((element) => element.attribute == attribute);
+        .indexWhere((element) => element.name == attribute);
   }
 
   void initListCategories(BuildContext context) {
@@ -289,12 +288,12 @@ class AdminHomeBloc extends BaseCubit<AdminHomeState> {
         listAllAttributes.take(100).toList();
     final listSelectedAttributes = state.listAttributes;
     for (MAttribute attribute in listSelectedAttributes) {
-      int index = _getAttributeEnumIndex(attribute.attribute);
+      int index = _getAttributeEnumIndex(attribute.name);
       listAfterChange.replaceRange(index, index + 1, [
         DropdownMenuItem<AttributeEnum>(
-          value: attribute.attribute,
+          value: attribute.name,
           enabled: false,
-          child: Text(attribute.attribute.getAttributeText(context),
+          child: Text(attribute.name.getAttributeText(context),
               style: AppTextStyle.contentTexStyleBold,
               overflow: TextOverflow.ellipsis),
         )
@@ -362,7 +361,7 @@ class AdminHomeBloc extends BaseCubit<AdminHomeState> {
     if (isNullOrEmpty(attribute)) return;
     final List<MAttribute> listAttributes = state.listAttributes;
     List<MAttribute> listAdd = listAttributes.take(100).toList();
-    listAdd.removeWhere((element) => element.attribute == attribute);
+    listAdd.removeWhere((element) => element.name == attribute);
     emit(state.copyWith(listAttributes: listAdd));
     _updateListAllAttributes(context);
   }
