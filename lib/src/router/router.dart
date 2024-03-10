@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:i2hand/src/feature/add_product/view/post_new_product_screen.dart';
 import 'package:i2hand/src/feature/admin/dashboard/logic/dashboard_state.dart';
 import 'package:i2hand/src/feature/admin/dashboard/view/admin_dashboard_screen.dart';
 import 'package:i2hand/src/feature/admin/home/logic/admin_home_bloc.dart';
@@ -135,6 +136,14 @@ class AppRouter {
               create: (context) => DetailProductBloc(id),
               child: const ProductDetailScreen(),
             );
+          }),
+      GoRoute(
+          parentNavigatorKey: AppCoordinator.navigatorKey,
+          name: AppRouteNames.newPost.name,
+          path: AppRouteNames.newPost.buildPathParam,
+          builder: (__, state) {
+            // final caregory = state.pathParameters[AppRouteNames.newPost.param]!;
+            return const PostNewProductScreen();
           }),
       ShellRoute(
         navigatorKey: AppCoordinator.shellKey,

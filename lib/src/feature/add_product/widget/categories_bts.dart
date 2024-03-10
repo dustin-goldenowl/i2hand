@@ -68,23 +68,32 @@ class XCategoriesBottomsheet extends StatelessWidget {
 
   Widget _renderCategoryItem(BuildContext context,
       {required MCategory category}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppPadding.p12),
-          child: Text(
-            category.name,
-            style:
-                AppTextStyle.contentTexStyle.copyWith(color: AppColors.black),
+    return GestureDetector(
+      onTap: () async {
+        AppCoordinator.pop();
+        Future.delayed(
+            const Duration(milliseconds: 200),
+            () => AppCoordinator.showAddNewProductScreen(
+                category: category.name));
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppPadding.p12),
+            child: Text(
+              category.name,
+              style:
+                  AppTextStyle.contentTexStyle.copyWith(color: AppColors.black),
+            ),
           ),
-        ),
-        const XDashSeparator(
-          height: AppSize.s0_5,
-          dashWidth: AppSize.s4,
-          color: AppColors.grey4,
-        ),
-      ],
+          const XDashSeparator(
+            height: AppSize.s0_5,
+            dashWidth: AppSize.s4,
+            color: AppColors.grey4,
+          ),
+        ],
+      ),
     );
   }
 }

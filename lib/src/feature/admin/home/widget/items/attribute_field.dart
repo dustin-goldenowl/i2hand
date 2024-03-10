@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:i2hand/src/config/enum/attribute.dart';
+import 'package:i2hand/src/config/enum/attribute_enum.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';

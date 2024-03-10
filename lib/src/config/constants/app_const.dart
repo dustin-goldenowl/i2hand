@@ -1,7 +1,7 @@
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:i2hand/gen/assets.gen.dart';
-import 'package:i2hand/src/config/enum/attribute.dart';
+import 'package:i2hand/src/config/enum/attribute_enum.dart';
 import 'package:i2hand/src/config/enum/options.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
