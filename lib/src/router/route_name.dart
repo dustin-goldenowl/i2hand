@@ -6,7 +6,7 @@ enum AppRouteNames {
   post(path: '/post'),
   cart(path: '/cart'),
   account(path: '/account'),
-  product(path: '/product'),
+  wishlist(path: '/wishlist'),
   onBoarding(path: '/onBoarding'),
   start(path: '/start'),
   loginEmail(path: '/loginEmail'),
@@ -17,7 +17,8 @@ enum AppRouteNames {
   signUp(path: '/signUp'),
   search(path: '/search'),
   productDetail(path: '/productDetail', param: 'id'),
-  selectLocation(path: 'selectLocation', param: 'address');
+  selectLocation(path: 'selectLocation', param: 'address'),
+  recentlyViewed(path: '/recentlyViewed');
 
   const AppRouteNames({
     required this.path,

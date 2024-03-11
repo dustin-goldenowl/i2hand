@@ -5,7 +5,7 @@ enum XNavigationBarItems {
     route: AppRouteNames.home,
   ),
   product(
-    route: AppRouteNames.product,
+    route: AppRouteNames.wishlist,
   ),
   post(
     route: AppRouteNames.post,

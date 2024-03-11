@@ -18,7 +18,7 @@ class AppColors {
   static const backgroundButton = Color(0xffE5EBFC);
   static const greyScaleLine = Color.fromARGB(255, 188, 194, 203);
   static const hintTextColor = Color(0xFF8C8A8A);
-  static const red = Color.fromARGB(255, 248, 103, 103);
+  static const red = Color.fromARGB(255, 255, 140, 140);
   static const green = Color.fromARGB(255, 61, 164, 61);
   static const greenLight = Color.fromARGB(255, 117, 179, 117);
   static const yellowIcon = Color(0xFFE6BB66);

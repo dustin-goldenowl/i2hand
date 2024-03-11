@@ -12,6 +12,7 @@ import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
 import 'package:i2hand/src/utils/string_utils.dart';
 import 'package:i2hand/widget/appbar/app_bar.dart';
+import 'package:i2hand/widget/container/circle_empty_container.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -125,10 +126,8 @@ class _CartScreenState extends State<CartScreen> {
             boxShadow: AppDecorations.shadowTwo,
             borderRadius: BorderRadius.circular(AppRadius.r100),
           ),
-          child: CircleAvatar(
-            backgroundColor: AppColors.white,
-            radius: AppSize.s67,
-            child: Assets.svg.cartApp.svg(width: AppSize.s105),
+          child: XCircleEmptyContainer(
+            emptyIcon: Assets.svg.cartApp.svg(width: AppSize.s105),
           )),
     );
   }

@@ -88,5 +88,10 @@
     "fromYourWishlist": "From Your Wishlist",
     "save": "Save",
     "address": "Address",
-    "yourAddress": "Your address:"
+    "yourAddress": "Your address:",
+    "wishlist": "Wishlist",
+    "recentlyViewed": "Recently viewed",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tryAgain": "Try again"
 }
