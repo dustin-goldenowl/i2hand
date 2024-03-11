@@ -9,7 +9,6 @@ import 'package:i2hand/src/utils/utils.dart';
 
 class ApiUrls {
   final Uri countryPhoneCodeApi = Uri.parse(AppLink.urlGetCountryPhoneCode);
-  final Uri getToken = Uri.parse(AppLink.urlGetToken);
   final Uri countryApi = Uri.parse(AppLink.urlGetCountry);
 }
 
@@ -46,35 +45,9 @@ class ApiServices {
     });
   }
 
-  static Future<String> _getAccessToken() async {
-    final headers = {
-      "Accept": "application/json",
-      "api-token":
-          "dY0ftewbfn6EavlhOz2Flzd9OsfuhpocMBgDdJ7Hqfdqro73m-EouE_AmXd6bEyTBGA",
-      "user-email": "lance.dinh.goldenowl@gmail.com"
-    };
-    return http
-        .get(ApiUrls().getToken, headers: headers)
-        .then((http.Response response) {
-      final String jsonBody = response.body;
-      final int statusCode = response.statusCode;
-
-      if (statusCode != 200 || isNullOrEmpty(jsonBody)) {
-        xLog.e(response.reasonPhrase);
-        throw Exception(S.text.someThingWentWrong);
-      }
-
-      const JsonDecoder decoder = JsonDecoder();
-      final accessToken = decoder.convert(jsonBody);
-      return accessToken['auth_token'];
-    });
-  }
-
   static Future<List<MLocation>> fetchCountryData() async {
-    final accessToken = await _getAccessToken();
     final headers = {
-      "Authorization": "Bearer $accessToken",
-      "Accept": "application/json"
+      'X-CSCAPI-KEY': 'OFhVM0tTOERHandleEplSnRmODR5b2M1SkxXQWpEUm1nMjBXZVNHaA=='
     };
     return http
         .get(ApiUrls().countryApi, headers: headers)
@@ -91,20 +64,18 @@ class ApiServices {
       final data = decoder.convert(jsonBody);
       List<MLocation> countryData = [];
       for (Map<String, dynamic> country in data) {
-        countryData.add(MLocation(name: country['country_name']));
+        countryData.add(MLocation.fromJson(country));
       }
       return countryData;
     });
   }
 
-  static Future<List<MLocation>> fetchStateData(String country) async {
-    final accessToken = await _getAccessToken();
+  static Future<List<MLocation>> fetchStateData(String ciso2) async {
     final headers = {
-      "Authorization": "Bearer $accessToken",
-      "Accept": "application/json"
+      'X-CSCAPI-KEY': 'OFhVM0tTOERHandleEplSnRmODR5b2M1SkxXQWpEUm1nMjBXZVNHaA=='
     };
     return http
-        .get(Uri.parse('${AppLink.urlGetState}$country'), headers: headers)
+        .get(Uri.parse('https://api.countrystatecity.in/v1/countries/$ciso2/states'), headers: headers)
         .then((http.Response response) {
       final String jsonBody = response.body;
       final int statusCode = response.statusCode;
@@ -118,37 +89,9 @@ class ApiServices {
       final data = decoder.convert(jsonBody);
       List<MLocation> stateData = [];
       for (Map<String, dynamic> state in data) {
-        stateData.add(MLocation(name: state['state_name']));
+        stateData.add(MLocation.fromJson(state));
       }
       return stateData;
-    });
-  }
-
-  static Future<List<MLocation>> fetchCityData(String state) async {
-    final accessToken = await _getAccessToken();
-    final headers = {
-      "Authorization": "Bearer $accessToken",
-      "Accept": "application/json"
-    };
-    return http
-        .get(Uri.parse('${AppLink.urlGetCity}$state'), headers: headers)
-        .then((http.Response response) {
-      final String jsonBody = response.body;
-      final int statusCode = response.statusCode;
-
-      if (statusCode != 200 || isNullOrEmpty(jsonBody)) {
-        xLog.e(response.reasonPhrase);
-        throw Exception(S.text.someThingWentWrong);
-      }
-
-      const JsonDecoder decoder = JsonDecoder();
-      final data = decoder.convert(jsonBody);
-      List<MLocation> cityData = [];
-      for (Map<String, dynamic> city in data) {
-        cityData.add(MLocation(name: city['city_name']));
-      }
-      xLog.e(cityData);
-      return cityData;
     });
   }
 }
