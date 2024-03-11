@@ -23,6 +23,9 @@ extension DateTimeFormat on DateTime {
   /// Formatted date: Jan 2024
   String get toMMMy => DateFormat("MMM y").format(this);
 
+  /// Formatted date: Jan, 18
+  String get toMMMd => DateFormat("MMM, d").format(this);
+
   bool isSameMomentIn({
     DurationEnum sameIn = DurationEnum.second,
     required DateTime otherTime,
