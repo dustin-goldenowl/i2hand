@@ -76,7 +76,8 @@ class _XLocationPickerState extends State<XLocationPicker> {
 
   Future<void> _getListState(MLocation country) async {
     try {
-      listStateData = await ApiServices.fetchStateData(country.iso2 ?? '');
+      listStateData =
+          await ApiServices.fetchStateDataByCountry(country.iso2 ?? '');
       if (isNullOrEmpty(listStateData)) return;
       listState = listStateData.map((e) => e.name).toList();
       _state = listState.first;

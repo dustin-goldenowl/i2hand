@@ -72,6 +72,10 @@ class $AssetsJsonsGen {
   LottieGenImage get category =>
       const LottieGenImage('assets/jsons/category.json');
 
+  /// File path: assets/jsons/empty_wishlist.json
+  LottieGenImage get emptyWishlist =>
+      const LottieGenImage('assets/jsons/empty_wishlist.json');
+
   /// File path: assets/jsons/female-avatar.json
   LottieGenImage get femaleAvatar =>
       const LottieGenImage('assets/jsons/female-avatar.json');
@@ -111,6 +115,7 @@ class $AssetsJsonsGen {
         account,
         cart,
         category,
+        emptyWishlist,
         femaleAvatar,
         home,
         loadingPicture,
@@ -146,6 +151,9 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/cart.svg
   SvgGenImage get cart => const SvgGenImage('assets/svg/cart.svg');
+
+  /// File path: assets/svg/cart_app.svg
+  SvgGenImage get cartApp => const SvgGenImage('assets/svg/cart_app.svg');
 
   /// File path: assets/svg/category.svg
   SvgGenImage get category => const SvgGenImage('assets/svg/category.svg');
@@ -199,6 +207,7 @@ class $AssetsSvgGen {
         bubbles4,
         bubbles5,
         cart,
+        cartApp,
         category,
         devices,
         emptyAttributes,

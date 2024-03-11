@@ -9,6 +9,14 @@ class AppDecorations {
     ),
   ];
 
+  static final shadowTwo = [
+    BoxShadow(
+      offset: const Offset(0, 3),
+      blurRadius: 3,
+      color: Colors.black.withOpacity(.1),
+    ),
+  ];
+
   static final shadowReverse = [
     BoxShadow(
       offset: const Offset(-2, -2),

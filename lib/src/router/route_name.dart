@@ -16,7 +16,8 @@ enum AppRouteNames {
   sendMailSuccess(path: '/sendMailSuccess'),
   signUp(path: '/signUp'),
   search(path: '/search'),
-  productDetail(path: '/productDetail', param: 'id');
+  productDetail(path: '/productDetail', param: 'id'),
+  selectLocation(path: 'selectLocation', param: 'address');
 
   const AppRouteNames({
     required this.path,

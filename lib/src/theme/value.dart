@@ -19,6 +19,7 @@ class AppSize {
   static const s44 = 44.0;
   static const s48 = 48.0;
   static const s60 = 60.0;
+  static const s67 = 67.0;
   static const s70 = 70.0;
   static const s90 = 90.0;
   static const s100 = 100.0;
@@ -50,6 +51,7 @@ class AppPadding {
   static const p20 = 20.0;
   static const p23 = 23.0;
   static const p30 = 30.0;
+  static const p40 = 40.0;
   static const p45 = 45.0;
   static const p53 = 53.0;
   static const p59 = 59.0;
@@ -106,6 +108,7 @@ class AppRadius {
   static const r20 = 20.0;
   static const r30 = 30.0;
   static const r40 = 40.0;
+  static const r100 = 100.0;
 }
 
 class AppElevation {

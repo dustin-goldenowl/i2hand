@@ -81,5 +81,12 @@
     "selectLocation": "Select location",
     "nearYou": "Near you",
     "allProducts": "All products",
-    "noProductFound": "No product found"
+    "noProductFound": "No product found",
+    "cart": "Cart",
+    "shippingAddress": "Shipping Address",
+    "pleaseAddYourAddress": "Please add your address",
+    "fromYourWishlist": "From Your Wishlist",
+    "save": "Save",
+    "address": "Address",
+    "yourAddress": "Your address:"
 }
