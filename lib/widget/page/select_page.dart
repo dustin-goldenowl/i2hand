@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
+import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/model/attribute/attribute_model.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
+import 'package:i2hand/src/utils/padding_utils.dart';
+import 'package:i2hand/src/utils/string_ext.dart';
 import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/separate/dash_separate.dart';
 
 class XSelectPage extends StatefulWidget {
-  final ValueChanged<String> onChangedValue;
-  final String? currentValue;
-  final MAttribute attribute;
+  final String currentValue;
+  final String attributeName;
 
   const XSelectPage({
     Key? key,
-    required this.onChangedValue,
-    this.currentValue,
-    required this.attribute,
+    required this.currentValue,
+    required this.attributeName,
   }) : super(key: key);
 
   @override
@@ -24,9 +27,37 @@ class XSelectPage extends StatefulWidget {
 }
 
 class _XSelectPageState extends State<XSelectPage> {
+  late List<String> _listValue;
+
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    widget.attributeName == S.of(context).categories
+        ? _getListCategory()
+        : _getListValue();
+  }
+
+  void _getListCategory() {
+    final data = context.read<GlobalBloc>().state.listCategories;
+    _listValue = data.map((e) => e.name).toList();
+  }
+
+  void _getListValue() {
+    final data = context.read<GlobalBloc>().state.listAttributeData;
+    _listValue = data
+            .singleWhere(
+              (e) =>
+                  e.name.getAttributeText(context).toLowerCase() ==
+                  widget.attributeName.toLowerCase(),
+              orElse: () => MAttribute.empty(),
+            )
+            .data ??
+        [];
   }
 
   @override
@@ -43,7 +74,7 @@ class _XSelectPageState extends State<XSelectPage> {
     return AppBar(
       backgroundColor: Colors.transparent,
       title: Text(
-        widget.attribute.name.getAttributeText(context),
+        widget.attributeName.capitalizeEachText(),
         style: AppTextStyle.titleTextStyle,
       ),
       leading: IconButton(
@@ -57,18 +88,20 @@ class _XSelectPageState extends State<XSelectPage> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Flexible(
-            child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
-                child: isNullOrEmpty(widget.attribute.data)
-                    ? const SizedBox.shrink()
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: widget.attribute.data!.length,
-                        itemBuilder: (_, index) {
-                          return _renderAttributeData(
-                              widget.attribute.data![index]);
-                        },
-                      )))
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
+            child: isNullOrEmpty(_listValue)
+                ? const SizedBox.shrink()
+                : ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _listValue.length,
+                    itemBuilder: (_, index) {
+                      return _renderAttributeData(_listValue[index]);
+                    },
+                  ),
+          ),
+        ),
+        XPaddingUtils.verticalPadding(height: AppPadding.p20),
       ],
     );
   }
@@ -90,10 +123,12 @@ class _XSelectPageState extends State<XSelectPage> {
                     style: AppTextStyle.contentTexStyle,
                   ),
                 ),
-                const Icon(
-                  Icons.check,
-                  color: AppColors.green,
-                )
+                attributeData == widget.currentValue
+                    ? const Icon(
+                        Icons.check,
+                        color: AppColors.green,
+                      )
+                    : const SizedBox.shrink()
               ],
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:i2hand/src/feature/add_product/logic/add_product_bloc.dart';
 import 'package:i2hand/src/feature/add_product/view/post_new_product_screen.dart';
 import 'package:i2hand/src/feature/admin/dashboard/logic/dashboard_state.dart';
 import 'package:i2hand/src/feature/admin/dashboard/view/admin_dashboard_screen.dart';
@@ -37,6 +38,7 @@ import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/router/route_name.dart';
 import 'package:i2hand/src/service/shared_pref.dart';
+import 'package:i2hand/widget/page/select_page.dart';
 
 class AppRouter {
   final router = GoRouter(
@@ -138,13 +140,32 @@ class AppRouter {
             );
           }),
       GoRoute(
-          parentNavigatorKey: AppCoordinator.navigatorKey,
-          name: AppRouteNames.newPost.name,
-          path: AppRouteNames.newPost.buildPathParam,
-          builder: (__, state) {
-            // final caregory = state.pathParameters[AppRouteNames.newPost.param]!;
-            return const PostNewProductScreen();
-          }),
+        parentNavigatorKey: AppCoordinator.navigatorKey,
+        name: AppRouteNames.newPost.name,
+        path: AppRouteNames.newPost.buildPathParam,
+        builder: (__, state) {
+          final category = state.pathParameters[AppRouteNames.newPost.param]!;
+          return BlocProvider(
+            create: (context) => AddProductBloc(category),
+            child: const PostNewProductScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: AppCoordinator.navigatorKey,
+        name: AppRouteNames.selectAttribute.name,
+        path: AppRouteNames.selectAttribute.buildPath2Param,
+        builder: (_, state) {
+          final attributeName =
+              state.pathParameters[AppRouteNames.selectAttribute.param]!;
+          final selectedValue =
+              state.pathParameters[AppRouteNames.selectAttribute.param2]!;
+          return XSelectPage(
+            currentValue: selectedValue,
+            attributeName: attributeName,
+          );
+        },
+      ),
       ShellRoute(
         navigatorKey: AppCoordinator.shellKey,
         builder: (context, state, child) => DashBoardScreen(

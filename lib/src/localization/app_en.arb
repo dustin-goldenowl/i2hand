@@ -58,8 +58,9 @@
     "status": "Status",
     "images": "Images",
     "videos": "Videos",
-    "agency": "Agency",
-    "microProcessor": "Micro processor",
+    "agencyPhone": "Agency phone",
+    "agencyLaptop": "Agency laptop",
+    "microProcessor": "Microprocessor",
     "ram": "Ram",
     "hardWare": "HardWare",
     "phoneLine": "Phone line",
@@ -105,5 +106,6 @@
     "postTitle": "Post's title",
     "description": "Description",
     "productOriginAndCondition": " - Product origin and condition\n - Used time\n - Warranty if any\n - Repairs, upgrades, accessories\n - Product return policy\n - Delivery and return address",
-    "post": "Post"
+    "post": "Post",
+    "color": "Color"
 }

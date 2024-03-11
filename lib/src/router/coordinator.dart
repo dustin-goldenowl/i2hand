@@ -70,4 +70,15 @@ class AppCoordinator {
   static void showAddNewProductScreen({required String category}) =>
       context.pushNamed(AppRouteNames.newPost.name,
           pathParameters: {'category': category});
+
+  static Future<String?> showSelectedAttributeValueScreen(
+          {required String attributeName,
+          required String selectedValue}) async =>
+      await context
+          .pushNamed(AppRouteNames.selectAttribute.name, pathParameters: {
+        'attribute': attributeName,
+        'selectedValue': selectedValue,
+      }).then((value) {
+        return value as String?;
+      });
 }

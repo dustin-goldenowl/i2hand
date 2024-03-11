@@ -24,6 +24,8 @@ class MAttribute with EquatableMixin {
         data: data ?? this.data);
   }
 
+  factory MAttribute.empty() => MAttribute(name: AttributeEnum.status);
+
   @override
   String toString() {
     return 'MAttribute{name=$name, isRequired=$isRequired, data=$data}';

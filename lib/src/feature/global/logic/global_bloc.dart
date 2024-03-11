@@ -1,12 +1,17 @@
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/feature/global/logic/global_state.dart';
+import 'package:i2hand/src/network/data/attribute/attribute_repository.dart';
 import 'package:i2hand/src/network/data/category/category_repository.dart';
 import 'package:i2hand/src/network/model/category/category.dart';
 import 'package:i2hand/src/utils/base_cubit.dart';
 import 'package:i2hand/src/utils/utils.dart';
 
 class GlobalBloc extends BaseCubit<GlobalState> {
-  GlobalBloc() : super(GlobalState(listCategories: List.empty(growable: true)));
+  GlobalBloc()
+      : super(GlobalState(
+          listCategories: List.empty(growable: true),
+          listAttributeData: List.empty(growable: true),
+        ));
 
   Future<void> getListCategories() async {
     try {
@@ -42,5 +47,16 @@ class GlobalBloc extends BaseCubit<GlobalState> {
 
   bool checkInvalidIndex(int index) {
     return (2 * index + 1) >= state.listCategories.length;
+  }
+
+  Future<void> getListAttributes() async {
+    try {
+      final result = await GetIt.I.get<AttributeRepository>().getAttributes();
+      if (!isNullOrEmpty(result.data)) {
+        emit(state.copyWith(listAttributeData: result.data!));
+      }
+    } catch (e) {
+      xLog.e(e);
+    }
   }
 }

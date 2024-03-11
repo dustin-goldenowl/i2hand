@@ -12,16 +12,18 @@ class XDropdownTextField extends StatelessWidget {
     required this.label,
     this.isRequired = false,
     this.value,
+    this.onTap,
   });
   final String label;
   final String? value;
   final bool isRequired;
+  final Function? onTap;
 
   @override
   Widget build(BuildContext context) {
     final isHasValue = !StringUtils.isNullOrEmpty(value);
     return GestureDetector(
-      onTap: () {},
+      onTap: () => onTap?.call(),
       child: Container(
         constraints: const BoxConstraints(minHeight: AppSize.s60),
         decoration: BoxDecoration(

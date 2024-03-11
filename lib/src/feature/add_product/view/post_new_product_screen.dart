@@ -1,12 +1,19 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/feature/add_product/logic/add_product_bloc.dart';
+import 'package:i2hand/src/feature/add_product/logic/add_product_state.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
+import 'package:i2hand/src/utils/string_ext.dart';
+import 'package:i2hand/src/utils/string_utils.dart';
+import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/appbar/app_bar.dart';
 import 'package:i2hand/widget/button/fill_button.dart';
 import 'package:i2hand/widget/text_field/dropdown_text_field.dart';
@@ -59,13 +66,26 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
   }
 
   Widget _renderSelectedCategorySection(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          left: AppPadding.p15, right: AppPadding.p15, bottom: AppPadding.p10),
-      child: XDropdownTextField(
-        label: S.of(context).categories,
-        isRequired: true,
-      ),
+    return BlocBuilder<AddProductBloc, AddProductState>(
+      buildWhen: (pre, cur) => pre.selectedCategory != cur.selectedCategory,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(
+              left: AppPadding.p15,
+              right: AppPadding.p15,
+              bottom: AppPadding.p10),
+          child: XDropdownTextField(
+            label: S.of(context).categories,
+            isRequired: true,
+            value: state.selectedCategory.name,
+            onTap: () => context.read<AddProductBloc>().showSelectedPage(
+                  selectedValue: state.selectedCategory.name,
+                  attributeName: S.of(context).categories,
+                  isSelectCategory: true,
+                ),
+          ),
+        );
+      },
     );
   }
 
@@ -73,7 +93,6 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
     return Column(
       children: [
         _renderTitleText(context, title: S.of(context).detailInfor),
-        _renderAssetsSection(context),
         _renderListAttributes(context),
       ],
     );
@@ -94,48 +113,89 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
   }
 
   Widget _renderListAttributes(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppPadding.p15),
-      child: Column(
-        children: [
-          XPaddingUtils.verticalPadding(height: AppPadding.p10),
-          XDropdownTextField(
-            label: S.of(context).status,
-            isRequired: true,
+    return BlocBuilder<AddProductBloc, AddProductState>(
+      buildWhen: (previous, current) {
+        return previous.selectedCategory != current.selectedCategory ||
+            !mapEquals(previous.attributesData, current.attributesData);
+      },
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppPadding.p15),
+          child: Column(
+            children: getListAttributes(
+              context,
+              listAttributeNames: state.selectedCategory.attributes,
+              attributesData: state.attributesData,
+            ),
           ),
-          XPaddingUtils.verticalPadding(height: AppPadding.p10),
-          XDropdownTextField(
-            label: S.of(context).agency,
-            isRequired: true,
-          ),
-          XPaddingUtils.verticalPadding(height: AppPadding.p10),
-          XDropdownTextField(
-            label: S.of(context).screenSize,
-          ),
-          XPaddingUtils.verticalPadding(height: AppPadding.p10),
-          XDropdownTextField(
-            label: S.of(context).price,
-            isRequired: true,
-          ),
-          XPaddingUtils.verticalPadding(height: AppPadding.p10),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _renderAssetsSection(BuildContext context) {
-    return Column(
-      children: [
-        _renderImageSection(context),
-        _renderVideoSection(context),
-      ],
-    );
+  List<Widget> getListAttributes(
+    BuildContext context, {
+    required List<String> listAttributeNames,
+    required Map<String, String> attributesData,
+  }) {
+    List<Widget> listAttributes = [];
+    for (String attributeName in listAttributeNames) {
+      switch (attributeName) {
+        case 'images':
+          listAttributes.add(_renderImageSection(context));
+        case 'videos':
+          listAttributes.add(_renderVideoSection(context));
+        case 'price':
+          listAttributes
+              .add(XPaddingUtils.verticalPadding(height: AppPadding.p10));
+          listAttributes.add(XTextFieldInsideLabel(
+            isRequired: true,
+            label: attributeName.capitalizeEachText(),
+            onChanged: (price) {},
+            hintText: S.of(context).price.capitalize(),
+          ));
+          listAttributes
+              .add(XPaddingUtils.verticalPadding(height: AppPadding.p10));
+        default:
+          listAttributes.add(
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppPadding.p5),
+              child: XDropdownTextField(
+                label: attributeName.capitalizeEachText(),
+                isRequired: true,
+                value: attributesData[attributeName.toLowerCase()],
+                onTap: () => context.read<AddProductBloc>().showSelectedPage(
+                      selectedValue:
+                          attributesData[attributeName.toLowerCase()] ?? '1',
+                      attributeName: attributeName,
+                    ),
+              ),
+            ),
+          );
+      }
+    }
+    return listAttributes;
   }
 
   Widget _renderImageSection(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppPadding.p15, vertical: AppPadding.p10),
+    return BlocBuilder<AddProductBloc, AddProductState>(
+      buildWhen: (previous, current) =>
+          !listEquals(previous.listImage, current.listImage),
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppPadding.p15, vertical: AppPadding.p10),
+          child: isNullOrEmpty(state.listImage)
+              ? _renderEmptyImageSection(context)
+              : _renderHasImageSection(context, listImage: state.listImage!),
+        );
+      },
+    );
+  }
+
+  Widget _renderEmptyImageSection(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.read<AddProductBloc>().onTapAddImage(context),
       child: DottedBorder(
         color: AppColors.black2,
         borderType: BorderType.RRect,
@@ -163,6 +223,104 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
                 ),
               )
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _renderHasImageSection(context, {required List<Uint8List> listImage}) {
+    return Container(
+      width: double.infinity,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: _renderListImage(listImage),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _renderListImage(List<Uint8List> listImage) {
+    List<Widget> listImageWidget = [];
+    listImageWidget.add(_renderAddMoreImage(context));
+    for (Uint8List image in listImage) {
+      listImageWidget.add(
+        _renderImage(image),
+      );
+    }
+    return listImageWidget;
+  }
+
+  Widget _renderImage(Uint8List image) {
+    return Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppPadding.p5),
+        child: Stack(
+          fit: StackFit.passthrough,
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              width: AppSize.s90,
+              height: AppSize.s90,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppRadius.r8),
+              ),
+              clipBehavior: Clip.hardEdge,
+              child: Image.memory(image),
+            ),
+            _renderRemoveImageIcon(),
+          ],
+        ));
+  }
+
+  Widget _renderRemoveImageIcon() {
+    return Positioned(
+      top: -5,
+      right: -5,
+      child: IconButton.filled(
+        onPressed: () {},
+        icon: const Icon(Icons.clear),
+        iconSize: AppSize.s14,
+        color: AppColors.white,
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              AppColors.black3.withOpacity(AppOpacity.o05),
+            ),
+            padding:
+                MaterialStateProperty.all(const EdgeInsets.all(AppPadding.p4)),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            minimumSize: MaterialStateProperty.all(Size.zero)),
+      ),
+    );
+  }
+
+  Widget _renderAddMoreImage(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(right: AppMargin.m4),
+      child: GestureDetector(
+        onTap: () => context.read<AddProductBloc>().onTapAddImage(context),
+        child: DottedBorder(
+          color: AppColors.black2,
+          borderType: BorderType.RRect,
+          padding: EdgeInsets.zero,
+          radius: const Radius.circular(AppRadius.r10),
+          child: Container(
+            width: AppSize.s90,
+            height: AppSize.s90,
+            padding: const EdgeInsets.symmetric(vertical: AppPadding.p23),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppRadius.r10),
+              color: AppColors.backgroundButton,
+            ),
+            child: const Center(
+              child: Icon(
+                Icons.camera_alt_rounded,
+                color: AppColors.primary,
+                size: AppSize.s30,
+              ),
+            ),
           ),
         ),
       ),
@@ -214,6 +372,7 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
           hintText: S.of(context).postTitle,
           label: S.of(context).postTitle,
           isRequired: true,
+          onChanged: (title) => context.read<AddProductBloc>().setTitle(title),
         ),
         _renderPostInforTextField(
           context,
@@ -222,6 +381,8 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
           isRequired: true,
           maxLines: 10,
           hintMaxLines: 10,
+          onChanged: (des) =>
+              context.read<AddProductBloc>().setDescription(des),
         ),
       ],
     );
@@ -234,6 +395,7 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
     bool isRequired = false,
     int? maxLines,
     int? hintMaxLines,
+    required Function(String) onChanged,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -242,7 +404,7 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
       ),
       child: XTextFieldInsideLabel(
         label: label,
-        onChanged: (text) {},
+        onChanged: (text) => onChanged(text),
         maxLines: maxLines ?? 1,
         hintMaxLines: hintMaxLines ?? 1,
         isRequired: isRequired,
@@ -261,15 +423,25 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
   }
 
   Widget _renderSellerAddress(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppPadding.p15,
-        vertical: AppPadding.p10,
-      ),
-      child: XDropdownTextField(
-        label: S.of(context).address,
-        isRequired: true,
-      ),
+    return BlocBuilder<AddProductBloc, AddProductState>(
+      buildWhen: (previous, current) => previous.address != current.address,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppPadding.p15,
+            vertical: AppPadding.p10,
+          ),
+          child: XDropdownTextField(
+            label: S.of(context).address,
+            isRequired: true,
+            value: StringUtils.isNullOrEmpty(state.address)
+                ? null
+                : context.read<AddProductBloc>().getAddressText(),
+            onTap: () =>
+                context.read<AddProductBloc>().showSelectedAddressPage(context),
+          ),
+        );
+      },
     );
   }
 
