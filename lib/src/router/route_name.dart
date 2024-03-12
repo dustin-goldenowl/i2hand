@@ -20,7 +20,12 @@ enum AppRouteNames {
   selectLocation(path: 'selectLocation', param: 'address'),
   recentlyViewed(path: '/recentlyViewed'),
   newPost(path: '/newPost', param: 'category'),
-  selectAttribute(path: '/selectAttribute', param: 'attribute', param2: 'selectedValue',);
+  selectAttribute(
+    path: '/selectAttribute',
+    param: 'attribute',
+    param2: 'selectedValue',
+  ),
+  setting(path: '/setting');
 
   const AppRouteNames({
     required this.path,

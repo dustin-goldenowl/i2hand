@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
+import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
@@ -111,16 +112,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
             iconColor: AppColors.primary,
           ),
-          XIconButton(
-            bgColor: AppColors.backgroundButton,
-            icon: Icons.settings,
-            onPressed: () {
-              //TODO: go to setting page
-            },
-            iconColor: AppColors.primary,
-          ),
+          _renderSettingButton(),
         ],
       ),
+    );
+  }
+
+  Widget _renderSettingButton() {
+    return XIconButton(
+      bgColor: AppColors.backgroundButton,
+      icon: Icons.settings,
+      onPressed: () {
+        AppCoordinator.showSettingScreen();
+      },
+      iconColor: AppColors.primary,
     );
   }
 

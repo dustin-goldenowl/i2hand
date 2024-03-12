@@ -120,5 +120,17 @@
     "review": "Review",
     "track": "Track",
     "reviewed": "Reviewed",
-    "standardDelivery": "Standard Delivery"
+    "standardDelivery": "Standard Delivery",
+    "setting": "Settings",
+    "personal": "Personal",
+    "aboutApp": "About App",
+    "profile": "Profile",
+    "paymentMethods": "Payment method",
+    "termsAndConditions": "Terms and Conditions",
+    "language": "Language",
+    "abouti2hand": "About i2hand",
+    "deleteMyAccount": "Delete my account",
+    "logOut": "Logout",
+    "shop": "Shop",
+    "currency": "Currency"
 }

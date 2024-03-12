@@ -81,4 +81,7 @@ class AppCoordinator {
       }).then((value) {
         return value as String?;
       });
+
+  static void showSettingScreen() =>
+      context.pushNamed(AppRouteNames.setting.name);
 }
