@@ -19,4 +19,12 @@ class StringUtils {
       ),
     );
   }
+
+  static String createGenerateRandomOrderNumber({required int length}) {
+    var r = Random();
+    const numberChars = "1234567890";
+    return "#${String.fromCharCodes(Iterable.generate(length, (_) => numberChars.codeUnitAt(
+          r.nextInt(numberChars.length),
+        )))}";
+  }
 }
