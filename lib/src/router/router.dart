@@ -30,6 +30,7 @@ import 'package:i2hand/src/feature/home/view/home_screen.dart';
 import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_bloc.dart';
 import 'package:i2hand/src/feature/product/view/detail_product_screen.dart';
+import 'package:i2hand/src/feature/setting/view/setting_screen.dart';
 import 'package:i2hand/src/feature/profile/view/profile_screen.dart';
 import 'package:i2hand/src/feature/recently_viewed/logic/recently_viewed_bloc.dart';
 import 'package:i2hand/src/feature/recently_viewed/view/recently_viewed_screen.dart';
@@ -239,12 +240,23 @@ class AppRouter {
             ),
           ),
           GoRoute(
-            path: AppRouteNames.account.path,
-            name: AppRouteNames.account.name,
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: ProfileScreen(),
-            ),
-          ),
+              path: AppRouteNames.account.path,
+              name: AppRouteNames.account.name,
+              pageBuilder: (context, state) => const NoTransitionPage(
+                    child: ProfileScreen(),
+                  ),
+              routes: [
+                GoRoute(
+                    parentNavigatorKey: AppCoordinator.navigatorKey,
+                    name: AppRouteNames.setting.name,
+                    path: AppRouteNames.setting.subPath,
+                    builder: (__, _) {
+                      return BlocProvider(
+                        create: (context) => SearchBloc(),
+                        child: const SettingScreen(),
+                      );
+                    }),
+              ]),
         ],
       ),
       ShellRoute(
