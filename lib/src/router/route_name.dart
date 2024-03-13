@@ -25,7 +25,8 @@ enum AppRouteNames {
     param: 'attribute',
     param2: 'selectedValue',
   ),
-  setting(path: '/setting');
+  setting(path: '/setting'),
+  detailAccount(path: '/detailAccount');
 
   const AppRouteNames({
     required this.path,

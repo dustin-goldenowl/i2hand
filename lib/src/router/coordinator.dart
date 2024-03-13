@@ -84,4 +84,7 @@ class AppCoordinator {
 
   static void showSettingScreen() =>
       context.pushNamed(AppRouteNames.setting.name);
+
+  static void showDetailAccountScreen() =>
+      context.pushNamed(AppRouteNames.detailAccount.name);
 }

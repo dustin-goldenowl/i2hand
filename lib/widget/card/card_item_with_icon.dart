@@ -13,6 +13,7 @@ class XCardItemWithIcon extends StatelessWidget {
   final double? borderRadius;
   final Color? backgroundColor;
   final Widget? suffixValue;
+  final Color? iconColor;
   const XCardItemWithIcon({
     Key? key,
     required this.text,
@@ -24,6 +25,7 @@ class XCardItemWithIcon extends StatelessWidget {
     this.borderRadius = AppRadius.r10,
     this.backgroundColor,
     this.suffixValue,
+    this.iconColor,
   }) : super(key: key);
 
   @override
@@ -75,6 +77,7 @@ class XCardItemWithIcon extends StatelessWidget {
             ? Icon(
                 iconPath!,
                 size: AppSize.s16,
+                color: iconColor,
               )
             : const SizedBox.shrink(),
       ],

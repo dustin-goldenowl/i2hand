@@ -132,5 +132,7 @@
     "deleteMyAccount": "Delete my account",
     "logOut": "Logout",
     "shop": "Shop",
-    "currency": "Currency"
+    "currency": "Currency",
+    "yourProfile": "Your Profile",
+    "verifyYourAccount": "Verify Your Account"
 }

@@ -27,6 +27,7 @@ class XTextField extends StatelessWidget {
     this.textInputAction,
     this.cursolHeight,
     this.cursorColor,
+    this.filledColor = AppColors.grey8,
   });
   final String? label;
   final TextStyle? labelStyle;
@@ -48,6 +49,7 @@ class XTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final double? cursolHeight;
   final Color? cursorColor;
+  final Color? filledColor;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +77,7 @@ class XTextField extends StatelessWidget {
                 : TextEditingController.fromValue(
                     TextEditingValue(text: initText!)),
             decoration: InputDecoration(
-                fillColor: AppColors.grey8,
+                fillColor: filledColor,
                 filled: true,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: borderColor, width: 0.5),

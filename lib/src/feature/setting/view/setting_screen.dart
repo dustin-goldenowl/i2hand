@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
+import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
@@ -66,7 +67,10 @@ class SettingScreen extends StatelessWidget {
   Widget _renderPersonalOptions(BuildContext context) {
     return Column(
       children: [
-        _renderOptionItem(label: S.of(context).profile, onTap: () {}),
+        _renderOptionItem(
+          label: S.of(context).profile,
+          onTap: () => AppCoordinator.showDetailAccountScreen(),
+        ),
         const XDashSeparator(color: AppColors.grey6),
         _renderOptionItem(label: S.of(context).shippingAddress, onTap: () {}),
         const XDashSeparator(color: AppColors.grey6),

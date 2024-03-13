@@ -25,6 +25,7 @@ class AppColors {
   static const yellow = Color(0xFFF4BD46);
   static const orange = Color(0xFFFF5500);
   static const blue = Color(0xFF0042E0);
+  static const textFieldBackground = Color(0xFFF1F4FE);
   // black
   static const black = Colors.black;
   static const black2 = Color(0xFF1E1E1E);
