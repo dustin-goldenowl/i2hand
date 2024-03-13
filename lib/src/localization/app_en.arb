@@ -134,5 +134,6 @@
     "shop": "Shop",
     "currency": "Currency",
     "yourProfile": "Your Profile",
-    "verifyYourAccount": "Verify Your Account"
+    "verifyYourAccount": "Verify Your Account",
+    "saveChanges": "Save Changes"
 }

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "412697295860-e077q4sjfomlpr3rhmthk0u0kb91p1fr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lance.i2hand",
+            "certificate_hash": "18f137d0ba90e04e79e98a3420c91b63901b784e"
+          }
+        },
+        {
           "client_id": "412697295860-51g4s0m6m2nuim9po7q0003sj4bm172f.apps.googleusercontent.com",
           "client_type": 3
         }

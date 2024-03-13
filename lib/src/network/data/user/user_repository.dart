@@ -15,4 +15,6 @@ abstract class UserRepository {
   Future<MResult<Uint8List>> getImage(String id);
 
   Future<MResult<bool>> addImage(String id, Uint8List data);
+
+  Future<MResult<String>> eKYCAccount();
 }
