@@ -107,5 +107,18 @@
     "description": "Description",
     "productOriginAndCondition": " - Product origin and condition\n - Used time\n - Warranty if any\n - Repairs, upgrades, accessories\n - Product return policy\n - Delivery and return address",
     "post": "Post",
-    "color": "Color"
+    "color": "Color",
+    "myActivity": "My Activity",
+    "myOrders": "My Orders",
+    "toPay": "To Pay",
+    "toReceive": "To Receive",
+    "toReview": "To Review",
+    "order": "Order  ",
+    "packed": "Packed",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "review": "Review",
+    "track": "Track",
+    "reviewed": "Reviewed",
+    "standardDelivery": "Standard Delivery"
 }
