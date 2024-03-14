@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
+import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
+import 'package:i2hand/src/feature/global/logic/global_state.dart';
 import 'package:i2hand/src/feature/setting/feature/detail_account/logic/detail_account_bloc.dart';
 import 'package:i2hand/src/feature/setting/feature/detail_account/logic/detail_account_state.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
@@ -179,26 +181,25 @@ class DetailAccountScreen extends StatelessWidget {
   }
 
   Widget _renderEKYCAccount(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(AppPadding.p20),
-      child: BlocBuilder<DetailAccountBloc, DetailAccountState>(
-        buildWhen: (previous, current) =>
-            previous.user.eKYC != current.user.eKYC,
-        builder: (context, state) {
-          return XCardItemWithIcon(
+    return BlocSelector<GlobalBloc, GlobalState, bool>(
+      selector: (state) => state.isVerified,
+      builder: (context, isVerified) {
+        return Padding(
+          padding: const EdgeInsets.all(AppPadding.p20),
+          child: XCardItemWithIcon(
             text: S.of(context).verifyYourAccount,
             firstItem: true,
             lastItem: true,
-            iconPath: state.user.eKYC
-                ? Icons.check_circle_rounded
-                : Icons.error_rounded,
+            iconPath:
+                isVerified ? Icons.check_circle_rounded : Icons.error_rounded,
             backgroundColor: AppColors.backgroundButton,
-            iconColor: AppColors.errorColor,
-            onTap: () =>
-                context.read<DetailAccountBloc>().onTapEKYCAccount(context),
-          );
-        },
-      ),
+            iconColor: isVerified ? AppColors.green : AppColors.errorColor,
+            onTap: () => isVerified
+                ? {}
+                : context.read<DetailAccountBloc>().onTapEKYCAccount(context),
+          ),
+        );
+      },
     );
   }
 

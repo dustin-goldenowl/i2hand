@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/setting/feature/detail_account/logic/detail_account_state.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
@@ -109,13 +110,15 @@ class DetailAccountBloc extends BaseCubit<DetailAccountState> {
   }
 
   Future<void> onTapEKYCAccount(BuildContext context) async {
+    XToast.showLoading();
     final result = await GetIt.I.get<UserRepository>().eKYCAccount();
     if (StringUtils.isNullOrEmpty(result.data)) return;
     if (!context.mounted) return;
-    _showEKYCWebView(context, result.data!);
+    XToast.hideLoading();
+    _showEKYCWeb(context, result.data!);
   }
 
-  Future<void> _showEKYCWebView(BuildContext context, String url) async {
+  Future<void> _showEKYCWeb(BuildContext context, String url) async {
     if (!await launchUrl(
       Uri.parse(url),
       mode: LaunchMode.externalApplication,

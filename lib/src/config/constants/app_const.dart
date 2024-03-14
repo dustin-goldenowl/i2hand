@@ -11,6 +11,9 @@ class AppConstantData {
   static const int passwordLength = 8;
   static const int userIdGenerateRandom = 20;
 
+  static const String adminUsername = 'photostartup2020@gmail.com';
+  static const String adminPassword = 'Death12a2';
+
   static List<TabItem> listDefaultBottomBarItems = [
     TabItem<Widget>(
       icon: Assets.svg.home.svg(

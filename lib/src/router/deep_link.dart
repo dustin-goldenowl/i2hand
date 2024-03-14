@@ -1,8 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show PlatformException;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
+import 'package:i2hand/src/network/data/user/user_repository.dart';
+import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
+import 'package:i2hand/src/service/shared_pref.dart';
 import 'package:uni_links/uni_links.dart';
 
 class AppDeepLinks {
@@ -40,12 +47,20 @@ class AppDeepLinks {
     if (uri == null || uri.queryParameters.isEmpty) return;
     Map<String, String> params = uri.queryParameters;
 
-    String route = params['route'] ?? '';
-    if (route.isEmpty) return;
-    _promoId = route;
-
-    if (hasPromoId) {
-      AppCoordinator.showDetailAccountScreen();
+    String isVerified = params['isVerified'] ?? '';
+    if (isVerified == 'true') {
+      await _verifiedAccountHandler(AppCoordinator.context, true);
     }
+  }
+
+  static _verifiedAccountHandler(BuildContext context, bool bool) async {
+    final user = SharedPrefs.I.getUser();
+    final verifiedUser = user?.copyWith(eKYC: true);
+    await SharedPrefs.I.setUser(verifiedUser);
+    if (!context.mounted) return;
+    context.read<GlobalBloc>().setVerifiedAccount(true);
+    await GetIt.I
+        .get<UserRepository>()
+        .upsertUser(verifiedUser ?? MUser.empty());
   }
 }

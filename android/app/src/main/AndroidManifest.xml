@@ -29,7 +29,19 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="i2hand.page.com" />
+                <data android:scheme="https"
+                    android:host="www.i2hand.com"
+                    android:pathPrefix="/app" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- back to account detail screen -->
+                <data android:scheme="i2hand"
+                    android:host="appi2hand"
+                    android:pathPrefix="/account/setting/detailAccount" />
             </intent-filter>
         </activity>
         <activity
