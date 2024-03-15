@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/feature/home/logic/home_state.dart';
 import 'package:i2hand/src/local/entities/most_viewed_products_entity.dart';
@@ -10,22 +12,29 @@ import 'package:i2hand/src/utils/utils.dart';
 class HomeBloc extends BaseCubit<HomeState> {
   HomeBloc() : super(HomeState(listCategory: List.empty(growable: true)));
 
+  StreamSubscription? _newestProductsStream;
+
   Future<void> initial() async {
-    await _getListNewProducts();
     await _getListMostViewedProducts();
+    _initStream();
   }
 
-  Future<void> _getListNewProducts() async {
-    try {
-      final listNewProducts =
-          await GetIt.I.get<NewProductsLocalRepo>().getAllDetails().get();
-      if (isNullOrEmpty(listNewProducts)) return;
+  @override
+  Future<void> close() {
+    _newestProductsStream?.cancel();
+    return super.close();
+  }
+
+  void _initStream() {
+    _newestProductsStream = GetIt.I
+        .get<NewProductsLocalRepo>()
+        .getAllDetails()
+        .watch()
+        .listen((listNewProducts) {
       emit(state.copyWith(
         listNewProducts: listNewProducts.convertToProductData(),
       ));
-    } catch (e) {
-      xLog.e(e);
-    }
+    });
   }
 
   Future<void> _getListMostViewedProducts() async {
