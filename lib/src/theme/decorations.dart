@@ -25,28 +25,28 @@ class AppDecorations {
     ),
   ];
 
-  static final fullShadow = [
-    BoxShadow(
-      offset: const Offset(0, 2),
-      blurRadius: 2,
-      color: Colors.black.withOpacity(.1),
-    ),
-    BoxShadow(
-      offset: const Offset(2, 0),
-      blurRadius: 2,
-      color: Colors.black.withOpacity(.1),
-    ),
-    BoxShadow(
-      offset: const Offset(0, -2),
-      blurRadius: 2,
-      color: Colors.black.withOpacity(.1),
-    ),
-    BoxShadow(
-      offset: const Offset(-2, 0),
-      blurRadius: 2,
-      color: Colors.black.withOpacity(.1),
-    ),
-  ];
+  static fullShadow({Color? color}) => [
+        BoxShadow(
+          offset: const Offset(0, 2),
+          blurRadius: 2,
+          color: color ?? Colors.black.withOpacity(.1),
+        ),
+        BoxShadow(
+          offset: const Offset(2, 0),
+          blurRadius: 2,
+          color: color ?? Colors.black.withOpacity(.1),
+        ),
+        BoxShadow(
+          offset: const Offset(0, -2),
+          blurRadius: 2,
+          color: color ?? Colors.black.withOpacity(.1),
+        ),
+        BoxShadow(
+          offset: const Offset(-2, 0),
+          blurRadius: 2,
+          color: color ?? Colors.black.withOpacity(.1),
+        ),
+      ];
 
   static const InputDecoration inputNoneBorder = InputDecoration(
     border: InputBorder.none,

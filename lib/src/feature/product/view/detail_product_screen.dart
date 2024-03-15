@@ -18,6 +18,7 @@ import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/avatar/avatar.dart';
 import 'package:i2hand/widget/button/fill_button.dart';
 import 'package:i2hand/widget/carousel/default_carousel.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({super.key});
@@ -53,7 +54,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                   backgroundColor: Colors.transparent,
                   pinned: true,
-                  expandedHeight: AppSize.s350,
+                  expandedHeight: AppSize.s430,
                   stretch: true,
                   elevation: 0,
                   centerTitle: false,
@@ -81,18 +82,40 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return BlocBuilder<DetailProductBloc, DetailProductState>(
       buildWhen: (previous, current) =>
           previous.assetsStatus != current.assetsStatus ||
+          previous.carouselIndex != current.carouselIndex ||
           listEquals(previous.listImage, current.listImage),
       builder: (context, state) {
         return state.assetsStatus == FetchAssetsStatus.success ||
                 !isNullOrEmpty(state.listImage)
-            ? XCarousel(
-                height: AppSize.s350,
-                isIndicatorInside: true,
-                autoPlay: false,
-                padBottom: AppSize.s24,
-                items: [
-                  for (Uint8List? image in state.listImage!)
-                    Image.memory(image ?? Uint8List(0))
+            ? Column(
+                children: [
+                  XCarousel(
+                    height: AppSize.s300,
+                    isIndicatorInside: false,
+                    effect: const ExpandingDotsEffect(
+                      radius: AppRadius.r8,
+                      spacing: AppPadding.p8,
+                      dotHeight: AppSize.s6,
+                      dotWidth: AppSize.s6,
+                      activeDotColor: AppColors.orange,
+                    ),
+                    autoPlay: false,
+                    onPageChanged: (index) => context
+                        .read<DetailProductBloc>()
+                        .onChangedCarouselIndex(index),
+                    padBottom: AppSize.s24,
+                    jumpPage: state.carouselIndex,
+                    items: [
+                      for (Uint8List? image in state.listImage!)
+                        Image.memory(
+                          image ?? Uint8List(0),
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        )
+                    ],
+                  ),
+                  _renderSmallerViewImage(
+                      state.listImage!, state.carouselIndex),
                 ],
               )
             : Assets.jsons.loadingPicture.lottie(fit: BoxFit.contain);
@@ -199,17 +222,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         return status == DetailProductScreenStatus.loading
             ? const SizedBox.shrink()
             : Container(
-                margin: const EdgeInsets.only(
-                    bottom: AppMargin.m10,
-                    left: AppMargin.m20,
-                    right: AppMargin.m20),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(AppRadius.r16),
                     color: AppColors.backgroundButton,
                     boxShadow: AppDecorations.shadow
                         .followedBy(AppDecorations.shadowReverse)
                         .toList()),
-                padding: const EdgeInsets.all(AppPadding.p8),
+                padding: const EdgeInsets.only(
+                  left: AppPadding.p20,
+                  right: AppPadding.p20,
+                  top: AppPadding.p12,
+                  bottom: AppPadding.p23,
+                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -351,6 +375,70 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 size: AppFontSize.f20,
                 color: AppColors.yellowIcon,
               )),
+    );
+  }
+
+  Widget _renderSmallerViewImage(
+      List<Uint8List?> listImage, int carouselIndex) {
+    return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppPadding.p20, vertical: AppPadding.p12),
+        child: Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: _getListSmallerViewImage(
+                listImage: listImage,
+                index: carouselIndex,
+              ),
+            ),
+          ),
+        ));
+  }
+
+  List<Widget> _getListSmallerViewImage(
+      {required List<Uint8List?> listImage, int index = 0}) {
+    List<Widget> listSmallerView = [];
+    for (int i = 0; i < listImage.length; i++) {
+      if (listImage[i] == null || listImage[i]!.isEmpty) continue;
+      listSmallerView.add(
+        _renderSmallerImageItems(
+          image: listImage[i]!,
+          isSelected: i == index,
+          index: i,
+        ),
+      );
+    }
+    return listSmallerView;
+  }
+
+  Widget _renderSmallerImageItems(
+      {required Uint8List image, bool isSelected = false, int index = 0}) {
+    return GestureDetector(
+      onTap: () =>
+          context.read<DetailProductBloc>().onChangedCarouselIndex(index),
+      child: Container(
+        width: AppSize.s70,
+        height: AppSize.s70,
+        margin: const EdgeInsets.symmetric(horizontal: AppMargin.m8),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+          border: isSelected
+              ? Border.all(
+                  color: AppColors.orange.withOpacity(0.2),
+                  strokeAlign: BorderSide.strokeAlignOutside)
+              : null,
+          boxShadow: AppDecorations.shadow,
+        ),
+        clipBehavior: Clip.hardEdge,
+        child: Image.memory(
+          image,
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 }

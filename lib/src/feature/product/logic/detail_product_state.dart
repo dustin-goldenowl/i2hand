@@ -15,6 +15,7 @@ class DetailProductState with EquatableMixin {
     this.user,
     this.assetsStatus = FetchAssetsStatus.init,
     this.listImage,
+    this.carouselIndex = 0,
   });
 
   final String id;
@@ -23,14 +24,17 @@ class DetailProductState with EquatableMixin {
   final MProduct product;
   final MUser? user;
   final List<Uint8List?>? listImage;
+  final int carouselIndex;
 
-  DetailProductState copyWith(
-      {String? id,
-      DetailProductScreenStatus? status,
-      FetchAssetsStatus? assetsStatus,
-      MProduct? product,
-      List<Uint8List?>? listImage,
-      MUser? user}) {
+  DetailProductState copyWith({
+    String? id,
+    DetailProductScreenStatus? status,
+    FetchAssetsStatus? assetsStatus,
+    MProduct? product,
+    List<Uint8List?>? listImage,
+    MUser? user,
+    int? carouselIndex,
+  }) {
     return DetailProductState(
       id: id ?? this.id,
       status: status ?? this.status,
@@ -38,12 +42,13 @@ class DetailProductState with EquatableMixin {
       user: user ?? this.user,
       assetsStatus: assetsStatus ?? this.assetsStatus,
       listImage: listImage ?? this.listImage,
+      carouselIndex: carouselIndex ?? this.carouselIndex,
     );
   }
 
   @override
   List<Object?> get props =>
-      [id, status, product, user, assetsStatus, listImage];
+      [id, status, product, user, assetsStatus, listImage, carouselIndex];
 
   @override
   String toString() {

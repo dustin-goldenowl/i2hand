@@ -95,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: AppColors.white,
       ),
       child: XCarousel(
+        jumpPage: 0,
         items: AppConstantData.listNotificationBanner,
       ),
     );

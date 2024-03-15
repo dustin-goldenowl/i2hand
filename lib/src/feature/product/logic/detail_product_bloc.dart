@@ -82,4 +82,8 @@ class DetailProductBloc extends BaseCubit<DetailProductState> {
       emit(state.copyWith(assetsStatus: FetchAssetsStatus.fail));
     }
   }
+
+  void onChangedCarouselIndex(int index) {
+    emit(state.copyWith(carouselIndex: index));
+  }
 }

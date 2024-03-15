@@ -90,7 +90,7 @@ class _CartScreenState extends State<CartScreen> {
       ),
       decoration: BoxDecoration(
         color: AppColors.grey8,
-        boxShadow: AppDecorations.fullShadow,
+        boxShadow: AppDecorations.fullShadow(),
         borderRadius: BorderRadius.circular(AppRadius.r16),
       ),
       child: Column(

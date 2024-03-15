@@ -71,7 +71,7 @@ class _XAvatarState extends State<XAvatar> {
             color: widget.borderColor ?? Colors.transparent,
             width: widget.borderWidth ?? AppSize.s0,
           ),
-          boxShadow: widget.isShadow ? AppDecorations.fullShadow : [],
+          boxShadow: widget.isShadow ? AppDecorations.fullShadow() : [],
         ),
         child: Center(child: Assets.jsons.maleAvatar.lottie()));
   }
@@ -129,7 +129,7 @@ class _XAvatarState extends State<XAvatar> {
                           width: widget.borderWidth ?? AppSize.s4),
                       borderRadius: BorderRadius.circular(AppRadius.r40),
                       boxShadow:
-                          widget.isShadow ? AppDecorations.fullShadow : null),
+                          widget.isShadow ? AppDecorations.fullShadow() : null),
                   child: IconButton(
                     onPressed: () {},
                     style: ButtonStyle(
@@ -176,7 +176,7 @@ class _XAvatarState extends State<XAvatar> {
           color: widget.borderColor ?? AppColors.primary,
           width: widget.borderWidth ?? AppSize.s4,
         ),
-        boxShadow: widget.isShadow ? AppDecorations.fullShadow : [],
+        boxShadow: widget.isShadow ? AppDecorations.fullShadow() : [],
       ),
       child: null,
     );
