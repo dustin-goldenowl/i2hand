@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:i2hand/src/config/enum/attribute_enum.dart';
 import 'package:i2hand/src/feature/account/bloc/account_bloc.dart';
 import 'package:i2hand/src/feature/add_product/logic/add_product_state.dart';
 import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
+import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
 import 'package:i2hand/src/network/data/product/product_repository.dart';
 import 'package:i2hand/src/network/model/category/category.dart';
 import 'package:i2hand/src/network/model/product/attribute/attribute.dart';
@@ -176,6 +178,7 @@ class AddProductBloc extends BaseCubit<AddProductState> {
         return;
       }
       await _uploadImageFile(listImage: state.listImage, id: product.id);
+      await _syncToLocalDatabase(product);
       setSuccessStatus();
     } catch (e) {
       xLog.e(e);
@@ -205,7 +208,6 @@ class AddProductBloc extends BaseCubit<AddProductState> {
             attributeName: AttributeEnum.getAttributeEnum(key), data: value));
       },
     );
-    xLog.e(data);
     return data;
   }
 
@@ -216,5 +218,17 @@ class AddProductBloc extends BaseCubit<AddProductState> {
   double _getPriceValue(String? priceText) {
     if (StringUtils.isNullOrEmpty(priceText)) return 0.0;
     return double.parse(priceText!);
+  }
+
+  Future<void> _syncToLocalDatabase(MProduct product) async {
+    try {
+      final image = state.listImage?.first;
+      final productLocalData = product.convertToNewProductLocalData();
+      await GetIt.I
+          .get<NewProductsLocalRepo>()
+          .insertDetail(productLocalData.copyWith(image: Value(image)));
+    } catch (e) {
+      xLog.e(e);
+    }
   }
 }
