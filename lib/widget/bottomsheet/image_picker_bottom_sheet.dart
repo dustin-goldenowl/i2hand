@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:i2hand/src/config/enum/picture_options_enum.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
@@ -9,23 +8,22 @@ import 'package:i2hand/widget/button/fill_button.dart';
 import 'package:i2hand/widget/separate/dash_separate.dart';
 
 class XImagePickerBottomSheet extends StatelessWidget {
-  List<PictureOptionsEnum> _getOptions(BuildContext context) =>
-      PictureOptionsEnum.values;
-
   final bool isPhotoExisted;
   final Function? onSelectedValue;
   final String? title;
+  final List listOptionsEnum;
 
   const XImagePickerBottomSheet(
       {Key? key,
       required this.isPhotoExisted,
       required this.onSelectedValue,
+      required this.listOptionsEnum,
       this.title})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final options = _getOptions(context);
+    final options = listOptionsEnum;
     var listOptions = options.take(100).toList();
     if (!isPhotoExisted) {
       listOptions.removeLast();
@@ -77,8 +75,7 @@ class XImagePickerBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _renderCell(BuildContext context,
-      {required PictureOptionsEnum value}) {
+  Widget _renderCell(BuildContext context, {required value}) {
     return ListTile(
       title: Text(value.getText(context), style: AppTextStyle.labelStyle),
       onTap: () {

@@ -17,8 +17,8 @@ class ProductRepositoryImpl extends ProductRepository {
   final productRefStorage = ProductStorageReference();
 
   @override
-  Future<MResult<MProduct>> getOrAddProduct(MProduct category) {
-    return productRef.getOrAddProduct(category);
+  Future<MResult<MProduct>> getOrAddProduct(MProduct product) {
+    return productRef.getOrAddProduct(product);
   }
 
   @override
@@ -36,13 +36,13 @@ class ProductRepositoryImpl extends ProductRepository {
   }
 
   @override
-  Future<MResult<bool>> upsertProduct(MProduct category) {
-    return productRef.updateCategory(category);
+  Future<MResult<bool>> upsertProduct(MProduct product) {
+    return productRef.updateCategory(product);
   }
 
   @override
-  Future<MResult<bool>> deleteProduct(MProduct category) {
-    return productRef.deleteProduct(category);
+  Future<MResult<bool>> deleteProduct(MProduct product) {
+    return productRef.deleteProduct(product);
   }
 
   @override
@@ -65,8 +65,8 @@ class ProductRepositoryImpl extends ProductRepository {
   }
 
   @override
-  Future<MResult<bool>> addImage(String id, Uint8List data) async {
-    return await productRefStorage.upsertProductImage(id, data);
+  Future<MResult<bool>> addImage({required String id, required Uint8List data, required int index}) async {
+    return await productRefStorage.addInSubFolder(subFolderText: id, data: data, itemText: '$index.jpg');
   }
 
   Future<void> _syncNewProductToLocal(List<MProduct> listProducts) async {

@@ -64,6 +64,7 @@ class _XSelectPageState extends State<XSelectPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: _renderAppBar(context),
         body: _renderBody(context),
       ),
@@ -120,7 +121,8 @@ class _XSelectPageState extends State<XSelectPage> {
                 Expanded(
                   child: Text(
                     attributeData,
-                    style: AppTextStyle.contentTexStyle,
+                    style: AppTextStyle.contentTexStyle
+                        .copyWith(color: AppColors.black2),
                   ),
                 ),
                 attributeData == widget.currentValue
