@@ -77,6 +77,7 @@ class XTextFieldInsideLabel extends StatelessWidget {
             !StringUtils.isNullOrEmpty(hintText)
         ? TextField(
             cursorColor: AppColors.primary,
+            onChanged: (value) => onChanged(value),
             maxLines: maxLines,
             minLines: 1,
             decoration: InputDecoration(

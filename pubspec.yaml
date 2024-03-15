@@ -79,6 +79,7 @@ dependencies:
   webview_flutter: 4.5.0
   validators: 3.0.0
   uni_links: 0.5.1
+  flutter_image_compress: 2.2.0
 
   # Widget
   smooth_page_indicator: 1.1.0
@@ -88,6 +89,8 @@ dependencies:
   flutter_svg: 2.0.9
   modal_bottom_sheet: 2.1.2
   image_picker: 1.0.7
+  video_player: 2.8.3
+  video_thumbnail: 0.5.3
   image_cropper: 5.0.1
   awesome_bottom_bar: 1.2.4
   carousel_slider: 4.2.1

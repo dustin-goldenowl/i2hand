@@ -379,7 +379,7 @@ class SignUpScreen extends StatelessWidget {
   }
 
   void _pickImagehandler(BuildContext context, Uint8List? avatar) {
-    ImageHandler.pickImagehandler(context,
+    AssetHandler.pickImagehandler(context,
         image: avatar,
         setImage: (image) => context.read<SignUpBloc>().setAvatar(image));
   }

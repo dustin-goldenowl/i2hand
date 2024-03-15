@@ -135,5 +135,7 @@
     "currency": "Currency",
     "yourProfile": "Your Profile",
     "verifyYourAccount": "Verify Your Account",
-    "saveChanges": "Save Changes"
+    "saveChanges": "Save Changes",
+    "chooseVideo": "Choose video",
+    "recordVideo": "Record video"
 }

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/add_product/logic/add_product_bloc.dart';
 import 'package:i2hand/src/feature/add_product/logic/add_product_state.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
@@ -29,21 +30,44 @@ class PostNewProductScreen extends StatefulWidget {
 class _PostNewProductScreenState extends State<PostNewProductScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: DismissKeyBoard(
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _renderAppBar(),
-                _renderSelectedCategorySection(context),
-                _renderDetailInformationSection(context),
-                _renderPostInformationSection(context),
-                _renderSellerInformationSection(context),
-                _renderBottomButton(context),
-                XPaddingUtils.verticalPadding(height: AppPadding.p30),
-              ],
+    return PopScope(
+      onPopInvoked: (didPop) => XToast.hideLoading(),
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        body: DismissKeyBoard(
+          child: BlocListener<AddProductBloc, AddProductState>(
+            listener: (context, state) {
+              switch (state.status) {
+                case AddProductStatus.loading:
+                  XToast.showLoading();
+                  break;
+                case AddProductStatus.fail:
+                  XToast.hideLoading();
+                  XToast.error(S.of(context).someThingWentWrong);
+                  context.read<AddProductBloc>().resetStatus();
+                  break;
+                case AddProductStatus.success:
+                  XToast.hideLoading();
+                  AppCoordinator.pop();
+                  break;
+                default:
+                  break;
+              }
+            },
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _renderAppBar(),
+                    _renderSelectedCategorySection(context),
+                    _renderDetailInformationSection(context),
+                    _renderPostInformationSection(context),
+                    _renderSellerInformationSection(context),
+                    _renderBottomButton(context),
+                    XPaddingUtils.verticalPadding(height: AppPadding.p30),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -151,7 +175,8 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
           listAttributes.add(XTextFieldInsideLabel(
             isRequired: true,
             label: attributeName.capitalizeEachText(),
-            onChanged: (price) {},
+            onChanged: (price) =>
+                context.read<AddProductBloc>().onChangedPrice(price),
             hintText: S.of(context).price.capitalize(),
           ));
           listAttributes
@@ -230,15 +255,22 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
   }
 
   Widget _renderHasImageSection(context, {required List<Uint8List> listImage}) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: _renderListImage(listImage),
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _renderAttributeLabel(label: S.of(context).images),
+          XPaddingUtils.verticalPadding(height: AppPadding.p2),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: _renderListImage(listImage),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -257,6 +289,7 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
   Widget _renderImage(Uint8List image) {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: AppPadding.p5),
+        padding: const EdgeInsets.only(top: AppPadding.p6),
         child: Stack(
           fit: StackFit.passthrough,
           clipBehavior: Clip.none,
@@ -270,17 +303,17 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
               clipBehavior: Clip.hardEdge,
               child: Image.memory(image),
             ),
-            _renderRemoveImageIcon(),
+            _renderRemoveImageIcon(image),
           ],
         ));
   }
 
-  Widget _renderRemoveImageIcon() {
+  Widget _renderRemoveImageIcon(Uint8List image) {
     return Positioned(
       top: -5,
       right: -5,
       child: IconButton.filled(
-        onPressed: () {},
+        onPressed: () => context.read<AddProductBloc>().removeImage(image),
         icon: const Icon(Icons.clear),
         iconSize: AppSize.s14,
         color: AppColors.white,
@@ -298,7 +331,8 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
 
   Widget _renderAddMoreImage(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: AppMargin.m4),
+      padding: const EdgeInsets.only(top: AppPadding.p4),
+      margin: const EdgeInsets.only(left: AppMargin.m2, right: AppMargin.m4),
       child: GestureDetector(
         onTap: () => context.read<AddProductBloc>().onTapAddImage(context),
         child: DottedBorder(
@@ -328,35 +362,112 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
   }
 
   Widget _renderVideoSection(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppPadding.p15),
-      child: DottedBorder(
-        color: AppColors.black2,
-        borderType: BorderType.RRect,
-        padding: EdgeInsets.zero,
-        radius: const Radius.circular(AppRadius.r10),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: AppPadding.p23),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppRadius.r10),
-            color: AppColors.backgroundButton,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const Icon(
-                Icons.video_camera_back_rounded,
-                color: AppColors.primary,
-                size: AppSize.s30,
-              ),
-              Text(
-                S.of(context).addMaximum1Video,
-                style: AppTextStyle.titleTextStyle.copyWith(
-                  fontSize: AppFontSize.f14,
+    return BlocBuilder<AddProductBloc, AddProductState>(
+      buildWhen: (previous, current) =>
+          previous.videoThumbnail != current.videoThumbnail,
+      builder: (context, state) {
+        return isNullOrEmpty(state.videoThumbnail)
+            ? _renderEmptyVideoSection(context)
+            : _renderHasVideoSection(context,
+                videoThumbnail: state.videoThumbnail!);
+      },
+    );
+  }
+
+  Widget _renderEmptyVideoSection(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.read<AddProductBloc>().onTapAddVideo(context),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppPadding.p15),
+        child: DottedBorder(
+          color: AppColors.black2,
+          borderType: BorderType.RRect,
+          padding: EdgeInsets.zero,
+          radius: const Radius.circular(AppRadius.r10),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: AppPadding.p23),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppRadius.r10),
+              color: AppColors.backgroundButton,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const Icon(
+                  Icons.video_camera_back_rounded,
+                  color: AppColors.primary,
+                  size: AppSize.s30,
                 ),
-              )
-            ],
+                Text(
+                  S.of(context).addMaximum1Video,
+                  style: AppTextStyle.titleTextStyle.copyWith(
+                    fontSize: AppFontSize.f14,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _renderHasVideoSection(BuildContext context,
+      {required Uint8List videoThumbnail}) {
+    return Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppPadding.p5),
+        padding: const EdgeInsets.only(top: AppPadding.p6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _renderAttributeLabel(label: S.of(context).videos),
+            XPaddingUtils.verticalPadding(height: AppPadding.p2),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Stack(
+                  fit: StackFit.passthrough,
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      width: AppSize.s90,
+                      height: AppSize.s90,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(AppRadius.r8),
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: Image.memory(videoThumbnail),
+                    ),
+                    _renderForeground(),
+                    _renderRemoveImageIcon(videoThumbnail),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ));
+  }
+
+  Widget _renderAttributeLabel({required String label}) {
+    return Text(
+      label,
+      style: AppTextStyle.labelStyle.copyWith(fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _renderForeground() {
+    return Positioned.fill(
+      child: Container(
+        color: AppColors.black2.withOpacity(0.2),
+        child: Center(
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.play_circle,
+              color: AppColors.white,
+            ),
           ),
         ),
       ),
@@ -434,9 +545,7 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
           child: XDropdownTextField(
             label: S.of(context).address,
             isRequired: true,
-            value: StringUtils.isNullOrEmpty(state.address)
-                ? null
-                : context.read<AddProductBloc>().getAddressText(),
+            value: StringUtils.getAddressText(rawAddress: state.address),
             onTap: () =>
                 context.read<AddProductBloc>().showSelectedAddressPage(context),
           ),
@@ -452,10 +561,11 @@ class _PostNewProductScreenState extends State<PostNewProductScreen> {
         vertical: AppPadding.p5,
       ),
       child: XFillButton(
+          onPressed: () => context.read<AddProductBloc>().postProduct(),
           label: Text(
-        S.of(context).post,
-        style: AppTextStyle.buttonTextStylePrimary,
-      )),
+            S.of(context).post,
+            style: AppTextStyle.buttonTextStylePrimary,
+          )),
     );
   }
 }

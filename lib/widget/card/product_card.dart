@@ -5,6 +5,7 @@ import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/string_ext.dart';
+import 'package:i2hand/src/utils/string_utils.dart';
 import 'package:i2hand/src/utils/utils.dart';
 
 class XProductCard extends StatelessWidget {
@@ -94,7 +95,7 @@ class XProductCard extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            product.province,
+            StringUtils.getProvinceText(rawAddress: product.province),
             style: AppTextStyle.contentTexStyle.copyWith(
               fontSize: AppFontSize.f12,
             ),

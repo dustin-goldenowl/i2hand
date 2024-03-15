@@ -72,12 +72,32 @@ class BaseStorageReference<T> {
     }
   }
 
-  Future<MResult<List>> getAllInSubFolder({required String subFolderText}) async {
+  Future<MResult<List>> getAllInSubFolder(
+      {required String subFolderText}) async {
     try {
-      final ListResult listAll = await ref.child(subFolderText).listAll().timeout(const Duration(seconds: 5));
+      final ListResult listAll = await ref
+          .child(subFolderText)
+          .listAll()
+          .timeout(const Duration(seconds: 5));
 
       return MResult.success([listAll.items, listAll.prefixes]);
     } catch (e) {
+      return MResult.exception(e);
+    }
+  }
+
+  Future<MResult<bool>> addInSubFolder(
+      {required String subFolderText,
+      required String itemText,
+      required Uint8List data}) async {
+    final itemRef = ref.child(subFolderText).child(itemText);
+    try {
+      await itemRef
+          .putData(data, SettableMetadata(contentType: 'image/jpeg'))
+          .timeout(const Duration(seconds: 5));
+      return MResult.success(true);
+    } on FirebaseException catch (e) {
+      xLog.e(e.message);
       return MResult.exception(e);
     }
   }

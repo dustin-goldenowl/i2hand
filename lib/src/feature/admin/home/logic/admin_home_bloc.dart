@@ -314,13 +314,15 @@ class AdminHomeBloc extends BaseCubit<AdminHomeState> {
         barrierColor: AppColors.black.withOpacity(0.5),
         context: context,
         builder: (_) => XImagePickerBottomSheet(
+            listOptionsEnum: PictureOptionsEnum.values,
             isPhotoExisted: !isNullOrEmpty(avatar),
             onSelectedValue: (value) async {
               AppCoordinator.pop();
               switch (value as PictureOptionsEnum) {
                 case PictureOptionsEnum.takePhoto:
                   try {
-                    final image = await PickerImageApp.show(ImageSource.camera);
+                    final image =
+                        await PickerAssetsApp.showImage(ImageSource.camera);
                     if (image != null) {
                       if (!context.mounted) return;
                       _setCategoryImage(bytes: image.bytes);
@@ -332,7 +334,7 @@ class AdminHomeBloc extends BaseCubit<AdminHomeState> {
                 case PictureOptionsEnum.choosePhoto:
                   try {
                     final image =
-                        await PickerImageApp.show(ImageSource.gallery);
+                        await PickerAssetsApp.showImage(ImageSource.gallery);
                     if (image != null) {
                       if (!context.mounted) return;
                       _setCategoryImage(bytes: image.bytes);

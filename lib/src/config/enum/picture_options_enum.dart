@@ -17,3 +17,17 @@ enum PictureOptionsEnum {
     }
   }
 }
+
+enum VideoOptionsEnum {
+  chooseVideo,
+  recordVideo;
+
+  String getText(BuildContext context) {
+    switch (this) {
+      case VideoOptionsEnum.chooseVideo:
+        return S.of(context).chooseVideo;
+      case VideoOptionsEnum.recordVideo:
+        return S.of(context).recordVideo;
+    }
+  }
+}

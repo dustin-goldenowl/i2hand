@@ -87,7 +87,7 @@ class DetailAccountScreen extends StatelessWidget {
         builder: (context, state) {
           final isHasAvatar = !isNullOrEmpty(state.user.avatar);
           return XAvatar(
-            onEdit: () => ImageHandler.pickImagehandler(
+            onEdit: () => AssetHandler.pickImagehandler(
               context,
               image: isHasAvatar
                   ? state.user.avatar!.convertToUint8List()
