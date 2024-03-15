@@ -51,7 +51,7 @@ class _XCalendarState extends State<XCalendar> {
             borderRadius: BorderRadius.circular(
               AppRadius.r16,
             ),
-            boxShadow: AppDecorations.fullShadow,
+            boxShadow: AppDecorations.fullShadow(),
           ),
           child: _renderTableSection(context),
         ),

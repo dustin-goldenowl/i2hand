@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/value.dart';
+import 'package:i2hand/src/utils/padding_utils.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class XCarousel extends StatefulWidget {
@@ -12,12 +13,18 @@ class XCarousel extends StatefulWidget {
     this.isIndicatorInside = false,
     this.padBottom,
     this.autoPlay = true,
+    this.effect,
+    this.onPageChanged,
+    this.jumpPage,
   });
   final List<Widget> items;
   final double? height;
   final bool isIndicatorInside;
   final double? padBottom;
   final bool autoPlay;
+  final IndicatorEffect? effect;
+  final Function(int)? onPageChanged;
+  final int? jumpPage;
 
   @override
   State<XCarousel> createState() => _XCarouselState();
@@ -35,6 +42,20 @@ class _XCarouselState extends State<XCarousel> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {
+      _currentIndex = widget.jumpPage ?? 0;
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant XCarousel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _controller.animateToPage(widget.jumpPage ?? 0);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return widget.isIndicatorInside
         ? _renderCarouselWithIndicatorInside()
@@ -49,9 +70,11 @@ class _XCarouselState extends State<XCarousel> {
           carouselController: _controller,
           options: CarouselOptions(
               viewportFraction: AppSize.s1,
+              aspectRatio: 16 / 9,
               height: widget.height,
               autoPlay: widget.autoPlay,
               onPageChanged: (index, reason) {
+                widget.onPageChanged?.call(index);
                 setState(() {
                   _currentIndex = index;
                 });
@@ -75,14 +98,17 @@ class _XCarouselState extends State<XCarousel> {
           options: CarouselOptions(
               viewportFraction: AppSize.s1,
               height: widget.height,
-              autoPlay: true,
+              autoPlay: widget.autoPlay,
+              clipBehavior: Clip.none,
               onPageChanged: (index, reason) {
+                widget.onPageChanged?.call(index);
                 setState(() {
                   _currentIndex = index;
                 });
               }),
           items: widget.items,
         ),
+        XPaddingUtils.verticalPadding(height: AppPadding.p12),
         _renderIndicator()
       ],
     );
@@ -92,14 +118,15 @@ class _XCarouselState extends State<XCarousel> {
     return AnimatedSmoothIndicator(
       activeIndex: _currentIndex,
       count: widget.items.length,
-      effect: const ScaleEffect(
-        radius: AppRadius.r8,
-        scale: AppSize.s2,
-        spacing: AppPadding.p8,
-        dotHeight: AppSize.s6,
-        dotWidth: AppSize.s6,
-        activeDotColor: AppColors.orange,
-      ),
+      effect: widget.effect ??
+          const ScaleEffect(
+            radius: AppRadius.r8,
+            scale: AppSize.s2,
+            spacing: AppPadding.p8,
+            dotHeight: AppSize.s6,
+            dotWidth: AppSize.s6,
+            activeDotColor: AppColors.orange,
+          ),
     );
   }
 }
