@@ -16,14 +16,14 @@ class MProduct with EquatableMixin {
   final bool isNew;
   final int viewed;
   final List<MAttributeData>? attributes;
-  final String time;
+  final DateTime? time;
   final String description;
   final String owner;
 
   MProduct({
     required this.id,
     this.title = '',
-    this.time = '',
+    this.time,
     this.description = '',
     this.attributes,
     this.price = 0.0,
@@ -44,7 +44,7 @@ class MProduct with EquatableMixin {
     int? viewed,
     List<String>? image,
     List<MAttributeData>? attributes,
-    String? time,
+    DateTime? time,
     String? description,
     String? owner,
   }) {
@@ -100,5 +100,11 @@ extension MProductExt on MProduct {
     final jsonData = toJson();
     jsonData['image'] = (image ?? []).convertToUint8List();
     return MostViewProductsEntityData.fromJson(jsonData);
+  }
+
+  ProductsEntityData convertToProductLocalData() {
+    final jsonData = toJson();
+    jsonData['image'] = (image ?? []).convertToUint8List();
+    return ProductsEntityData.fromJson(jsonData);
   }
 }

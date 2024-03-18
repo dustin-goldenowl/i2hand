@@ -37,6 +37,7 @@ import 'package:i2hand/src/feature/profile/view/profile_screen.dart';
 import 'package:i2hand/src/feature/recently_viewed/logic/recently_viewed_bloc.dart';
 import 'package:i2hand/src/feature/recently_viewed/view/recently_viewed_screen.dart';
 import 'package:i2hand/src/feature/syncing_data/view/syncing_data_screen.dart';
+import 'package:i2hand/src/feature/wishlist/logic/wishlist_bloc.dart';
 import 'package:i2hand/src/feature/wishlist/view/wishlist_screen.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
@@ -226,7 +227,7 @@ class AppRouter {
             name: AppRouteNames.wishlist.name,
             pageBuilder: (context, state) => NoTransitionPage(
               child: BlocProvider(
-                create: (context) => CartBloc(),
+                create: (context) => WishlistBloc(),
                 child: const WishlistScreen(),
               ),
             ),

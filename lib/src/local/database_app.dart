@@ -2,8 +2,14 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/local/entities/most_viewed_products_entity.dart';
 import 'package:i2hand/src/local/entities/new_products_entity.dart';
+import 'package:i2hand/src/local/entities/product_entity.dart';
+import 'package:i2hand/src/local/entities/wishlist_products_entity.dart';
+import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo.dart';
+import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
+import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_repo.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 part 'database_app.g.dart';
@@ -12,14 +18,20 @@ part 'database_app.g.dart';
 //flutter pub run build_runner build --delete-conflicting-outputs
 @DriftDatabase(tables: [
   NewProductsEntity,
-  MostViewProductsEntity
+  MostViewProductsEntity,
+  WishlistProductsEntity,
+  ProductsEntity,
 ])
 class DatabaseApp extends _$DatabaseApp {
   DatabaseApp() : super(_openConnection());
 
   @override
   int get schemaVersion => 1;
-  Future<void> deleteAll() async {}
+  Future<void> deleteAll() async {
+    await GetIt.I.get<NewProductsLocalRepo>().deleteAll();
+    await GetIt.I.get<MostViewedProductsLocalRepo>().deleteAll();
+    await GetIt.I.get<WishlistProductsLocalRepo>().deleteAll();
+  }
 }
 
 LazyDatabase _openConnection() {

@@ -10,6 +10,10 @@ import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_lo
 import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo_impl.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo_impl.dart';
+import 'package:i2hand/src/local/repo/product/product_local_repo.dart';
+import 'package:i2hand/src/local/repo/product/product_local_repo_impl.dart';
+import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_repo.dart';
+import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_repo_impl.dart';
 import 'package:i2hand/src/network/data/attribute/attribute_repository.dart';
 import 'package:i2hand/src/network/data/attribute/attribute_repository_impl.dart';
 import 'package:i2hand/src/network/data/category/category_repository.dart';
@@ -20,6 +24,8 @@ import 'package:i2hand/src/network/data/sign/sign_repository.dart';
 import 'package:i2hand/src/network/data/sign/sign_repository_impl.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
 import 'package:i2hand/src/network/data/user/user_repository_impl.dart';
+import 'package:i2hand/src/network/data/wishlist/wishlist_repository.dart';
+import 'package:i2hand/src/network/data/wishlist/wishlist_repository_impl.dart';
 import 'package:i2hand/src/router/deep_link.dart';
 import 'package:i2hand/src/router/router.dart';
 import 'package:i2hand/src/service/shared_pref.dart';
@@ -58,10 +64,21 @@ void _locator() {
       .registerLazySingleton<ProductRepository>(() => ProductRepositoryImpl());
   GetIt.I.registerLazySingleton<AttributeRepository>(
       () => AttributeRepositoryImpl());
+  GetIt.I.registerLazySingleton<WishlistRepository>(
+      () => WishlistRepositoryImpl());
 
+  // Local database
   GetIt.I.registerLazySingleton<DatabaseApp>((() => DatabaseApp()));
   GetIt.I.registerLazySingleton<NewProductsLocalRepo>(
       (() => NewProductsLocalRepoImpl(GetIt.I())));
   GetIt.I.registerLazySingleton<MostViewedProductsLocalRepo>(
       (() => MostViewedProductsLocalRepoImpl(GetIt.I())));
+  GetIt.I.registerLazySingleton<WishlistProductsLocalRepo>(
+      (() => WishlistProductsLocalRepoImpl(GetIt.I())));
+  GetIt.I.registerLazySingleton<ProductsLocalRepo>(
+      (() => ProductsLocalRepoImpl(GetIt.I())));
+}
+
+void resetSingleton() {
+  GetIt.I.resetLazySingleton<WishlistProductsLocalRepo>();
 }
