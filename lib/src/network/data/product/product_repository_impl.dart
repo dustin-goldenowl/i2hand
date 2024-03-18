@@ -79,24 +79,7 @@ class ProductRepositoryImpl extends ProductRepository {
         await GetIt.I
             .get<NewProductsLocalRepo>()
             .upsert(product.convertToNewProductLocalData());
-        await _syncImageData(product.convertToNewProductLocalData());
       }
-    }
-  }
-
-  Future<void> _syncImageData(NewProductsEntityData product) async {
-    try {
-      final images =
-          await productRefStorage.getAllInSubFolder(subFolderText: product.id);
-      if (isNullOrEmpty(images.data)) return;
-      final thumbnailImage =
-          await (images.data!.first as List<Reference>).first.getData();
-      if (thumbnailImage == null) return;
-      await GetIt.I
-          .get<NewProductsLocalRepo>()
-          .upsert(product.copyWith(image: Value(thumbnailImage)));
-    } catch (e) {
-      xLog.e(e);
     }
   }
 
@@ -111,25 +94,7 @@ class ProductRepositoryImpl extends ProductRepository {
         await GetIt.I
             .get<MostViewedProductsLocalRepo>()
             .upsert(listProduct[i].convertToMostViewedProductLocalData());
-        await _syncImageMostView(
-            listProduct[i].convertToMostViewedProductLocalData());
       }
-    }
-  }
-
-  Future<void> _syncImageMostView(MostViewProductsEntityData product) async {
-    try {
-      final images =
-          await productRefStorage.getAllInSubFolder(subFolderText: product.id);
-      if (isNullOrEmpty(images.data)) return;
-      final thumbnailImage =
-          await (images.data!.first as List<Reference>).first.getData();
-      if (thumbnailImage == null) return;
-      await GetIt.I
-          .get<MostViewedProductsLocalRepo>()
-          .upsert(product.copyWith(image: Value(thumbnailImage)));
-    } catch (e) {
-      xLog.e(e);
     }
   }
 

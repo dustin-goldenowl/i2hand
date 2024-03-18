@@ -7,7 +7,9 @@ import 'package:i2hand/src/config/enum/attribute_enum.dart';
 import 'package:i2hand/src/feature/account/bloc/account_bloc.dart';
 import 'package:i2hand/src/feature/add_product/logic/add_product_state.dart';
 import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
+import 'package:i2hand/src/local/database_app.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
+import 'package:i2hand/src/local/repo/product/product_local_repo.dart';
 import 'package:i2hand/src/network/data/product/product_repository.dart';
 import 'package:i2hand/src/network/model/category/category.dart';
 import 'package:i2hand/src/network/model/product/attribute/attribute.dart';
@@ -223,12 +225,25 @@ class AddProductBloc extends BaseCubit<AddProductState> {
   Future<void> _syncToLocalDatabase(MProduct product) async {
     try {
       final image = state.listImage?.first;
-      final productLocalData = product.convertToNewProductLocalData();
-      await GetIt.I
-          .get<NewProductsLocalRepo>()
-          .insertDetail(productLocalData.copyWith(image: Value(image)));
+      final productLocalData = product.convertToProductLocalData();
+      _syncToProductLocal(productLocalData: productLocalData, image: image);
+      _syncToNewestProductLocal(newProduct: productLocalData);
     } catch (e) {
       xLog.e(e);
     }
+  }
+
+  Future<void> _syncToProductLocal(
+      {required ProductsEntityData productLocalData, Uint8List? image}) async {
+    await GetIt.I
+        .get<ProductsLocalRepo>()
+        .insertDetail(productLocalData.copyWith(image: Value(image)));
+  }
+
+  Future<void> _syncToNewestProductLocal(
+      {required ProductsEntityData newProduct}) async {
+    await GetIt.I
+        .get<NewProductsLocalRepo>()
+        .insertDetail(NewProductsEntityData(id: newProduct.id));
   }
 }
