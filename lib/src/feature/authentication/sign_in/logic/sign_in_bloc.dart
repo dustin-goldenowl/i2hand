@@ -10,6 +10,7 @@ import 'package:i2hand/src/network/model/common/social_type.dart';
 import 'package:i2hand/src/network/model/domain_manager.dart';
 import 'package:i2hand/src/network/model/social_user/social_user.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
+import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/service/shared_pref.dart';
 import 'package:i2hand/src/utils/base_cubit.dart';
 import 'package:i2hand/src/utils/string_utils.dart';
@@ -101,8 +102,12 @@ class SignInBloc extends BaseCubit<SignInState> {
 
   Future loginDecision(MResult<MUser> result, {MSocialType? socialType}) async {
     if (result.isSuccess) {
+      if (socialType != null) {
+        XToast.hideLoading();
+        AppCoordinator.showSyncingDataScreen();
+        return;
+      }
       emit(state.copyWith(status: SignInStatus.successed));
-      // TODO: Add logic Navigate to Syncing data screen
     } else {
       emitWrongPass();
       emit(state.copyWith(status: SignInStatus.failed));

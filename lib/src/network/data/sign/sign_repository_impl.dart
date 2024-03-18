@@ -29,9 +29,12 @@ class SignRepositoryImpl extends SignRepository {
       );
       final userResult = await DomainManager().user.getOrAddUser(newUser);
 
+      // reset singleton database
+      resetSingleton();
+
       // save sharepref
-      // SharedPrefs.I.setToken(await result.user?.getIdToken());
-      // SharedPrefs.I.setUser(userResult.data);
+      SharedPrefs.I.setToken(await result.user?.getIdToken());
+      SharedPrefs.I.setUser(userResult.data);
 
       return MResult.success(userResult.data ?? newUser);
     } catch (e) {

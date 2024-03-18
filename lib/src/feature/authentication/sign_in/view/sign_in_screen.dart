@@ -156,7 +156,7 @@ class SignInScreen extends StatelessWidget {
         bgColor: AppColors.white,
         border: const BorderSide(color: AppColors.grey2, width: 0.5),
         borderRadius: AppRadius.r10,
-        onPressed: () {},
+        onPressed: () => context.read<SignInBloc>().loginWithGoogle(context),
         label: Row(
           children: [
             Assets.svg.google.svg(width: AppFontSize.f20),
