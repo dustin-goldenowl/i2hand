@@ -181,6 +181,44 @@ class $AssetsSvgGen {
   /// File path: assets/svg/home.svg
   SvgGenImage get home => const SvgGenImage('assets/svg/home.svg');
 
+  /// File path: assets/svg/ic-color.svg
+  SvgGenImage get icColor => const SvgGenImage('assets/svg/ic-color.svg');
+
+  /// File path: assets/svg/ic-graphics-card.svg
+  SvgGenImage get icGraphicsCard =>
+      const SvgGenImage('assets/svg/ic-graphics-card.svg');
+
+  /// File path: assets/svg/ic-hardware-type.svg
+  SvgGenImage get icHardwareType =>
+      const SvgGenImage('assets/svg/ic-hardware-type.svg');
+
+  /// File path: assets/svg/ic-hardware.svg
+  SvgGenImage get icHardware => const SvgGenImage('assets/svg/ic-hardware.svg');
+
+  /// File path: assets/svg/ic-laptop-agency.svg
+  SvgGenImage get icLaptopAgency =>
+      const SvgGenImage('assets/svg/ic-laptop-agency.svg');
+
+  /// File path: assets/svg/ic-microprocessor.svg
+  SvgGenImage get icMicroprocessor =>
+      const SvgGenImage('assets/svg/ic-microprocessor.svg');
+
+  /// File path: assets/svg/ic-origin.svg
+  SvgGenImage get icOrigin => const SvgGenImage('assets/svg/ic-origin.svg');
+
+  /// File path: assets/svg/ic-ram.svg
+  SvgGenImage get icRam => const SvgGenImage('assets/svg/ic-ram.svg');
+
+  /// File path: assets/svg/ic-screen-size.svg
+  SvgGenImage get icScreenSize =>
+      const SvgGenImage('assets/svg/ic-screen-size.svg');
+
+  /// File path: assets/svg/ic-status.svg
+  SvgGenImage get icStatus => const SvgGenImage('assets/svg/ic-status.svg');
+
+  /// File path: assets/svg/ic-warranty.svg
+  SvgGenImage get icWarranty => const SvgGenImage('assets/svg/ic-warranty.svg');
+
   /// File path: assets/svg/icon-check.svg
   SvgGenImage get iconCheck => const SvgGenImage('assets/svg/icon-check.svg');
 
@@ -223,6 +261,17 @@ class $AssetsSvgGen {
         emptyData,
         google,
         home,
+        icColor,
+        icGraphicsCard,
+        icHardwareType,
+        icHardware,
+        icLaptopAgency,
+        icMicroprocessor,
+        icOrigin,
+        icRam,
+        icScreenSize,
+        icStatus,
+        icWarranty,
         iconCheck,
         onBoardingBg,
         onboardingIllustration,

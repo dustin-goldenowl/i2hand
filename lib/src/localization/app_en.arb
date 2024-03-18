@@ -137,5 +137,7 @@
     "verifyYourAccount": "Verify Your Account",
     "saveChanges": "Save Changes",
     "chooseVideo": "Choose video",
-    "recordVideo": "Record video"
+    "recordVideo": "Record video",
+    "attributes": "Attributes",
+    "twoDots": " : "
 }
