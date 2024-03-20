@@ -10,6 +10,8 @@ import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_lo
 import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo_impl.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo_impl.dart';
+import 'package:i2hand/src/network/data/attribute/attribute_repository.dart';
+import 'package:i2hand/src/network/data/attribute/attribute_repository_impl.dart';
 import 'package:i2hand/src/network/data/category/category_repository.dart';
 import 'package:i2hand/src/network/data/category/category_repository_impl.dart';
 import 'package:i2hand/src/network/data/product/product_repository.dart';
@@ -52,6 +54,8 @@ void _locator() {
       () => CategoryRepositoryImpl());
   GetIt.I
       .registerLazySingleton<ProductRepository>(() => ProductRepositoryImpl());
+  GetIt.I
+      .registerLazySingleton<AttributeRepository>(() => AttributeRepositoryImpl());
 
   GetIt.I.registerLazySingleton<DatabaseApp>((() => DatabaseApp()));
   GetIt.I.registerLazySingleton<NewProductsLocalRepo>(

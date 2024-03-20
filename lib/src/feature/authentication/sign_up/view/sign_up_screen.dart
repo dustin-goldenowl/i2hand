@@ -7,14 +7,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
 import 'package:i2hand/src/config/constants/app_const.dart';
-import 'package:i2hand/src/config/enum/picture_options_enum.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/feature/authentication/sign_up/logic/sign_up_bloc.dart';
 import 'package:i2hand/src/feature/authentication/sign_up/logic/sign_up_state.dart';
 import 'package:i2hand/src/feature/common/country_logic/search_dial_code_bloc.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/model/country/country_code.dart';
-import 'package:i2hand/src/router/coordinator.dart';
+import 'package:i2hand/src/service/image_handler.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
@@ -24,13 +23,10 @@ import 'package:i2hand/src/utils/string_utils.dart';
 import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/avatar/avatar.dart';
 import 'package:i2hand/widget/bottomsheet/country_code_bottomsheet.dart';
-import 'package:i2hand/widget/bottomsheet/image_picker_bottom_sheet.dart';
 import 'package:i2hand/widget/button/fill_button.dart';
-import 'package:i2hand/widget/image/pick_image_app.dart';
 import 'package:i2hand/widget/text_field/password_field.dart';
 import 'package:i2hand/widget/text_field/phone_input.dart';
 import 'package:i2hand/widget/text_field/text_field.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -383,48 +379,9 @@ class SignUpScreen extends StatelessWidget {
   }
 
   void _pickImagehandler(BuildContext context, Uint8List? avatar) {
-    showCupertinoModalBottomSheet(
-        duration: const Duration(milliseconds: 350),
-        animationCurve: Curves.easeOut,
-        barrierColor: AppColors.black.withOpacity(0.5),
-        context: context,
-        builder: (_) => XImagePickerBottomSheet(
-            isPhotoExisted: !isNullOrEmpty(avatar),
-            onSelectedValue: (value) async {
-              AppCoordinator.pop();
-              switch (value as PictureOptionsEnum) {
-                case PictureOptionsEnum.takePhoto:
-                  try {
-                    final image = await PickerImageApp.show(ImageSource.camera);
-                    if (image != null) {
-                      if (!context.mounted) return;
-                      context.read<SignUpBloc>().setAvatar(image.bytes);
-                    }
-                  } catch (error) {
-                    xLog.e("pickImagehandler $error");
-                  }
-                  break;
-                case PictureOptionsEnum.choosePhoto:
-                  try {
-                    final image =
-                        await PickerImageApp.show(ImageSource.gallery);
-                    if (image != null) {
-                      if (!context.mounted) return;
-                      context.read<SignUpBloc>().setAvatar(image.bytes);
-                    }
-                  } catch (error) {
-                    xLog.e("pickImagehandler $error");
-                  }
-                  break;
-                case PictureOptionsEnum.removePhoto:
-                  try {
-                    context.read<SignUpBloc>().setAvatar(Uint8List(0));
-                  } catch (error) {
-                    xLog.e("pickImagehandler $error");
-                  }
-                  break;
-              }
-            }));
+    ImageHandler.pickImagehandler(context,
+        image: avatar,
+        setImage: (image) => context.read<SignUpBloc>().setAvatar(image));
   }
 }
 

@@ -8,7 +8,7 @@ part of 'attribute_model.dart';
 
 MAttribute _$MAttributeFromJson(Map<String, dynamic> json) => MAttribute(
       name: $enumDecode(_$AttributeEnumEnumMap, json['name']),
-      isRequired: json['isRequired'] as bool,
+      isRequired: json['isRequired'] as bool? ?? false,
       data: (json['data'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
@@ -23,7 +23,8 @@ const _$AttributeEnumEnumMap = {
   AttributeEnum.status: 'status',
   AttributeEnum.images: 'images',
   AttributeEnum.videos: 'videos',
-  AttributeEnum.agency: 'agency',
+  AttributeEnum.agencyPhone: 'agencyPhone',
+  AttributeEnum.agencyLaptop: 'agencyLaptop',
   AttributeEnum.microProcessor: 'microProcessor',
   AttributeEnum.ram: 'ram',
   AttributeEnum.hardWare: 'hardWare',
@@ -33,5 +34,6 @@ const _$AttributeEnumEnumMap = {
   AttributeEnum.screenSize: 'screenSize',
   AttributeEnum.warrantyPolicy: 'warrantyPolicy',
   AttributeEnum.origin: 'origin',
+  AttributeEnum.color: 'color',
   AttributeEnum.price: 'price',
 };

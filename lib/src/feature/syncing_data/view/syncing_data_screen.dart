@@ -117,6 +117,7 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
     await _getListNewProducts();
     await _syncingUserAvatar();
     await _syncingUserData();
+    await _getAttributesData();
   }
 
   Future<void> _syncingUserData() async {
@@ -165,5 +166,9 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
 
   Future<void> _getListNewProducts() async {
     await GetIt.I.get<ProductRepository>().getProducts();
+  }
+
+  Future<void> _getAttributesData() async {
+    await context.read<GlobalBloc>().getListAttributes();
   }
 }

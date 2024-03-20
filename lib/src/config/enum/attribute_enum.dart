@@ -5,7 +5,8 @@ enum AttributeEnum {
   status,
   images,
   videos,
-  agency,
+  agencyPhone,
+  agencyLaptop,
   microProcessor,
   ram,
   hardWare,
@@ -15,6 +16,7 @@ enum AttributeEnum {
   screenSize,
   warrantyPolicy,
   origin,
+  color,
   price;
 
   String getAttributeText(BuildContext context) {
@@ -25,8 +27,10 @@ enum AttributeEnum {
         return S.of(context).images;
       case AttributeEnum.videos:
         return S.of(context).videos;
-      case AttributeEnum.agency:
-        return S.of(context).agency;
+      case AttributeEnum.agencyPhone:
+        return S.of(context).agencyPhone;
+      case AttributeEnum.agencyLaptop:
+        return S.of(context).agencyLaptop;
       case AttributeEnum.microProcessor:
         return S.of(context).microProcessor;
       case AttributeEnum.ram:
@@ -47,6 +51,8 @@ enum AttributeEnum {
         return S.of(context).origin;
       case AttributeEnum.price:
         return S.of(context).price;
+      case AttributeEnum.color:
+        return S.of(context).color;
     }
   }
 
@@ -58,8 +64,10 @@ enum AttributeEnum {
         return AttributeEnum.images;
       case 'videos':
         return AttributeEnum.videos;
-      case 'agency':
-        return AttributeEnum.agency;
+      case 'agency phone':
+        return AttributeEnum.agencyPhone;
+      case 'agency laptop':
+        return AttributeEnum.agencyLaptop;
       case 'microprocessor':
         return AttributeEnum.microProcessor;
       case 'ram':
@@ -80,6 +88,8 @@ enum AttributeEnum {
         return AttributeEnum.origin;
       case 'price':
         return AttributeEnum.price;
+      case 'color':
+        return AttributeEnum.color;
       default:
         return AttributeEnum.status;
     }
