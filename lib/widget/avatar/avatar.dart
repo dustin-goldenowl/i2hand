@@ -81,73 +81,9 @@ class _XAvatarState extends State<XAvatar> {
     return Stack(
       children: [
         _renderImage(widget.imageType),
-        widget.isEditable
-            ? Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(AppPadding.p5),
-                  decoration: BoxDecoration(
-                      color: AppColors.greenLight,
-                      borderRadius: BorderRadius.circular(AppRadius.r20)),
-                  child: IconButton(
-                    onPressed: () {
-                      widget.onEdit?.call();
-                    },
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all(EdgeInsets.zero),
-                      minimumSize: MaterialStateProperty.all(Size.zero),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      iconColor: MaterialStateProperty.all(AppColors.white),
-                      foregroundColor:
-                          MaterialStateProperty.all(AppColors.white),
-                    ),
-                    icon: const Icon(Icons.edit),
-                    color: AppColors.white,
-                    alignment: Alignment.topRight,
-                    constraints: const BoxConstraints(
-                      minWidth: AppSize.s20,
-                      minHeight: AppSize.s20,
-                    ),
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                  ),
-                ),
-              )
-            : const SizedBox.shrink(),
+        widget.isEditable ? _renderEditedIcon() : const SizedBox.shrink(),
         widget.isSelected
-            ? Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: AppPadding.p5, vertical: AppPadding.p6),
-                  decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      border: Border.all(
-                          color: widget.borderColor ?? AppColors.white,
-                          width: widget.borderWidth ?? AppSize.s4),
-                      borderRadius: BorderRadius.circular(AppRadius.r40),
-                      boxShadow:
-                          widget.isShadow ? AppDecorations.fullShadow() : null),
-                  child: IconButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all(EdgeInsets.zero),
-                      minimumSize: MaterialStateProperty.all(Size.zero),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      iconColor: MaterialStateProperty.all(AppColors.white),
-                      foregroundColor:
-                          MaterialStateProperty.all(AppColors.white),
-                    ),
-                    icon: Assets.svg.iconCheck.svg(fit: BoxFit.contain),
-                    color: AppColors.white,
-                    alignment: Alignment.topRight,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                  ),
-                ),
-              )
+            ? _renderSelectedIcon(context)
             : const SizedBox.shrink(),
       ],
     );
@@ -179,6 +115,62 @@ class _XAvatarState extends State<XAvatar> {
         boxShadow: widget.isShadow ? AppDecorations.fullShadow() : [],
       ),
       child: null,
+    );
+  }
+
+  Widget _renderSelectedIcon(BuildContext context) {
+    return Positioned(
+      top: 0,
+      right: 0,
+      child: Container(
+        width: AppSize.s20,
+        height: AppSize.s20,
+        padding: const EdgeInsets.all(AppPadding.p3),
+        decoration: BoxDecoration(
+            color: AppColors.primary,
+            border: Border.all(
+              color: widget.borderColor ?? AppColors.white,
+              width: widget.borderWidth ?? AppSize.s4,
+              strokeAlign: BorderSide.strokeAlignCenter,
+            ),
+            borderRadius: BorderRadius.circular(AppRadius.r40),
+            boxShadow: widget.isShadow ? AppDecorations.fullShadow() : null),
+        child: Assets.svg.iconCheck.svg(fit: BoxFit.contain),
+      ),
+    );
+  }
+
+  Widget _renderEditedIcon() {
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      child: Container(
+        padding: const EdgeInsets.all(AppPadding.p5),
+        decoration: BoxDecoration(
+            color: AppColors.greenLight,
+            borderRadius: BorderRadius.circular(AppRadius.r20)),
+        child: IconButton(
+          onPressed: () {
+            widget.onEdit?.call();
+          },
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            minimumSize: MaterialStateProperty.all(Size.zero),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            iconColor: MaterialStateProperty.all(AppColors.white),
+            foregroundColor: MaterialStateProperty.all(AppColors.white),
+          ),
+          icon: const Icon(Icons.edit),
+          color: AppColors.white,
+          alignment: Alignment.topRight,
+          constraints: const BoxConstraints(
+            minWidth: AppSize.s20,
+            minHeight: AppSize.s20,
+          ),
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+      ),
     );
   }
 }

@@ -1,14 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
+import 'package:i2hand/src/config/enum/product_enum.dart';
 import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
 import 'package:i2hand/src/feature/global/logic/global_state.dart';
 import 'package:i2hand/src/feature/home/feature/search/logic/search_bloc.dart';
 import 'package:i2hand/src/feature/home/feature/search/logic/search_state.dart';
+import 'package:i2hand/src/feature/home/feature/search/widget/filter_bottomsheet.dart';
 import 'package:i2hand/src/feature/home/feature/search/widget/location_picker.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/model/category/category.dart';
+import 'package:i2hand/src/network/model/product/product.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
@@ -18,10 +22,13 @@ import 'package:i2hand/src/utils/string_utils.dart';
 import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/appbar/app_bar.dart';
 import 'package:i2hand/widget/avatar/avatar.dart';
+import 'package:i2hand/widget/button/fill_button.dart';
+import 'package:i2hand/widget/card/product_card.dart';
 import 'package:i2hand/widget/text_field/search_input.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  const SearchScreen({super.key, required this.options});
+  final String options;
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -31,6 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
+    context.read<SearchBloc>().inital(context);
   }
 
   @override
@@ -46,8 +54,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 _renderAppBar(),
                 XPaddingUtils.verticalPadding(height: AppPadding.p10),
                 _renderCategoriesSection(context),
-                XPaddingUtils.verticalPadding(height: AppPadding.p10),
-                _renderProductNearFromYou(context),
                 XPaddingUtils.verticalPadding(height: AppPadding.p10),
                 _renderAllProducts(context),
                 XPaddingUtils.verticalPadding(height: AppPadding.p45),
@@ -81,27 +87,30 @@ class _SearchScreenState extends State<SearchScreen> {
               actions: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Expanded(
-                    child: XSearchInput(
-                      onChanged: (searchText) => context
-                          .read<SearchBloc>()
-                          .onChangedSearchText(searchText),
-                      bgColor: AppColors.grey8,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.r30),
-                        borderSide: const BorderSide(
-                            width: AppSize.s0, color: Colors.transparent),
-                      ),
-                      focusBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.r30),
-                        borderSide: const BorderSide(
-                            width: AppSize.s0, color: Colors.transparent),
-                      ),
-                    ),
-                  )
+                  _renderSearchField(context),
                 ],
               ));
         },
+      ),
+    );
+  }
+
+  Widget _renderSearchField(BuildContext context) {
+    return Expanded(
+      child: XSearchInput(
+        onChanged: (searchText) =>
+            context.read<SearchBloc>().onChangedSearchText(searchText),
+        bgColor: AppColors.grey8,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r30),
+          borderSide:
+              const BorderSide(width: AppSize.s0, color: Colors.transparent),
+        ),
+        focusBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r30),
+          borderSide:
+              const BorderSide(width: AppSize.s0, color: Colors.transparent),
+        ),
       ),
     );
   }
@@ -151,7 +160,7 @@ class _SearchScreenState extends State<SearchScreen> {
           !listEquals(previous.listCategories, current.listCategories),
       builder: (context, state) {
         return SizedBox(
-          height: AppSize.s200,
+          height: AppSize.s170,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: context.read<GlobalBloc>().getNumberColumns(),
@@ -173,7 +182,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Expanded(child: _renderCategory(firstCategory)),
+        _renderCategory(firstCategory),
         XPaddingUtils.verticalPadding(height: AppPadding.p12),
         isNullOrEmpty(secondCategory)
             ? const SizedBox.shrink()
@@ -184,8 +193,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _renderCategory(MCategory category) {
     return BlocBuilder<SearchBloc, SearchState>(
-      buildWhen: (previous, current) =>
-          !listEquals(previous.selectedCategories, current.selectedCategories),
+      buildWhen: (previous, current) {
+        // Check changement of list [selectedCategories] of this [category]
+        return (previous.selectedCategory == category &&
+                current.selectedCategory != category) ||
+            (previous.selectedCategory != category &&
+                current.selectedCategory == category);
+      },
       builder: (context, state) {
         return GestureDetector(
           onTap: () =>
@@ -195,24 +209,8 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                XAvatar(
-                  imageSize: AppSize.s70,
-                  isSelected:
-                      context.read<SearchBloc>().isSelectedCategory(category),
-                  memoryData: Uint8List.fromList(
-                    category.image?.map((e) => int.parse(e)).toList() ?? [],
-                  ),
-                  imageType: ImageType.memory,
-                  borderColor: AppColors.white,
-                ),
-                Text(
-                  category.name,
-                  style: AppTextStyle.contentTexStyle
-                      .copyWith(color: AppColors.black),
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                )
+                _renderCircleCategory(category),
+                _renderCategoryText(category),
               ],
             ),
           ),
@@ -221,33 +219,25 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _renderProductNearFromYou(BuildContext context) {
-    return Column(
-      children: [
-        _renderSelectPosition(context),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: AppPadding.p10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppRadius.r16),
-            color: AppColors.white,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _renderTitleSection(context, title: S.of(context).nearYou),
-              XPaddingUtils.verticalPadding(height: AppPadding.p10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
-                child: Text(
-                  S.of(context).noProductFound,
-                  style: AppTextStyle.contentTexStyleBold,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+  Widget _renderCircleCategory(MCategory category) {
+    return XAvatar(
+      imageSize: AppSize.s50,
+      isSelected: context.read<SearchBloc>().isSelectedCategory(category),
+      memoryData: Uint8List.fromList(
+        category.image?.map((e) => int.parse(e)).toList() ?? [],
+      ),
+      imageType: ImageType.memory,
+      borderColor: AppColors.white,
+    );
+  }
+
+  Widget _renderCategoryText(MCategory category) {
+    return Text(
+      category.name,
+      style: AppTextStyle.contentTexStyle.copyWith(color: AppColors.black),
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,
+      maxLines: 2,
     );
   }
 
@@ -331,41 +321,167 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _renderAllProducts(BuildContext context) {
     return Column(
       children: [
+        _renderSelectPosition(context),
         Container(
           padding: const EdgeInsets.symmetric(vertical: AppPadding.p10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.r16),
             color: AppColors.white,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _renderTitleSection(
-                context,
-                title: S.of(context).allProducts,
-                actions: _renderFilterButton(context),
-              ),
-              XPaddingUtils.verticalPadding(height: AppPadding.p10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
-                child: Text(
-                  S.of(context).noProductFound,
-                  style: AppTextStyle.contentTexStyleBold,
-                ),
-              ),
-            ],
+          child: BlocBuilder<SearchBloc, SearchState>(
+            buildWhen: (previous, current) =>
+                !listEquals(
+                    previous.searchedProduct, current.searchedProduct) ||
+                previous.status != current.status,
+            builder: (context, state) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _renderTitleSection(
+                    context,
+                    title: S.of(context).allProducts,
+                    actions: _renderStatusAndFilter(context),
+                  ),
+                  XPaddingUtils.verticalPadding(height: AppPadding.p10),
+                  state.status == SearchStatus.loading
+                      ? _renderLoadingView()
+                      : state.searchedProduct.isEmpty
+                          ? _renderEmptyProduct(context)
+                          : _renderProducts(context,
+                              allProduct: state.searchedProduct),
+                ],
+              );
+            },
           ),
         ),
       ],
     );
   }
 
+  Widget _renderStatusAndFilter(BuildContext context) {
+    return Row(
+      children: [
+        _renderStatusData(context),
+        _renderFilterButton(context),
+      ],
+    );
+  }
+
+  Widget _renderStatusData(BuildContext context) {
+    return BlocSelector<SearchBloc, SearchState, ProductStatusEnum>(
+      selector: (state) {
+        return state.productStatus;
+      },
+      builder: (context, productStatus) {
+        return productStatus == ProductStatusEnum.none
+            ? const SizedBox.shrink()
+            : Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppPadding.p10,
+                  vertical: AppPadding.p2,
+                ),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppRadius.r16),
+                    border: Border.all(color: AppColors.primary)),
+                child: Text(
+                  productStatus.getText(context),
+                  style: AppTextStyle.labelStyle,
+                ),
+              );
+      },
+    );
+  }
+
   Widget _renderFilterButton(BuildContext context) {
     return IconButton(
-        onPressed: () {
-          //TODO: Navigation to filter page
-        },
-        icon: const Icon(Icons.filter_list_alt));
+      onPressed: () {
+        showListFilter(context);
+      },
+      icon: const Icon(Icons.filter_list_alt),
+    );
+  }
+
+  Widget _renderEmptyProduct(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
+      child: Text(
+        S.of(context).noProductFound,
+        style: AppTextStyle.contentTexStyleBold,
+      ),
+    );
+  }
+
+  Widget _renderProducts(BuildContext context,
+      {required List<MProduct> allProduct}) {
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppPadding.p20,
+      ),
+      shrinkWrap: true,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: AppPadding.p10,
+        crossAxisSpacing: AppPadding.p10,
+        childAspectRatio: 10 / 15,
+      ),
+      itemBuilder: (context, index) => XProductCard(
+        product: allProduct[index],
+      ),
+      itemCount: allProduct.length,
+    );
+  }
+
+  Widget _renderLoadingView() {
+    return Assets.jsons.syncData.lottie(width: AppSize.s100);
+  }
+
+  void showListFilter(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      builder: (_) => FractionallySizedBox(
+        heightFactor: 0.75,
+        child: BlocProvider.value(
+          value: BlocProvider.of<SearchBloc>(context),
+          child: Scaffold(
+              backgroundColor: Colors.transparent,
+              bottomNavigationBar: _renderBottomButton(context),
+              body: const XFilterBottomsheet()),
+        ),
+      ),
+      isScrollControlled: true,
+      barrierColor: AppColors.black.withOpacity(0.6),
+      enableDrag: true,
+      isDismissible: true,
+    ).then((valueCallback) {});
+  }
+
+  Widget _renderBottomButton(BuildContext context) {
+    return BlocSelector<SearchBloc, SearchState, bool>(
+      selector: (state) {
+        return state.isChangeFilter;
+      },
+      builder: (context, isChangeFilter) {
+        return Padding(
+          padding: const EdgeInsets.only(
+            left: AppPadding.p12,
+            right: AppPadding.p12,
+            bottom: AppPadding.p23,
+          ),
+          child: XFillButton(
+            onPressed: () =>
+                isChangeFilter ? context.read<SearchBloc>().resetFilter() : {},
+            bgColor:
+                isChangeFilter ? AppColors.primary : AppColors.backgroundButton,
+            label: Text(
+              S.of(context).resetFilter,
+              style: AppTextStyle.buttonTextStylePrimary,
+            ),
+          ),
+        );
+      },
+    );
   }
 }

@@ -15,7 +15,7 @@ enum AppRouteNames {
   forgotPassword(path: '/forgotPassword'),
   sendMailSuccess(path: '/sendMailSuccess'),
   signUp(path: '/signUp'),
-  search(path: '/search'),
+  search(path: 'search', param: 'options'),
   productDetail(path: '/productDetail', param: 'id'),
   selectLocation(path: 'selectLocation', param: 'address'),
   recentlyViewed(path: '/recentlyViewed'),

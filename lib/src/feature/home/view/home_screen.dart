@@ -1,6 +1,10 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/package/dismiss_keyboard/dismiss_keyboard.dart';
 import 'package:i2hand/src/config/constants/app_const.dart';
 import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
@@ -9,6 +13,7 @@ import 'package:i2hand/src/feature/home/logic/home_bloc.dart';
 import 'package:i2hand/src/feature/home/logic/home_state.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/model/category/category.dart';
+import 'package:i2hand/src/network/model/product/product.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
@@ -70,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Expanded(
                   child: GestureDetector(
-                onTap: () => AppCoordinator.showSearchScreen(),
+                onTap: () => AppCoordinator.showSearchScreen(options: ' '),
                 child: Container(
                   decoration: BoxDecoration(
                       color: AppColors.grey8,
@@ -222,21 +227,66 @@ class _HomeScreenState extends State<HomeScreen> {
           !listEquals(previous.listNewProducts, current.listNewProducts),
       builder: (context, state) {
         return SizedBox(
-            height: AppSize.s250,
-            child: (isNullOrEmpty(state.listNewProducts))
-                ? const SizedBox.shrink()
-                : ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: state.listNewProducts!.length,
-                    itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppPadding.p12,
-                            vertical: AppPadding.p6),
-                        child: XProductCard(
-                          product: state.listNewProducts![index],
-                        )),
-                  ));
+          height: AppSize.s250,
+          child: (isNullOrEmpty(state.listNewProducts))
+              ? const SizedBox.shrink()
+              : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: state.listNewProducts!.length > 5
+                      ? 6
+                      : state.listNewProducts!.length,
+                  itemBuilder: (context, index) {
+                    if (index == 5) {
+                      return _renderMoreProduct(
+                          context, state.listNewProducts![5]);
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppPadding.p12, vertical: AppPadding.p6),
+                      child: XProductCard(
+                        product: state.listNewProducts![index],
+                      ),
+                    );
+                  }),
+        );
       },
+    );
+  }
+
+  Widget _renderMoreProduct(BuildContext context, MProduct product) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppPadding.p12, vertical: AppPadding.p6),
+      child: Stack(
+        children: [
+          Container(
+            width: AppSize.s150,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppRadius.r8),
+            ),
+            clipBehavior: Clip.hardEdge,
+            child: XProductCard(
+              product: product,
+            ),
+          ),
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () => AppCoordinator.showSearchScreen(options: ' '),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppColors.showMoreGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(AppRadius.r8),
+                ),
+                child: Transform.rotate(
+                    angle: -pi / 2, child: Assets.jsons.showMore.lottie()),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

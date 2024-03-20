@@ -139,5 +139,14 @@
     "chooseVideo": "Choose video",
     "recordVideo": "Record video",
     "attributes": "Attributes",
-    "twoDots": " : "
+    "twoDots": " : ",
+    "filter": "Filter",
+    "newest": "Newest",
+    "mostViewed": "Most viewed",
+    "priceHighToLow": "Price High to Low",
+    "priceLowToHigh": "Price Low to High",
+    "postHaveVideo": "Post have video",
+    "dash": " ─ ",
+    "plus": "+",
+    "resetFilter": "Reset filter"
 }

@@ -81,7 +81,7 @@ class _RecentlyViewedScreenState extends State<RecentlyViewedScreen> {
           child: Row(
             children: [
               Expanded(
-                child: XSelectedChip(
+                child: XSelectedChipWithIcon(
                   title: S.of(context).today,
                   isSelected: isSameDay(
                     state.selectedDate,
@@ -94,7 +94,7 @@ class _RecentlyViewedScreenState extends State<RecentlyViewedScreen> {
               ),
               XPaddingUtils.horizontalPadding(width: AppPadding.p6),
               Expanded(
-                child: XSelectedChip(
+                child: XSelectedChipWithIcon(
                   title:
                       context.read<RecentlyViewedBloc>().getDateText(context),
                   isSelected:

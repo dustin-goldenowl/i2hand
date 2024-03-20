@@ -6,6 +6,7 @@ import 'package:i2hand/src/config/enum/options.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class AppConstantData {
   static const int passwordLength = 8;
@@ -13,6 +14,12 @@ class AppConstantData {
 
   static const String adminUsername = 'photostartup2020@gmail.com';
   static const String adminPassword = 'Death12a2';
+
+  static const double minPrice = 0.0;
+  static const double maxPrice = 1000.0;
+
+  static const SfRangeValues defaultPriceRange =
+      SfRangeValues(minPrice, maxPrice);
 
   static List<TabItem> listDefaultBottomBarItems = [
     TabItem<Widget>(

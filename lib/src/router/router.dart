@@ -191,11 +191,15 @@ class AppRouter {
                 GoRoute(
                     parentNavigatorKey: AppCoordinator.navigatorKey,
                     name: AppRouteNames.search.name,
-                    path: AppRouteNames.search.subPath,
-                    builder: (__, _) {
+                    path: AppRouteNames.search.buildSubPathParam,
+                    builder: (__, state) {
+                      final options =
+                          state.pathParameters[AppRouteNames.search.param]!;
                       return BlocProvider(
                         create: (context) => SearchBloc(),
-                        child: const SearchScreen(),
+                        child: SearchScreen(
+                          options: options,
+                        ),
                       );
                     }),
               ]),
