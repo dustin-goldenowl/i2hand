@@ -56,7 +56,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     background: _renderImageCarousel(),
                     stretchModes: const [StretchMode.zoomBackground],
                   ),
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: AppColors.secondPrimary,
                   pinned: true,
                   expandedHeight: AppSize.s430,
                   stretch: true,
@@ -83,47 +83,50 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _renderImageCarousel() {
-    return BlocBuilder<DetailProductBloc, DetailProductState>(
-      buildWhen: (previous, current) =>
-          previous.assetsStatus != current.assetsStatus ||
-          previous.carouselIndex != current.carouselIndex ||
-          listEquals(previous.listImage, current.listImage),
-      builder: (context, state) {
-        return state.assetsStatus == FetchAssetsStatus.success ||
-                !isNullOrEmpty(state.listImage)
-            ? Column(
-                children: [
-                  XCarousel(
-                    height: AppSize.s300,
-                    isIndicatorInside: false,
-                    effect: const ExpandingDotsEffect(
-                      radius: AppRadius.r8,
-                      spacing: AppPadding.p8,
-                      dotHeight: AppSize.s6,
-                      dotWidth: AppSize.s6,
-                      activeDotColor: AppColors.orange,
+    return Container(
+      color: AppColors.scaffoldBackgroundColor,
+      child: BlocBuilder<DetailProductBloc, DetailProductState>(
+        buildWhen: (previous, current) =>
+            previous.assetsStatus != current.assetsStatus ||
+            previous.carouselIndex != current.carouselIndex ||
+            listEquals(previous.listImage, current.listImage),
+        builder: (context, state) {
+          return state.assetsStatus == FetchAssetsStatus.success ||
+                  !isNullOrEmpty(state.listImage)
+              ? Column(
+                  children: [
+                    XCarousel(
+                      height: AppSize.s300,
+                      isIndicatorInside: false,
+                      effect: const ExpandingDotsEffect(
+                        radius: AppRadius.r8,
+                        spacing: AppPadding.p8,
+                        dotHeight: AppSize.s6,
+                        dotWidth: AppSize.s6,
+                        activeDotColor: AppColors.orange,
+                      ),
+                      autoPlay: false,
+                      onPageChanged: (index) => context
+                          .read<DetailProductBloc>()
+                          .onChangedCarouselIndex(index),
+                      padBottom: AppSize.s24,
+                      jumpPage: state.carouselIndex,
+                      items: [
+                        for (Uint8List? image in state.listImage!)
+                          Image.memory(
+                            image ?? Uint8List(0),
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
+                      ],
                     ),
-                    autoPlay: false,
-                    onPageChanged: (index) => context
-                        .read<DetailProductBloc>()
-                        .onChangedCarouselIndex(index),
-                    padBottom: AppSize.s24,
-                    jumpPage: state.carouselIndex,
-                    items: [
-                      for (Uint8List? image in state.listImage!)
-                        Image.memory(
-                          image ?? Uint8List(0),
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        )
-                    ],
-                  ),
-                  _renderSmallerViewImage(
-                      state.listImage!, state.carouselIndex),
-                ],
-              )
-            : Assets.jsons.loadingPicture.lottie(fit: BoxFit.contain);
-      },
+                    _renderSmallerViewImage(
+                        state.listImage!, state.carouselIndex),
+                  ],
+                )
+              : Assets.jsons.loadingPicture.lottie(fit: BoxFit.contain);
+        },
+      ),
     );
   }
 
@@ -194,6 +197,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget _renderDetailProductSection(BuildContext context) {
     return Container(
       clipBehavior: Clip.antiAlias,
+      margin: const EdgeInsets.only(top: AppMargin.m4),
       width: double.infinity,
       decoration: BoxDecoration(
           color: AppColors.white,
@@ -438,29 +442,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _renderTitleWithIcon(
-          title: S.of(context).address,
-          icon: Icons.location_on_rounded,
-        ),
+        _renderTitle(title: S.of(context).address),
         _renderLocationText(context),
       ],
     );
   }
 
-  Widget _renderTitleWithIcon({required IconData icon, required String title}) {
+  Widget _renderTitle({required String title}) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Icon(icon, color: AppColors.hintTextColor),
-            Text(
-              title,
-              style: AppTextStyle.titleTextStyle.copyWith(
-                color: AppColors.hintTextColor,
-                fontSize: AppFontSize.f18,
-              ),
-            )
-          ],
+        Text(
+          title,
+          style: AppTextStyle.titleTextStyle.copyWith(
+            color: AppColors.hintTextColor,
+            fontSize: AppFontSize.f18,
+          ),
         ),
         _renderDashline(),
       ],
@@ -483,12 +480,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return BlocBuilder<DetailProductBloc, DetailProductState>(
       buildWhen: (previous, current) =>
           previous.product.province != current.product.province,
-      builder: (context, state) => Text(
-        StringUtils.getAddressText(rawAddress: state.product.province),
-        style: AppTextStyle.contentTexStyle.copyWith(
-          fontSize: AppFontSize.f15,
-          color: AppColors.black,
-        ),
+      builder: (context, state) => Row(
+        children: [
+          const Icon(
+            Icons.share_location_rounded,
+            color: AppColors.red,
+          ),
+          Text(
+            StringUtils.getAddressText(rawAddress: state.product.province),
+            style: AppTextStyle.contentTexStyle.copyWith(
+              fontSize: AppFontSize.f15,
+              color: AppColors.black,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -497,10 +502,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _renderTitleWithIcon(
-          title: S.of(context).description,
-          icon: Icons.description,
-        ),
+        _renderTitle(title: S.of(context).description),
         _renderDescriptionText(),
       ],
     );
@@ -525,10 +527,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _renderTitleWithIcon(
-          title: S.of(context).attributes,
-          icon: Icons.auto_awesome_rounded,
-        ),
+        _renderTitle(title: S.of(context).attributes),
         _renderAttributesText(),
       ],
     );
