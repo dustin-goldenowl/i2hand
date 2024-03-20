@@ -92,13 +92,11 @@ class MProduct with EquatableMixin {
 extension MProductExt on MProduct {
   NewProductsEntityData convertToNewProductLocalData() {
     final jsonData = toJson();
-    jsonData['image'] = (image ?? []).convertToUint8List();
     return NewProductsEntityData.fromJson(jsonData);
   }
 
   MostViewProductsEntityData convertToMostViewedProductLocalData() {
     final jsonData = toJson();
-    jsonData['image'] = (image ?? []).convertToUint8List();
     return MostViewProductsEntityData.fromJson(jsonData);
   }
 

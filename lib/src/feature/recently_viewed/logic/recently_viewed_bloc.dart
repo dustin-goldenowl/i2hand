@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/feature/recently_viewed/logic/recently_viewed_state.dart';
-import 'package:i2hand/src/local/entities/new_products_entity.dart';
-import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
+import 'package:i2hand/src/network/model/product/product.dart';
 import 'package:i2hand/src/utils/base_cubit.dart';
 import 'package:i2hand/src/utils/datetime_ext.dart';
 import 'package:i2hand/src/utils/utils.dart';
@@ -18,10 +16,11 @@ class RecentlyViewedBloc extends BaseCubit<RecentlyViewedState> {
 
   Future<void> inital(BuildContext context) async {
     try {
-      final data =
-          await GetIt.I.get<NewProductsLocalRepo>().getAllDetails().get();
-      final listProducts = data.convertToProductData();
-      emit(state.copyWith(listProducts: listProducts));
+      // TODO: Add logic get recently data
+      // final data =
+      //     await GetIt.I.get<NewProductsLocalRepo>().getAllDetails().get();
+      // final listProducts = data.convertToProductData();
+      emit(state.copyWith(listProducts: [MProduct.empty()]));
     } catch (e) {
       xLog.e(e);
     }
