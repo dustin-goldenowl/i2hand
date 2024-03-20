@@ -4,9 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
 import 'package:i2hand/gen/fonts.gen.dart';
+import 'package:i2hand/src/config/enum/attribute_enum.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_bloc.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_state.dart';
+import 'package:i2hand/src/feature/product/widget/attributes_detail_widget.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
+import 'package:i2hand/src/network/model/product/attribute/attribute.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/decorations.dart';
@@ -14,6 +17,7 @@ import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
 import 'package:i2hand/src/utils/string_ext.dart';
+import 'package:i2hand/src/utils/string_utils.dart';
 import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/avatar/avatar.dart';
 import 'package:i2hand/widget/button/fill_button.dart';
@@ -52,7 +56,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     background: _renderImageCarousel(),
                     stretchModes: const [StretchMode.zoomBackground],
                   ),
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: AppColors.secondPrimary,
                   pinned: true,
                   expandedHeight: AppSize.s430,
                   stretch: true,
@@ -79,53 +83,121 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _renderImageCarousel() {
-    return BlocBuilder<DetailProductBloc, DetailProductState>(
-      buildWhen: (previous, current) =>
-          previous.assetsStatus != current.assetsStatus ||
-          previous.carouselIndex != current.carouselIndex ||
-          listEquals(previous.listImage, current.listImage),
-      builder: (context, state) {
-        return state.assetsStatus == FetchAssetsStatus.success ||
-                !isNullOrEmpty(state.listImage)
-            ? Column(
-                children: [
-                  XCarousel(
-                    height: AppSize.s300,
-                    isIndicatorInside: false,
-                    effect: const ExpandingDotsEffect(
-                      radius: AppRadius.r8,
-                      spacing: AppPadding.p8,
-                      dotHeight: AppSize.s6,
-                      dotWidth: AppSize.s6,
-                      activeDotColor: AppColors.orange,
+    return Container(
+      color: AppColors.scaffoldBackgroundColor,
+      child: BlocBuilder<DetailProductBloc, DetailProductState>(
+        buildWhen: (previous, current) =>
+            previous.assetsStatus != current.assetsStatus ||
+            previous.carouselIndex != current.carouselIndex ||
+            listEquals(previous.listImage, current.listImage),
+        builder: (context, state) {
+          return state.assetsStatus == FetchAssetsStatus.success ||
+                  !isNullOrEmpty(state.listImage)
+              ? Column(
+                  children: [
+                    XCarousel(
+                      height: AppSize.s300,
+                      isIndicatorInside: false,
+                      effect: const ExpandingDotsEffect(
+                        radius: AppRadius.r8,
+                        spacing: AppPadding.p8,
+                        dotHeight: AppSize.s6,
+                        dotWidth: AppSize.s6,
+                        activeDotColor: AppColors.orange,
+                      ),
+                      autoPlay: false,
+                      onPageChanged: (index) => context
+                          .read<DetailProductBloc>()
+                          .onChangedCarouselIndex(index),
+                      padBottom: AppSize.s24,
+                      jumpPage: state.carouselIndex,
+                      items: [
+                        for (Uint8List? image in state.listImage!)
+                          Image.memory(
+                            image ?? Uint8List(0),
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
+                      ],
                     ),
-                    autoPlay: false,
-                    onPageChanged: (index) => context
-                        .read<DetailProductBloc>()
-                        .onChangedCarouselIndex(index),
-                    padBottom: AppSize.s24,
-                    jumpPage: state.carouselIndex,
-                    items: [
-                      for (Uint8List? image in state.listImage!)
-                        Image.memory(
-                          image ?? Uint8List(0),
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        )
-                    ],
-                  ),
-                  _renderSmallerViewImage(
-                      state.listImage!, state.carouselIndex),
-                ],
-              )
-            : Assets.jsons.loadingPicture.lottie(fit: BoxFit.contain);
-      },
+                    _renderSmallerViewImage(
+                        state.listImage!, state.carouselIndex),
+                  ],
+                )
+              : Assets.jsons.loadingPicture.lottie(fit: BoxFit.contain);
+        },
+      ),
+    );
+  }
+
+  Widget _renderSmallerViewImage(
+      List<Uint8List?> listImage, int carouselIndex) {
+    return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppPadding.p20, vertical: AppPadding.p12),
+        child: Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: _getListSmallerViewImage(
+                listImage: listImage,
+                index: carouselIndex,
+              ),
+            ),
+          ),
+        ));
+  }
+
+  List<Widget> _getListSmallerViewImage(
+      {required List<Uint8List?> listImage, int index = 0}) {
+    List<Widget> listSmallerView = [];
+    for (int i = 0; i < listImage.length; i++) {
+      if (listImage[i] == null || listImage[i]!.isEmpty) continue;
+      listSmallerView.add(
+        _renderSmallerImageItems(
+          image: listImage[i]!,
+          isSelected: i == index,
+          index: i,
+        ),
+      );
+    }
+    return listSmallerView;
+  }
+
+  Widget _renderSmallerImageItems(
+      {required Uint8List image, bool isSelected = false, int index = 0}) {
+    return GestureDetector(
+      onTap: () =>
+          context.read<DetailProductBloc>().onChangedCarouselIndex(index),
+      child: Container(
+        width: AppSize.s70,
+        height: AppSize.s70,
+        margin: const EdgeInsets.symmetric(horizontal: AppMargin.m8),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+          border: isSelected
+              ? Border.all(
+                  color: AppColors.orange.withOpacity(0.2),
+                  strokeAlign: BorderSide.strokeAlignOutside)
+              : null,
+          boxShadow: AppDecorations.shadow,
+        ),
+        clipBehavior: Clip.hardEdge,
+        child: Image.memory(
+          image,
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 
   Widget _renderDetailProductSection(BuildContext context) {
     return Container(
       clipBehavior: Clip.antiAlias,
+      margin: const EdgeInsets.only(top: AppMargin.m4),
       width: double.infinity,
       decoration: BoxDecoration(
           color: AppColors.white,
@@ -143,17 +215,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           _renderPrice(context),
           _renderTitleAndSavePost(context),
           _renderUserInfor(context),
-          _renderDescription(context),
-          _renderDescription(context),
-          _renderDescription(context),
-          _renderDescription(context),
-          _renderDescription(context),
-          _renderDescription(context),
-          _renderDescription(context),
-          _renderDescription(context),
-          _renderDescription(context),
+          _renderLocationSection(context),
+          XPaddingUtils.verticalPadding(height: AppPadding.p23),
+          _renderDescriptionSection(context),
+          XPaddingUtils.verticalPadding(height: AppPadding.p23),
+          _renderAttributesSection(context),
         ],
       ),
+    );
+  }
+
+  Widget _renderPrice(BuildContext context) {
+    return BlocBuilder<DetailProductBloc, DetailProductState>(
+      buildWhen: (previous, current) => previous.product != current.product,
+      builder: (context, state) {
+        return Text(
+          Utils.createPriceText(state.product.price),
+          style: AppTextStyle.contentTexStyleBold.copyWith(
+            color: AppColors.errorColor,
+            fontSize: AppFontSize.f26,
+            fontWeight: FontWeight.w900,
+          ),
+        );
+      },
     );
   }
 
@@ -181,91 +265,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget _renderDescription(BuildContext context) {
-    return BlocBuilder<DetailProductBloc, DetailProductState>(
-      buildWhen: (previous, current) => previous.product != current.product,
-      builder: (context, state) {
-        return Text(
-          state.product.description,
-          style: AppTextStyle.contentTexStyle.copyWith(
-            fontSize: AppFontSize.f15,
-            color: AppColors.black,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _renderPrice(BuildContext context) {
-    return BlocBuilder<DetailProductBloc, DetailProductState>(
-      buildWhen: (previous, current) => previous.product != current.product,
-      builder: (context, state) {
-        return Text(
-          Utils.createPriceText(state.product.price),
-          style: AppTextStyle.contentTexStyleBold.copyWith(
+  Widget _renderSavePostButton() {
+    return BlocSelector<DetailProductBloc, DetailProductState, bool>(
+      selector: (state) => state.isSaved,
+      builder: (context, isSaved) {
+        return IconButton(
+          onPressed: () {
+            context.read<DetailProductBloc>().saveToWishlist();
+          },
+          icon: Icon(
+            isSaved ? Icons.favorite : Icons.favorite_border_outlined,
             color: AppColors.errorColor,
-            fontSize: AppFontSize.f26,
-            fontWeight: FontWeight.w900,
           ),
         );
       },
-    );
-  }
-
-  Widget _renderBottomButtonSection(BuildContext context) {
-    return BlocSelector<DetailProductBloc, DetailProductState,
-        DetailProductScreenStatus>(
-      selector: (state) {
-        return state.status;
-      },
-      builder: (context, status) {
-        return status == DetailProductScreenStatus.loading
-            ? const SizedBox.shrink()
-            : Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(AppRadius.r16),
-                    color: AppColors.backgroundButton,
-                    boxShadow: AppDecorations.shadow
-                        .followedBy(AppDecorations.shadowReverse)
-                        .toList()),
-                padding: const EdgeInsets.only(
-                  left: AppPadding.p20,
-                  right: AppPadding.p20,
-                  top: AppPadding.p12,
-                  bottom: AppPadding.p23,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    _renderAddCartButton(context),
-                    XPaddingUtils.horizontalPadding(width: AppPadding.p16),
-                    _renderBuyButton(context),
-                  ],
-                ),
-              );
-      },
-    );
-  }
-
-  Widget _renderAddCartButton(BuildContext context) {
-    return Expanded(
-      child: XFillButton(
-          bgColor: AppColors.black3,
-          label: Text(
-            S.of(context).addToCart,
-            style: AppTextStyle.buttonTextStylePrimary
-                .copyWith(color: AppColors.white),
-          )),
-    );
-  }
-
-  Widget _renderBuyButton(BuildContext context) {
-    return Expanded(
-      child: XFillButton(
-          label: Text(
-        S.of(context).buyNow,
-        style: AppTextStyle.buttonTextStylePrimary,
-      )),
     );
   }
 
@@ -284,23 +297,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           _renderUserRate(context),
         ],
       ),
-    );
-  }
-
-  Widget _renderSavePostButton() {
-    return BlocSelector<DetailProductBloc, DetailProductState, bool>(
-      selector: (state) => state.isSaved,
-      builder: (context, isSaved) {
-        return IconButton(
-          onPressed: () {
-            context.read<DetailProductBloc>().saveToWishlist();
-          },
-          icon: Icon(
-            isSaved ? Icons.favorite : Icons.favorite_border_outlined,
-            color: AppColors.errorColor,
-          ),
-        );
-      },
     );
   }
 
@@ -384,67 +380,180 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget _renderSmallerViewImage(
-      List<Uint8List?> listImage, int carouselIndex) {
+  Widget _renderBottomButtonSection(BuildContext context) {
+    return BlocSelector<DetailProductBloc, DetailProductState,
+        DetailProductScreenStatus>(
+      selector: (state) {
+        return state.status;
+      },
+      builder: (context, status) {
+        return status == DetailProductScreenStatus.loading
+            ? const SizedBox.shrink()
+            : Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppRadius.r16),
+                    color: AppColors.backgroundButton,
+                    boxShadow: AppDecorations.shadow
+                        .followedBy(AppDecorations.shadowReverse)
+                        .toList()),
+                padding: const EdgeInsets.only(
+                  left: AppPadding.p20,
+                  right: AppPadding.p20,
+                  top: AppPadding.p12,
+                  bottom: AppPadding.p23,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    _renderAddCartButton(context),
+                    XPaddingUtils.horizontalPadding(width: AppPadding.p16),
+                    _renderBuyButton(context),
+                  ],
+                ),
+              );
+      },
+    );
+  }
+
+  Widget _renderAddCartButton(BuildContext context) {
+    return Expanded(
+      child: XFillButton(
+          bgColor: AppColors.black3,
+          label: Text(
+            S.of(context).addToCart,
+            style: AppTextStyle.buttonTextStylePrimary
+                .copyWith(color: AppColors.white),
+          )),
+    );
+  }
+
+  Widget _renderBuyButton(BuildContext context) {
+    return Expanded(
+      child: XFillButton(
+          label: Text(
+        S.of(context).buyNow,
+        style: AppTextStyle.buttonTextStylePrimary,
+      )),
+    );
+  }
+
+  Widget _renderLocationSection(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _renderTitle(title: S.of(context).address),
+        _renderLocationText(context),
+      ],
+    );
+  }
+
+  Widget _renderTitle({required String title}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: AppTextStyle.titleTextStyle.copyWith(
+            color: AppColors.hintTextColor,
+            fontSize: AppFontSize.f18,
+          ),
+        ),
+        _renderDashline(),
+      ],
+    );
+  }
+
+  Widget _renderDashline() {
     return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(
-            horizontal: AppPadding.p20, vertical: AppPadding.p12),
-        child: Center(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: _getListSmallerViewImage(
-                listImage: listImage,
-                index: carouselIndex,
-              ),
+      width: double.infinity,
+      height: AppSize.s1,
+      margin: const EdgeInsets.symmetric(vertical: AppMargin.m4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppRadius.r4),
+        color: AppColors.greyScaleLine.withOpacity(AppOpacity.o05),
+      ),
+    );
+  }
+
+  Widget _renderLocationText(BuildContext context) {
+    return BlocBuilder<DetailProductBloc, DetailProductState>(
+      buildWhen: (previous, current) =>
+          previous.product.province != current.product.province,
+      builder: (context, state) => Row(
+        children: [
+          const Icon(
+            Icons.share_location_rounded,
+            color: AppColors.red,
+          ),
+          Text(
+            StringUtils.getAddressText(rawAddress: state.product.province),
+            style: AppTextStyle.contentTexStyle.copyWith(
+              fontSize: AppFontSize.f15,
+              color: AppColors.black,
             ),
           ),
-        ));
-  }
-
-  List<Widget> _getListSmallerViewImage(
-      {required List<Uint8List?> listImage, int index = 0}) {
-    List<Widget> listSmallerView = [];
-    for (int i = 0; i < listImage.length; i++) {
-      if (listImage[i] == null || listImage[i]!.isEmpty) continue;
-      listSmallerView.add(
-        _renderSmallerImageItems(
-          image: listImage[i]!,
-          isSelected: i == index,
-          index: i,
-        ),
-      );
-    }
-    return listSmallerView;
-  }
-
-  Widget _renderSmallerImageItems(
-      {required Uint8List image, bool isSelected = false, int index = 0}) {
-    return GestureDetector(
-      onTap: () =>
-          context.read<DetailProductBloc>().onChangedCarouselIndex(index),
-      child: Container(
-        width: AppSize.s70,
-        height: AppSize.s70,
-        margin: const EdgeInsets.symmetric(horizontal: AppMargin.m8),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(AppRadius.r20),
-          border: isSelected
-              ? Border.all(
-                  color: AppColors.orange.withOpacity(0.2),
-                  strokeAlign: BorderSide.strokeAlignOutside)
-              : null,
-          boxShadow: AppDecorations.shadow,
-        ),
-        clipBehavior: Clip.hardEdge,
-        child: Image.memory(
-          image,
-          fit: BoxFit.cover,
-        ),
+        ],
       ),
+    );
+  }
+
+  Widget _renderDescriptionSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _renderTitle(title: S.of(context).description),
+        _renderDescriptionText(),
+      ],
+    );
+  }
+
+  Widget _renderDescriptionText() {
+    return BlocBuilder<DetailProductBloc, DetailProductState>(
+      buildWhen: (previous, current) => previous.product != current.product,
+      builder: (context, state) {
+        return Text(
+          state.product.description,
+          style: AppTextStyle.contentTexStyle.copyWith(
+            fontSize: AppFontSize.f15,
+            color: AppColors.black,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _renderAttributesSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _renderTitle(title: S.of(context).attributes),
+        _renderAttributesText(),
+      ],
+    );
+  }
+
+  Widget _renderAttributesText() {
+    return BlocBuilder<DetailProductBloc, DetailProductState>(
+      buildWhen: (previous, current) =>
+          !listEquals(previous.product.attributes, current.product.attributes),
+      builder: (context, state) {
+        return (isNullOrEmpty(state.product.attributes))
+            ? const SizedBox.shrink()
+            : Column(
+                children: [
+                  for (MAttributeData attribute in state.product.attributes!)
+                    if (!isNullOrEmpty(attribute.data) &&
+                        attribute.attributeName != AttributeEnum.price)
+                      XAttributesDetailWidget(
+                        attribute: attribute.attributeName,
+                        attributeValue: attribute.data,
+                      )
+                    else
+                      const SizedBox.shrink(),
+                ],
+              );
+      },
     );
   }
 }
