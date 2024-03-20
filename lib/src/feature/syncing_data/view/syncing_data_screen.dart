@@ -14,6 +14,7 @@ import 'package:i2hand/src/local/database_app.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/data/product/product_repository.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
+import 'package:i2hand/src/network/data/wishlist/wishlist_repository.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/service/shared_pref.dart';
@@ -118,6 +119,7 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
     await _syncingUserAvatar();
     await _syncingUserData();
     await _getAttributesData();
+    await _getListWishlistProduct();
   }
 
   Future<void> _syncingUserData() async {
@@ -171,5 +173,9 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
 
   Future<void> _getAttributesData() async {
     await context.read<GlobalBloc>().getListAttributes();
+  }
+
+  Future<void> _getListWishlistProduct() async {
+    await GetIt.I.get<WishlistRepository>().getWishlistProducts();
   }
 }

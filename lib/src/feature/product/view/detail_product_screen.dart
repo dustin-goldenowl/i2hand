@@ -288,14 +288,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _renderSavePostButton() {
-    return IconButton(
-        onPressed: () {
-          //TODO: Add logic save post
-        },
-        icon: const Icon(
-          Icons.favorite_border_outlined,
-          color: AppColors.errorColor,
-        ));
+    return BlocSelector<DetailProductBloc, DetailProductState, bool>(
+      selector: (state) => state.isSaved,
+      builder: (context, isSaved) {
+        return IconButton(
+          onPressed: () {
+            context.read<DetailProductBloc>().saveToWishlist();
+          },
+          icon: Icon(
+            isSaved ? Icons.favorite : Icons.favorite_border_outlined,
+            color: AppColors.errorColor,
+          ),
+        );
+      },
+    );
   }
 
   Widget _renderUser(BuildContext context) {

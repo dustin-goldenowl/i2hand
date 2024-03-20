@@ -8,9 +8,17 @@ import 'package:i2hand/src/utils/padding_utils.dart';
 import 'package:i2hand/widget/button/fill_button.dart';
 
 class XProductCartEdit extends StatelessWidget {
-  const XProductCartEdit({super.key, this.title = '', this.price = ''});
+  const XProductCartEdit({
+    super.key,
+    this.title = '',
+    this.price = '',
+    this.image,
+    required this.onTapRemove,
+  });
   final String title;
   final String price;
+  final Widget? image;
+  final Function onTapRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +26,7 @@ class XProductCartEdit extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         _renderImageProduct(),
-        XPaddingUtils.horizontalPadding(width: AppPadding.p10),
+        XPaddingUtils.horizontalPadding(width: AppPadding.p16),
         _renderInfor(context),
       ],
     );
@@ -43,11 +51,12 @@ class XProductCartEdit extends StatelessWidget {
           )),
       child: Stack(
         children: [
-          Assets.images.splashLogo.image(
-            width: AppSize.s105,
-            height: AppSize.s105,
-            fit: BoxFit.cover,
-          ),
+          image ??
+              Assets.images.splashLogo.image(
+                width: AppSize.s105,
+                height: AppSize.s105,
+                fit: BoxFit.cover,
+              ),
           Positioned(
             bottom: 10,
             left: 6,
@@ -118,7 +127,7 @@ class XProductCartEdit extends StatelessWidget {
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           minimumSize: MaterialStateProperty.all(Size.zero),
         ),
-        onPressed: () {},
+        onPressed: () => onTapRemove.call(),
         icon: const Icon(Icons.delete_outlined));
   }
 }

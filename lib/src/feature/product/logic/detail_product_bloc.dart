@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_state.dart';
+import 'package:i2hand/src/local/database_app.dart';
+import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_repo.dart';
 import 'package:i2hand/src/network/data/product/product_repository.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
 import 'package:i2hand/src/network/model/product/product.dart';
@@ -24,6 +26,7 @@ class DetailProductBloc extends BaseCubit<DetailProductState> {
   Future<void> initial(BuildContext context) async {
     await _fetchProductData(state.id);
     await _fetchProductImage(state.id);
+    await _initSavedProduct(state.id);
   }
 
   Future<void> _fetchProductData(String id) async {
@@ -51,6 +54,12 @@ class DetailProductBloc extends BaseCubit<DetailProductState> {
       xLog.e(e);
       rethrow;
     }
+  }
+
+  Future<void> _initSavedProduct(String id) async {
+    final result =
+        await GetIt.I.get<WishlistProductsLocalRepo>().isContainInDatabase(id);
+    emit(state.copyWith(isSaved: result));
   }
 
   Future<void> _fetchOwnerAvatar({required MUser user}) async {
@@ -85,5 +94,25 @@ class DetailProductBloc extends BaseCubit<DetailProductState> {
 
   void onChangedCarouselIndex(int index) {
     emit(state.copyWith(carouselIndex: index));
+  }
+
+  Future<void> saveToWishlist() async {
+    try {
+      if (!state.isSaved) {
+        // Save to wishlist
+        await GetIt.I
+            .get<WishlistProductsLocalRepo>()
+            .insertDetail(WishlistProductsEntityData(id: state.id));
+        emit(state.copyWith(isSaved: true));
+      } else {
+        // Remove from wishlist
+        await GetIt.I
+            .get<WishlistProductsLocalRepo>()
+            .deleteProductById(state.id);
+        emit(state.copyWith(isSaved: false));
+      }
+    } catch (e) {
+      xLog.e(e);
+    }
   }
 }

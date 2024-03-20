@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/local/database_app.dart';
 import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
+import 'package:i2hand/src/local/repo/product/product_local_repo.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/data/product/product_reference.dart';
 import 'package:i2hand/src/network/data/product/product_reference_storage.dart';
@@ -26,6 +27,7 @@ class ProductRepositoryImpl extends ProductRepository {
     try {
       final result = await productRef.getProducts();
       if (isNullOrEmpty(result.data)) return MResult.success([]);
+      await _syncProductToLocal(result.data!);
       await _syncNewProductToLocal(result.data!);
       await _syncMostViewedProductToLocal(result.data!);
       return result;
@@ -65,8 +67,10 @@ class ProductRepositoryImpl extends ProductRepository {
   }
 
   @override
-  Future<MResult<bool>> addImage({required String id, required Uint8List data, required int index}) async {
-    return await productRefStorage.addInSubFolder(subFolderText: id, data: data, itemText: '$index.jpg');
+  Future<MResult<bool>> addImage(
+      {required String id, required Uint8List data, required int index}) async {
+    return await productRefStorage.addInSubFolder(
+        subFolderText: id, data: data, itemText: '$index.jpg');
   }
 
   Future<void> _syncNewProductToLocal(List<MProduct> listProducts) async {
@@ -123,6 +127,31 @@ class ProductRepositoryImpl extends ProductRepository {
       if (thumbnailImage == null) return;
       await GetIt.I
           .get<MostViewedProductsLocalRepo>()
+          .upsert(product.copyWith(image: Value(thumbnailImage)));
+    } catch (e) {
+      xLog.e(e);
+    }
+  }
+
+  Future<void> _syncProductToLocal(List<MProduct> listProducts) async {
+    for (MProduct product in listProducts) {
+      await GetIt.I
+          .get<ProductsLocalRepo>()
+          .upsert(product.convertToProductLocalData());
+      await _syncProductImageData(product.convertToProductLocalData());
+    }
+  }
+
+  Future<void> _syncProductImageData(ProductsEntityData product) async {
+    try {
+      final images =
+          await productRefStorage.getAllInSubFolder(subFolderText: product.id);
+      if (isNullOrEmpty(images.data)) return;
+      final thumbnailImage =
+          await (images.data!.first as List<Reference>).first.getData();
+      if (thumbnailImage == null) return;
+      await GetIt.I
+          .get<ProductsLocalRepo>()
           .upsert(product.copyWith(image: Value(thumbnailImage)));
     } catch (e) {
       xLog.e(e);

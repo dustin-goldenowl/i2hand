@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:i2hand/src/locator.dart';
 import 'package:i2hand/src/network/data/sign/sign_repository.dart';
 import 'package:i2hand/src/network/firebase/helper/firebase_helper.dart';
 import 'package:i2hand/src/network/model/common/error_code.dart';
@@ -78,6 +79,9 @@ class SignRepositoryImpl extends SignRepository {
 
       final userResult = await DomainManager().user.getOrAddUser(newUser);
 
+      // reset singleton database
+      resetSingleton();
+
       // save sharepref
       SharedPrefs.I.setToken(token);
       SharedPrefs.I.setUser(userResult.data);
@@ -139,6 +143,9 @@ class SignRepositoryImpl extends SignRepository {
         name: name,
         phone: phone,
       );
+
+      // reset singleton database
+      resetSingleton();
 
       // save sharepref
       SharedPrefs.I.setUser(newUser);
