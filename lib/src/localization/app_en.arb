@@ -165,5 +165,6 @@
     "sampleCardNumber": "4242424242424242",
     "sampleCardHolder": "LANCE",
     "sampleCardCVV": "057",
-    "sampleCardValid": "02/28"
+    "sampleCardValid": "02/28",
+    "pleaseAddYourPhone": "Please add your phone"
 }
