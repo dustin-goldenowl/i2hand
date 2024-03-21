@@ -134,3 +134,9 @@ class AppOpacity {
   static const o075 = 0.75;
   static const o1 = 1.0;
 }
+
+class AppLines {
+  static const l1 = 1;
+  static const l2 = 2;
+  static const l3 = 3;
+}

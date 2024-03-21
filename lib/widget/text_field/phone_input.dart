@@ -22,6 +22,7 @@ class XPhoneInput extends StatefulWidget {
   final bool isRequired;
   final int? maxlength;
   final bool? isShowLabel;
+  final Color fieldColor;
 
   const XPhoneInput({
     Key? key,
@@ -38,6 +39,7 @@ class XPhoneInput extends StatefulWidget {
     this.isRequired = false,
     this.maxlength,
     this.isShowLabel = true,
+    this.fieldColor = AppColors.grey6,
   }) : super(key: key);
 
   @override
@@ -85,7 +87,7 @@ class _InputWidgetState extends State<XPhoneInput> {
   Widget _renderMainView() {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.grey6,
+        color: widget.fieldColor,
         border: Border.all(
           color: widget.errorText == null
               ? Colors.transparent
@@ -150,6 +152,7 @@ class _InputWidgetState extends State<XPhoneInput> {
         textInputAction: widget.keyboardAction,
         style: AppTextStyle.hintTextStyle.copyWith(color: AppColors.black),
         onFieldSubmitted: widget.onSubmit,
+        cursorColor: AppColors.primary,
         decoration: InputDecoration(
           hintText: widget.hintText,
           hintStyle: AppTextStyle.hintTextStyle
