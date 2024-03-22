@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
+import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/utils/utils.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,7 +14,8 @@ class StripePaymentHandle {
   Future<void> stripeMakePayment(
       {required String buyerMail,
       required String buyerPhone,
-      required List<String> address, required double price}) async {
+      required List<String> address,
+      required double price}) async {
     try {
       paymentIntent = await createPaymentIntent(price.toString(), 'USD');
       await Stripe.instance
@@ -35,6 +37,20 @@ class StripePaymentHandle {
               paymentIntentClientSecret: paymentIntent!['client_secret'],
               style: ThemeMode.system,
               merchantDisplayName: 'Lance',
+              billingDetailsCollectionConfiguration:
+                  const BillingDetailsCollectionConfiguration(
+                name: CollectionMode.always,
+                phone: CollectionMode.always,
+                email: CollectionMode.always,
+              ),
+              appearance: const PaymentSheetAppearance(
+                primaryButton: PaymentSheetPrimaryButtonAppearance(
+                  colors: PaymentSheetPrimaryButtonTheme(
+                    light: PaymentSheetPrimaryButtonThemeColors(
+                        background: AppColors.errorColor),
+                  ),
+                ),
+              ),
             ),
           )
           .then((value) {});
