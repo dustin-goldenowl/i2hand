@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart' hide AppInfo;
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/firebase_options.dart';
 import 'package:i2hand/src/config/device/app_infor.dart';
@@ -29,12 +30,18 @@ import 'package:i2hand/src/network/data/wishlist/wishlist_repository_impl.dart';
 import 'package:i2hand/src/router/deep_link.dart';
 import 'package:i2hand/src/router/router.dart';
 import 'package:i2hand/src/service/shared_pref.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // setup dotenv
+  await dotenv.load(fileName: "lib/.env");
+
+  _initStripeKey();
 
   // catch error
   FlutterError.onError = (errorDetails) {
@@ -52,6 +59,10 @@ Future initializeApp() async {
     AppDeepLinks.init(),
   ]);
   _locator();
+}
+
+void _initStripeKey() {
+  Stripe.publishableKey = dotenv.env['STRIPE_PUBLIC'] ?? '';
 }
 
 void _locator() {

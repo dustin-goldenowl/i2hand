@@ -6,16 +6,18 @@ import 'package:i2hand/src/network/model/user/user.dart';
 enum PaymentScreenStatus { init, loading, fail, success }
 
 class PaymentState with EquatableMixin {
-  PaymentState(
-      {this.status = PaymentScreenStatus.init,
-      this.address = '',
-      this.email = '',
-      this.countryCode,
-      this.phoneNumber = '',
-      this.productId = '',
-      required this.seller,
-      required this.user,
-      required this.product});
+  PaymentState({
+    this.status = PaymentScreenStatus.init,
+    this.address = '',
+    this.email = '',
+    this.countryCode,
+    this.phoneNumber = '',
+    this.productId = '',
+    required this.seller,
+    required this.user,
+    required this.product,
+    this.totalPrice = 0.0,
+  });
 
   final PaymentScreenStatus status;
   final String address;
@@ -26,6 +28,7 @@ class PaymentState with EquatableMixin {
   final String productId;
   final MUser seller;
   final MUser user;
+  final double totalPrice;
 
   PaymentState copyWith({
     PaymentScreenStatus? status,
@@ -37,6 +40,7 @@ class PaymentState with EquatableMixin {
     String? productId,
     MUser? seller,
     MUser? user,
+    double? totalPrice,
   }) {
     return PaymentState(
       status: status ?? this.status,
@@ -48,6 +52,7 @@ class PaymentState with EquatableMixin {
       product: product ?? this.product,
       seller: seller ?? this.seller,
       user: user ?? this.user,
+      totalPrice: totalPrice ?? this.totalPrice,
     );
   }
 
@@ -61,7 +66,8 @@ class PaymentState with EquatableMixin {
         product,
         productId,
         seller,
-        user
+        user,
+        totalPrice
       ];
 
   @override
