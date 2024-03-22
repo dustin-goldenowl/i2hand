@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
+import 'package:i2hand/src/network/data/user/user_repository.dart';
+import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
+import 'package:i2hand/src/service/shared_pref.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/decorations.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
 import 'package:i2hand/src/utils/string_utils.dart';
+import 'package:i2hand/src/utils/utils.dart';
 
 class XShippingAddressSection extends StatelessWidget {
   const XShippingAddressSection(
@@ -79,9 +84,12 @@ class XShippingAddressSection extends StatelessWidget {
         padding: MaterialStateProperty.all(EdgeInsets.zero),
       ),
       onPressed: () async => await AppCoordinator.showSelectLocationPage(
-        address: address ?? S.of(context).emptyRouteParam,
-      ).then((value) {
+        address: StringUtils.isNullOrEmpty(address)
+            ? S.of(context).emptyRouteParam
+            : address!,
+      ).then((value) async {
         if (value == null) return;
+        await _syncAddress(value);
         onChangeAddress.call(value);
       }),
       iconSize: AppFontSize.f15,
@@ -90,5 +98,25 @@ class XShippingAddressSection extends StatelessWidget {
         color: AppColors.white,
       ),
     );
+  }
+
+  Future<void> _syncAddress(String address) async {
+    final user = SharedPrefs.I.getUser();
+    final mUser = user?.copyWith(address: address);
+    if (mUser == null || mUser == MUser.empty()) return;
+    await _syncToSharedPref(mUser);
+    await _syncToFirebase(mUser);
+  }
+
+  Future<void> _syncToSharedPref(MUser? mUser) async {
+    await SharedPrefs.I.setUser(mUser);
+  }
+
+  Future<void> _syncToFirebase(MUser mUser) async {
+    try {
+      await GetIt.I.get<UserRepository>().upsertUser(mUser);
+    } catch (e) {
+      xLog.e(e);
+    }
   }
 }

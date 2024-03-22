@@ -18,6 +18,7 @@ class MUser with EquatableMixin {
   final String? phone;
   final AccountRole? role;
   final bool eKYC;
+  final String? address;
 
   MUser(
       {required this.id,
@@ -28,6 +29,7 @@ class MUser with EquatableMixin {
       this.dateOfBirth,
       this.role,
       this.eKYC = false,
+      this.address,
       this.gender});
 
   factory MUser.empty() => MUser(
@@ -36,7 +38,7 @@ class MUser with EquatableMixin {
 
   @override
   String toString() {
-    return 'MUser{id=$id, name=$name, avatar=$avatar, email=$email, dateOfBirth=$dateOfBirth, gender=$gender, phone=$phone, role=$role, eKYC=$eKYC}';
+    return 'MUser{id=$id, name=$name, avatar=$avatar, email=$email, dateOfBirth=$dateOfBirth, gender=$gender, phone=$phone, role=$role, eKYC=$eKYC, address=$address}';
   }
 
   Map<String, dynamic> toJson() => _$MUserToJson(this);
@@ -44,8 +46,18 @@ class MUser with EquatableMixin {
   factory MUser.fromJson(Map<String, dynamic> json) => _$MUserFromJson(json);
 
   @override
-  List<Object?> get props =>
-      [id, name, avatar, email, dateOfBirth, gender, phone, role, eKYC];
+  List<Object?> get props => [
+        id,
+        name,
+        avatar,
+        email,
+        dateOfBirth,
+        gender,
+        phone,
+        role,
+        eKYC,
+        address
+      ];
   MUser copyWith(
       {String? id,
       String? name,
@@ -55,16 +67,19 @@ class MUser with EquatableMixin {
       AccountRole? role,
       DateTime? dateOfBirth,
       bool? eKYC,
+      String? address,
       Gender? gender}) {
     return MUser(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        avatar: avatar ?? this.avatar,
-        email: email ?? this.email,
-        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-        phone: phone ?? this.phone,
-        role: role ?? this.role,
-        eKYC: eKYC ?? this.eKYC,
-        gender: gender ?? this.gender);
+      id: id ?? this.id,
+      name: name ?? this.name,
+      avatar: avatar ?? this.avatar,
+      email: email ?? this.email,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      eKYC: eKYC ?? this.eKYC,
+      gender: gender ?? this.gender,
+      address: address ?? this.address,
+    );
   }
 }

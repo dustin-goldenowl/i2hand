@@ -18,6 +18,7 @@ MUser _$MUserFromJson(Map<String, dynamic> json) => MUser(
           : DateTime.parse(json['dateOfBirth'] as String),
       role: $enumDecodeNullable(_$AccountRoleEnumMap, json['role']),
       eKYC: json['eKYC'] as bool? ?? false,
+      address: json['address'] as String?,
       gender: $enumDecodeNullable(_$GenderEnumMap, json['gender']),
     );
 
@@ -31,6 +32,7 @@ Map<String, dynamic> _$MUserToJson(MUser instance) => <String, dynamic>{
       'phone': instance.phone,
       'role': _$AccountRoleEnumMap[instance.role],
       'eKYC': instance.eKYC,
+      'address': instance.address,
     };
 
 const _$AccountRoleEnumMap = {

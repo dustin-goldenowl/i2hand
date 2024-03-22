@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:i2hand/src/feature/payment/logic/payment_bloc.dart';
+import 'package:i2hand/src/feature/payment/logic/payment_state.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
-import 'package:i2hand/src/service/shared_pref.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
+import 'package:i2hand/src/utils/string_ext.dart';
+import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/appbar/app_bar.dart';
 import 'package:i2hand/widget/avatar/avatar.dart';
 import 'package:i2hand/widget/bottomsheet/payment_method_bottomsheet.dart';
@@ -21,6 +25,12 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<PaymentBloc>().inital(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,18 +63,30 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _renderAddressSection(BuildContext context) {
-    return XShippingAddressSection(onChangeAddress: (address) {
-      //TODO: change address text => save to blocr
-    });
+    return BlocBuilder<PaymentBloc, PaymentState>(
+      buildWhen: (previous, current) => previous.address != current.address,
+      builder: (context, state) {
+        return XShippingAddressSection(
+          address: state.address,
+          onChangeAddress: (address) =>
+              context.read<PaymentBloc>().setAddress(address),
+        );
+      },
+    );
   }
 
   Widget _renderContactInforSection(BuildContext context) {
-    final email = SharedPrefs.I.getUser()?.email ?? '';
-    return XContactInformationSection(
-        email: email,
-        onChangeContact: (contact) {
-          //TODO: change contact text => save to bloc
-        });
+    return BlocBuilder<PaymentBloc, PaymentState>(
+      buildWhen: (previous, current) => previous.user != current.user,
+      builder: (context, state) {
+        return XContactInformationSection(
+            email: state.user.email ?? '',
+            phone: state.phoneNumber,
+            onChangeContact: (phoneContact) {
+              context.read<PaymentBloc>().setPhoneNumber(phoneContact);
+            });
+      },
+    );
   }
 
   Widget _renderItemSection(BuildContext context) {
@@ -98,78 +120,62 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _renderItemInfor(BuildContext context) {
-    return Column(
+    return Row(
       children: [
-        _renderSellerInfor(context),
-        XPaddingUtils.verticalPadding(height: AppPadding.p10),
-        Row(
-          children: [
-            _renderProductImage(context),
-            XPaddingUtils.horizontalPadding(width: AppPadding.p15),
-            _renderProductName(context),
-            XPaddingUtils.horizontalPadding(width: AppPadding.p15),
-            _renderPrice(context),
-          ],
-        ),
+        _renderProductImage(context),
+        XPaddingUtils.horizontalPadding(width: AppPadding.p15),
+        _renderProductName(context),
+        XPaddingUtils.horizontalPadding(width: AppPadding.p15),
+        _renderPrice(context),
       ],
     );
   }
 
   Widget _renderProductImage(BuildContext context) {
-    return const XAvatar(
-      imageSize: AppSize.s48,
+    return BlocBuilder<PaymentBloc, PaymentState>(
+      buildWhen: (previous, current) => previous.product != current.product,
+      builder: (context, state) {
+        return XAvatar(
+          imageSize: AppSize.s48,
+          memoryData: state.product.image?.convertToUint8List(),
+          imageType: isNullOrEmpty(state.product.image)
+              ? ImageType.none
+              : ImageType.memory,
+        );
+      },
     );
   }
 
   Widget _renderProductName(BuildContext context) {
     return Expanded(
-        child: Text(
-      S.of(context).randomText,
-      style: AppTextStyle.contentTexStyle.copyWith(
-        fontSize: AppFontSize.f12,
-        color: AppColors.black,
-      ),
-      maxLines: AppLines.l2,
-      overflow: TextOverflow.ellipsis,
+        child: BlocBuilder<PaymentBloc, PaymentState>(
+      buildWhen: (previous, current) => previous.product != current.product,
+      builder: (context, state) {
+        return Text(
+          state.product.title,
+          style: AppTextStyle.contentTexStyle.copyWith(
+            fontSize: AppFontSize.f12,
+            color: AppColors.black,
+          ),
+          maxLines: AppLines.l2,
+          overflow: TextOverflow.ellipsis,
+        );
+      },
     ));
   }
 
   Widget _renderPrice(BuildContext context) {
-    return Text(
-      S.of(context).samplePriceText,
-      style: AppTextStyle.titleTextStyle.copyWith(
-        color: AppColors.text,
-        fontSize: AppFontSize.f18,
-      ),
-    );
-  }
-
-  Widget _renderSellerInfor(BuildContext context) {
-    return Row(
-      children: [
-        const XAvatar(imageSize: AppSize.s20),
-        XPaddingUtils.horizontalPadding(width: AppSize.s10),
-        Expanded(
-          child: Text(
-            S.of(context).randomText,
-            style: AppTextStyle.contentTexStyle.copyWith(
-              fontSize: AppFontSize.f10,
-              color: AppColors.black,
-              fontWeight: FontWeight.bold,
-            ),
+    return BlocBuilder<PaymentBloc, PaymentState>(
+      buildWhen: (previous, current) => previous.product != current.product,
+      builder: (context, state) {
+        return Text(
+          Utils.createPriceText(state.product.price),
+          style: AppTextStyle.titleTextStyle.copyWith(
+            color: AppColors.text,
+            fontSize: AppFontSize.f18,
           ),
-        ),
-        IconButton.filled(
-          style: const ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(AppColors.primary)),
-          onPressed: () {},
-          iconSize: AppSize.s16,
-          icon: const Icon(
-            Icons.phone,
-            color: AppColors.white,
-          ),
-        )
-      ],
+        );
+      },
     );
   }
 
