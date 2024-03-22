@@ -11,6 +11,7 @@ import 'package:i2hand/src/feature/product/widget/attributes_detail_widget.dart'
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/model/product/attribute/attribute.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
+import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/decorations.dart';
 import 'package:i2hand/src/theme/styles.dart';
@@ -430,10 +431,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget _renderBuyButton(BuildContext context) {
     return Expanded(
       child: XFillButton(
-          label: Text(
-        S.of(context).buyNow,
-        style: AppTextStyle.buttonTextStylePrimary,
-      )),
+        onPressed: () => AppCoordinator.showPaymentScreen(
+            productId: context.read<DetailProductBloc>().state.id),
+        label: Text(
+          S.of(context).buyNow,
+          style: AppTextStyle.buttonTextStylePrimary,
+        ),
+      ),
     );
   }
 

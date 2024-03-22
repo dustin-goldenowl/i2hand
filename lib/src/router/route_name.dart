@@ -26,7 +26,8 @@ enum AppRouteNames {
     param2: 'selectedValue',
   ),
   setting(path: '/setting'),
-  detailAccount(path: '/detailAccount');
+  detailAccount(path: '/detailAccount'),
+  payment(path: '/payment', param: 'productId');
 
   const AppRouteNames({
     required this.path,
