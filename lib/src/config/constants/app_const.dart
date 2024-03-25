@@ -11,6 +11,7 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 class AppConstantData {
   static const int passwordLength = 8;
   static const int userIdGenerateRandom = 20;
+  static const int orderNumberLength = 10;
 
   static const String adminUsername = 'photostartup2020@gmail.com';
   static const String adminPassword = 'Death12a2';

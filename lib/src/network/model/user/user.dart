@@ -19,18 +19,21 @@ class MUser with EquatableMixin {
   final AccountRole? role;
   final bool eKYC;
   final String? address;
+  final double moneyEarned;
 
-  MUser(
-      {required this.id,
-      this.name,
-      this.avatar,
-      this.email,
-      this.phone,
-      this.dateOfBirth,
-      this.role,
-      this.eKYC = false,
-      this.address,
-      this.gender});
+  MUser({
+    required this.id,
+    this.name,
+    this.avatar,
+    this.email,
+    this.phone,
+    this.dateOfBirth,
+    this.role,
+    this.eKYC = false,
+    this.address,
+    this.gender,
+    this.moneyEarned = 0.0,
+  });
 
   factory MUser.empty() => MUser(
       id: StringUtils.createGenerateRandomText(
@@ -56,19 +59,22 @@ class MUser with EquatableMixin {
         phone,
         role,
         eKYC,
-        address
+        address,
+        moneyEarned,
       ];
-  MUser copyWith(
-      {String? id,
-      String? name,
-      List<String>? avatar,
-      String? email,
-      String? phone,
-      AccountRole? role,
-      DateTime? dateOfBirth,
-      bool? eKYC,
-      String? address,
-      Gender? gender}) {
+  MUser copyWith({
+    String? id,
+    String? name,
+    List<String>? avatar,
+    String? email,
+    String? phone,
+    AccountRole? role,
+    DateTime? dateOfBirth,
+    bool? eKYC,
+    String? address,
+    Gender? gender,
+    double? moneyEarned,
+  }) {
     return MUser(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -80,6 +86,7 @@ class MUser with EquatableMixin {
       eKYC: eKYC ?? this.eKYC,
       gender: gender ?? this.gender,
       address: address ?? this.address,
+      moneyEarned: moneyEarned ?? this.moneyEarned,
     );
   }
 }

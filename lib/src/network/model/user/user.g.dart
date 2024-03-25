@@ -20,6 +20,7 @@ MUser _$MUserFromJson(Map<String, dynamic> json) => MUser(
       eKYC: json['eKYC'] as bool? ?? false,
       address: json['address'] as String?,
       gender: $enumDecodeNullable(_$GenderEnumMap, json['gender']),
+      moneyEarned: json['moneyEarned'] as double? ?? 0.0,
     );
 
 Map<String, dynamic> _$MUserToJson(MUser instance) => <String, dynamic>{
@@ -33,6 +34,7 @@ Map<String, dynamic> _$MUserToJson(MUser instance) => <String, dynamic>{
       'role': _$AccountRoleEnumMap[instance.role],
       'eKYC': instance.eKYC,
       'address': instance.address,
+      'moneyEarned': instance.moneyEarned,
     };
 
 const _$AccountRoleEnumMap = {

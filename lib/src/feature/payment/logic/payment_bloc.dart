@@ -74,6 +74,8 @@ class PaymentBloc extends BaseCubit<PaymentState> {
       buyerPhone: state.user.phone ?? '',
       address: state.address.split(','),
       price: state.totalPrice,
+      productId: state.productId,
+      productPrice: state.totalPrice,
     );
   }
 }
