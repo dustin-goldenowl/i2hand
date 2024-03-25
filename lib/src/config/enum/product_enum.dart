@@ -29,34 +29,46 @@ enum ProductStatusEnum {
   Future<List<MProduct>> getListProducts(BuildContext context) async {
     switch (this) {
       case ProductStatusEnum.none:
-        final listData =
-            await GetIt.I.get<ProductsLocalRepo>().getAllDetails().get();
-        return listData.convertToProductData();
+        return await _addProductToDatabase();
       case ProductStatusEnum.newest:
-        final listProductId =
-            await GetIt.I.get<NewProductsLocalRepo>().getAllDetails().get();
-        List<MProduct> listProduct = [];
-        for (MUserProduct productId in listProductId.convertToProductData()) {
-          final product = await GetIt.I
-              .get<ProductsLocalRepo>()
-              .getDetail(id: productId.id)
-              .get();
-          listProduct.add(product.convertToProductData().first);
-        }
-        return listProduct;
+        return await _addProductToNewestProductDatabase();
       case ProductStatusEnum.mostViewed:
-        final listProductId =
-            await GetIt.I.get<MostViewedProductsLocalRepo>().getAllDetails().get();
-        List<MProduct> listProduct = [];
-        for (MUserProduct productId in listProductId.convertToProductData()) {
-          final product = await GetIt.I
-              .get<ProductsLocalRepo>()
-              .getDetail(id: productId.id)
-              .get();
-          listProduct.add(product.convertToProductData().first);
-        }
-        return listProduct;
+        return await _addProductToMostViewedProductDatabase();
     }
+  }
+
+  Future<List<MProduct>> _addProductToDatabase() async {
+    final listData =
+        await GetIt.I.get<ProductsLocalRepo>().getAllDetails().get();
+    return listData.convertToProductData();
+  }
+
+  Future<List<MProduct>> _addProductToNewestProductDatabase() async {
+    final listProductId =
+        await GetIt.I.get<NewProductsLocalRepo>().getAllDetails().get();
+    List<MProduct> listProduct = [];
+    for (MUserProduct productId in listProductId.convertToProductData()) {
+      final product = await GetIt.I
+          .get<ProductsLocalRepo>()
+          .getDetail(id: productId.id)
+          .get();
+      listProduct.add(product.convertToProductData().first);
+    }
+    return listProduct;
+  }
+
+  Future<List<MProduct>> _addProductToMostViewedProductDatabase() async {
+    final listProductId =
+        await GetIt.I.get<MostViewedProductsLocalRepo>().getAllDetails().get();
+    List<MProduct> listProduct = [];
+    for (MUserProduct productId in listProductId.convertToProductData()) {
+      final product = await GetIt.I
+          .get<ProductsLocalRepo>()
+          .getDetail(id: productId.id)
+          .get();
+      listProduct.add(product.convertToProductData().first);
+    }
+    return listProduct;
   }
 }
 
