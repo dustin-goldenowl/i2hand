@@ -20,6 +20,7 @@ import 'package:i2hand/src/network/data/sign/sign_repository.dart';
 import 'package:i2hand/src/network/data/sign/sign_repository_impl.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
 import 'package:i2hand/src/network/data/user/user_repository_impl.dart';
+import 'package:i2hand/src/router/deep_link.dart';
 import 'package:i2hand/src/router/router.dart';
 import 'package:i2hand/src/service/shared_pref.dart';
 
@@ -42,6 +43,7 @@ Future initializeApp() async {
   await Future.wait([
     AppInfo.initialize(),
     SharedPrefs.instance.initialize(),
+    AppDeepLinks.init(),
   ]);
   _locator();
 }
@@ -54,8 +56,8 @@ void _locator() {
       () => CategoryRepositoryImpl());
   GetIt.I
       .registerLazySingleton<ProductRepository>(() => ProductRepositoryImpl());
-  GetIt.I
-      .registerLazySingleton<AttributeRepository>(() => AttributeRepositoryImpl());
+  GetIt.I.registerLazySingleton<AttributeRepository>(
+      () => AttributeRepositoryImpl());
 
   GetIt.I.registerLazySingleton<DatabaseApp>((() => DatabaseApp()));
   GetIt.I.registerLazySingleton<NewProductsLocalRepo>(

@@ -59,4 +59,8 @@ class GlobalBloc extends BaseCubit<GlobalState> {
       xLog.e(e);
     }
   }
+
+  void setVerifiedAccount(bool isVerified) {
+    emit(state.copyWith(isVerified: isVerified));
+  }
 }

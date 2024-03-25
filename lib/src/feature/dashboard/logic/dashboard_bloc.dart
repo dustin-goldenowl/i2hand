@@ -35,7 +35,7 @@ class DashboardBloc extends BaseCubit<XNavigationBarItems> {
       duration: const Duration(milliseconds: 300),
       animationCurve: Curves.easeOut,
       context: context,
-      builder: (context) => XCategoriesBottomsheet(),
+      builder: (context) => const XCategoriesBottomsheet(),
       barrierColor: Colors.transparent.withOpacity(0.5),
       enableDrag: false,
     ).then((valueCallback) {

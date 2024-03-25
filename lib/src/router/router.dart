@@ -30,6 +30,7 @@ import 'package:i2hand/src/feature/home/view/home_screen.dart';
 import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_bloc.dart';
 import 'package:i2hand/src/feature/product/view/detail_product_screen.dart';
+import 'package:i2hand/src/feature/setting/feature/detail_account/logic/detail_account_bloc.dart';
 import 'package:i2hand/src/feature/setting/feature/detail_account/view/detail_account_screen.dart';
 import 'package:i2hand/src/feature/setting/view/setting_screen.dart';
 import 'package:i2hand/src/feature/profile/view/profile_screen.dart';
@@ -263,8 +264,15 @@ class AppRouter {
                           name: AppRouteNames.detailAccount.name,
                           path: AppRouteNames.detailAccount.subPath,
                           builder: (__, _) {
+                            var user = SharedPrefs.I.getUser();
+                            var userAvatar = SharedPrefs.I.getUserAvatar();
+                            final userWithAvatar = user?.copyWith(
+                                avatar: userAvatar
+                                    .map((e) => e.toString())
+                                    .toList());
                             return BlocProvider(
-                              create: (context) => SearchBloc(),
+                              create: (context) => DetailAccountBloc(
+                                  userWithAvatar ?? MUser.empty()),
                               child: const DetailAccountScreen(),
                             );
                           }),

@@ -137,6 +137,7 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
     final userData = sharePrefUser!.copyWith(
         avatar: sharePrefUserAvatar.toList().map((e) => e.toString()).toList());
     if (!context.mounted) return;
+    context.read<GlobalBloc>().setVerifiedAccount(false);
     await context.read<AccountBloc>().inital(context, userData);
     if (userData.role == AccountRole.admin) {
       AppCoordinator.showAdminHomeScreen();

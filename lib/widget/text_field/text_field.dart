@@ -4,7 +4,7 @@ import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/string_utils.dart';
 
-class XTextField extends StatelessWidget {
+class XTextField extends StatefulWidget {
   const XTextField({
     super.key,
     this.label,
@@ -52,52 +52,63 @@ class XTextField extends StatelessWidget {
   final Color? filledColor;
 
   @override
+  State<XTextField> createState() => _XTextFieldState();
+}
+
+class _XTextFieldState extends State<XTextField> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initText);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        StringUtils.isNullOrEmpty(label)
+        StringUtils.isNullOrEmpty(widget.label)
             ? const SizedBox.shrink()
-            : Text(label!, style: labelStyle ?? AppTextStyle.labelStyle),
+            : Text(widget.label!,
+                style: widget.labelStyle ?? AppTextStyle.labelStyle),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: AppPadding.p10),
           child: TextField(
-            enabled: isEnable,
+            enabled: widget.isEnable,
             style: AppTextStyle.hintTextStyle.copyWith(color: AppColors.black),
-            maxLines: maxLines,
-            minLines: minLines,
-            cursorColor: cursorColor,
-            cursorHeight: cursolHeight,
-            keyboardType: keyboardType,
-            textInputAction: textInputAction,
-            onChanged: (value) => onChanged(value),
-            obscureText: isObscureText,
-            controller: StringUtils.isNullOrEmpty(initText)
-                ? null
-                : TextEditingController.fromValue(
-                    TextEditingValue(text: initText!)),
+            maxLines: widget.maxLines,
+            minLines: widget.minLines,
+            cursorColor: widget.cursorColor,
+            cursorHeight: widget.cursolHeight,
+            keyboardType: widget.keyboardType,
+            textInputAction: widget.textInputAction,
+            onChanged: (value) => widget.onChanged(value),
+            obscureText: widget.isObscureText,
+            controller: _controller,
             decoration: InputDecoration(
-                fillColor: filledColor,
+                fillColor: widget.filledColor,
                 filled: true,
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: borderColor, width: 0.5),
-                  borderRadius: BorderRadius.circular(radius),
+                  borderSide: BorderSide(color: widget.borderColor, width: 0.5),
+                  borderRadius: BorderRadius.circular(widget.radius),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide:
                       const BorderSide(color: AppColors.primary, width: 0.5),
-                  borderRadius: BorderRadius.circular(radius),
+                  borderRadius: BorderRadius.circular(widget.radius),
                 ),
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: borderColor, width: 0.5),
-                  borderRadius: BorderRadius.circular(radius),
+                  borderSide: BorderSide(color: widget.borderColor, width: 0.5),
+                  borderRadius: BorderRadius.circular(widget.radius),
                 ),
-                prefixIcon: prefix,
-                suffixIcon: suffix,
-                hintText: hintText,
-                hintStyle: hintStyle ?? AppTextStyle.hintTextStyle,
-                errorText: errorText,
-                errorStyle: errorStyle ??
+                prefixIcon: widget.prefix,
+                suffixIcon: widget.suffix,
+                hintText: widget.hintText,
+                hintStyle: widget.hintStyle ?? AppTextStyle.hintTextStyle,
+                errorText: widget.errorText,
+                errorStyle: widget.errorStyle ??
                     AppTextStyle.hintTextStyle.copyWith(color: AppColors.red),
                 focusColor: AppColors.primary,
                 contentPadding: const EdgeInsets.symmetric(
