@@ -4,8 +4,8 @@ import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 
-class XSelectedChip extends StatelessWidget {
-  const XSelectedChip({
+class XSelectedChipWithIcon extends StatelessWidget {
+  const XSelectedChipWithIcon({
     super.key,
     required this.title,
     required this.isSelected,

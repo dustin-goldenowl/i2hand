@@ -44,6 +44,7 @@ class AppPadding {
   static const p0 = 0.0;
   static const p1 = 1.0;
   static const p2 = 2.0;
+  static const p3 = 3.0;
   static const p4 = 4.0;
   static const p5 = 5.0;
   static const p6 = 6.0;
@@ -132,4 +133,10 @@ class AppOpacity {
   static const o05 = 0.5;
   static const o075 = 0.75;
   static const o1 = 1.0;
+}
+
+class AppLines {
+  static const l1 = 1;
+  static const l2 = 2;
+  static const l3 = 3;
 }

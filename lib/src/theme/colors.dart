@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:i2hand/src/theme/value.dart';
 
 class AppColors {
   // primary
@@ -44,4 +45,10 @@ class AppColors {
   static const grey6 = Color(0xFFE5E5E5);
   static const grey7 = Color(0xFFF2F2F2);
   static const grey8 = Color(0xFFF8F8F8);
+
+  // Gradient color
+  static List<Color> showMoreGradient = [
+    white2.withOpacity(AppOpacity.o075),
+    grey.withOpacity(AppOpacity.o075),
+  ];
 }

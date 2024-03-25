@@ -102,6 +102,10 @@ class $AssetsJsonsGen {
   LottieGenImage get product =>
       const LottieGenImage('assets/jsons/product.json');
 
+  /// File path: assets/jsons/show-more.json
+  LottieGenImage get showMore =>
+      const LottieGenImage('assets/jsons/show-more.json');
+
   /// File path: assets/jsons/sync_data.json
   LottieGenImage get syncData =>
       const LottieGenImage('assets/jsons/sync_data.json');
@@ -123,6 +127,7 @@ class $AssetsJsonsGen {
         maleAvatar,
         post,
         product,
+        showMore,
         syncData,
         verified
       ];

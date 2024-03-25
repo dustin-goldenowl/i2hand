@@ -28,6 +28,7 @@ import 'package:i2hand/src/feature/home/feature/search/view/search_screen.dart';
 import 'package:i2hand/src/feature/home/logic/home_bloc.dart';
 import 'package:i2hand/src/feature/home/view/home_screen.dart';
 import 'package:i2hand/src/feature/on_boarding/on_boarding_screen.dart';
+import 'package:i2hand/src/feature/payment/view/payment_screen.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_bloc.dart';
 import 'package:i2hand/src/feature/product/view/detail_product_screen.dart';
 import 'package:i2hand/src/feature/setting/feature/detail_account/logic/detail_account_bloc.dart';
@@ -145,6 +146,17 @@ class AppRouter {
             );
           }),
       GoRoute(
+          parentNavigatorKey: AppCoordinator.navigatorKey,
+          name: AppRouteNames.payment.name,
+          path: AppRouteNames.payment.buildPathParam,
+          builder: (__, state) {
+            final productId = state.pathParameters[AppRouteNames.payment.param]!;
+            return BlocProvider(
+              create: (context) => DetailProductBloc(productId),
+              child: const PaymentScreen(),
+            );
+          }),
+      GoRoute(
         parentNavigatorKey: AppCoordinator.navigatorKey,
         name: AppRouteNames.newPost.name,
         path: AppRouteNames.newPost.buildPathParam,
@@ -191,11 +203,15 @@ class AppRouter {
                 GoRoute(
                     parentNavigatorKey: AppCoordinator.navigatorKey,
                     name: AppRouteNames.search.name,
-                    path: AppRouteNames.search.subPath,
-                    builder: (__, _) {
+                    path: AppRouteNames.search.buildSubPathParam,
+                    builder: (__, state) {
+                      final options =
+                          state.pathParameters[AppRouteNames.search.param]!;
                       return BlocProvider(
                         create: (context) => SearchBloc(),
-                        child: const SearchScreen(),
+                        child: SearchScreen(
+                          options: options,
+                        ),
                       );
                     }),
               ]),

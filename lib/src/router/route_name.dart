@@ -15,7 +15,7 @@ enum AppRouteNames {
   forgotPassword(path: '/forgotPassword'),
   sendMailSuccess(path: '/sendMailSuccess'),
   signUp(path: '/signUp'),
-  search(path: '/search'),
+  search(path: 'search', param: 'options'),
   productDetail(path: '/productDetail', param: 'id'),
   selectLocation(path: 'selectLocation', param: 'address'),
   recentlyViewed(path: '/recentlyViewed'),
@@ -26,7 +26,8 @@ enum AppRouteNames {
     param2: 'selectedValue',
   ),
   setting(path: '/setting'),
-  detailAccount(path: '/detailAccount');
+  detailAccount(path: '/detailAccount'),
+  payment(path: '/payment', param: 'productId');
 
   const AppRouteNames({
     required this.path,

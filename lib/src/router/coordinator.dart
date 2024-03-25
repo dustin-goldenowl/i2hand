@@ -54,8 +54,9 @@ class AppCoordinator {
   static void showProductDetailScreen({required String id}) => context
       .pushNamed(AppRouteNames.productDetail.name, pathParameters: {'id': id});
 
-  static void showSearchScreen() =>
-      context.pushNamed(AppRouteNames.search.name);
+  static void showSearchScreen({required String options}) =>
+      context.pushNamed(AppRouteNames.search.name,
+          pathParameters: {'options': options});
 
   static Future<String?> showSelectLocationPage(
           {required String address}) async =>
@@ -87,4 +88,8 @@ class AppCoordinator {
 
   static void showDetailAccountScreen() =>
       context.pushNamed(AppRouteNames.detailAccount.name);
+
+  static void showPaymentScreen({required String productId}) =>
+      context.pushNamed(AppRouteNames.payment.name,
+          pathParameters: {'productId': productId});
 }

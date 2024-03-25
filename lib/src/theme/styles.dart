@@ -41,4 +41,11 @@ class AppTextStyle {
       fontSize: AppFontSize.f16,
       color: AppColors.text,
       fontFamily: FontFamily.nunitoSans);
+
+  static TextStyle extraBoldTextStyle = const TextStyle(
+    fontSize: AppFontSize.f20,
+    color: AppColors.black,
+    fontFamily: FontFamily.raleway,
+    fontWeight: FontWeight.w900,
+  );
 }
