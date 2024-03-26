@@ -887,8 +887,13 @@ class $OrderEntityTable extends OrderEntity
   late final GeneratedColumn<int> epochTime = GeneratedColumn<int>(
       'epoch_time', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
-  List<GeneratedColumn> get $columns => [id, productId, epochTime];
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, productId, epochTime, status];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -916,6 +921,12 @@ class $OrderEntityTable extends OrderEntity
     } else if (isInserting) {
       context.missing(_epochTimeMeta);
     }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
     return context;
   }
 
@@ -931,6 +942,8 @@ class $OrderEntityTable extends OrderEntity
           .read(DriftSqlType.string, data['${effectivePrefix}product_id'])!,
       epochTime: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}epoch_time'])!,
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
     );
   }
 
@@ -944,14 +957,19 @@ class OrderEntityData extends DataClass implements Insertable<OrderEntityData> {
   final String id;
   final String productId;
   final int epochTime;
+  final String status;
   const OrderEntityData(
-      {required this.id, required this.productId, required this.epochTime});
+      {required this.id,
+      required this.productId,
+      required this.epochTime,
+      required this.status});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['product_id'] = Variable<String>(productId);
     map['epoch_time'] = Variable<int>(epochTime);
+    map['status'] = Variable<String>(status);
     return map;
   }
 
@@ -960,6 +978,7 @@ class OrderEntityData extends DataClass implements Insertable<OrderEntityData> {
       id: Value(id),
       productId: Value(productId),
       epochTime: Value(epochTime),
+      status: Value(status),
     );
   }
 
@@ -970,6 +989,7 @@ class OrderEntityData extends DataClass implements Insertable<OrderEntityData> {
       id: serializer.fromJson<String>(json['id']),
       productId: serializer.fromJson<String>(json['productId']),
       epochTime: serializer.fromJson<int>(json['epochTime']),
+      status: serializer.fromJson<String>(json['status']),
     );
   }
   @override
@@ -979,65 +999,76 @@ class OrderEntityData extends DataClass implements Insertable<OrderEntityData> {
       'id': serializer.toJson<String>(id),
       'productId': serializer.toJson<String>(productId),
       'epochTime': serializer.toJson<int>(epochTime),
+      'status': serializer.toJson<String>(status),
     };
   }
 
-  OrderEntityData copyWith({String? id, String? productId, int? epochTime}) =>
+  OrderEntityData copyWith(
+          {String? id, String? productId, int? epochTime, String? status}) =>
       OrderEntityData(
         id: id ?? this.id,
         productId: productId ?? this.productId,
         epochTime: epochTime ?? this.epochTime,
+        status: status ?? this.status,
       );
   @override
   String toString() {
     return (StringBuffer('OrderEntityData(')
           ..write('id: $id, ')
           ..write('productId: $productId, ')
-          ..write('epochTime: $epochTime')
+          ..write('epochTime: $epochTime, ')
+          ..write('status: $status')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, productId, epochTime);
+  int get hashCode => Object.hash(id, productId, epochTime, status);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is OrderEntityData &&
           other.id == this.id &&
           other.productId == this.productId &&
-          other.epochTime == this.epochTime);
+          other.epochTime == this.epochTime &&
+          other.status == this.status);
 }
 
 class OrderEntityCompanion extends UpdateCompanion<OrderEntityData> {
   final Value<String> id;
   final Value<String> productId;
   final Value<int> epochTime;
+  final Value<String> status;
   final Value<int> rowid;
   const OrderEntityCompanion({
     this.id = const Value.absent(),
     this.productId = const Value.absent(),
     this.epochTime = const Value.absent(),
+    this.status = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   OrderEntityCompanion.insert({
     required String id,
     required String productId,
     required int epochTime,
+    required String status,
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         productId = Value(productId),
-        epochTime = Value(epochTime);
+        epochTime = Value(epochTime),
+        status = Value(status);
   static Insertable<OrderEntityData> custom({
     Expression<String>? id,
     Expression<String>? productId,
     Expression<int>? epochTime,
+    Expression<String>? status,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (productId != null) 'product_id': productId,
       if (epochTime != null) 'epoch_time': epochTime,
+      if (status != null) 'status': status,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1046,11 +1077,13 @@ class OrderEntityCompanion extends UpdateCompanion<OrderEntityData> {
       {Value<String>? id,
       Value<String>? productId,
       Value<int>? epochTime,
+      Value<String>? status,
       Value<int>? rowid}) {
     return OrderEntityCompanion(
       id: id ?? this.id,
       productId: productId ?? this.productId,
       epochTime: epochTime ?? this.epochTime,
+      status: status ?? this.status,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1067,6 +1100,9 @@ class OrderEntityCompanion extends UpdateCompanion<OrderEntityData> {
     if (epochTime.present) {
       map['epoch_time'] = Variable<int>(epochTime.value);
     }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1079,6 +1115,7 @@ class OrderEntityCompanion extends UpdateCompanion<OrderEntityData> {
           ..write('id: $id, ')
           ..write('productId: $productId, ')
           ..write('epochTime: $epochTime, ')
+          ..write('status: $status, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();

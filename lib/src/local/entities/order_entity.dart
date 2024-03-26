@@ -6,6 +6,7 @@ class OrderEntity extends Table {
   TextColumn get id => text()();
   TextColumn get productId => text()();
   IntColumn get epochTime => integer()();
+  TextColumn get status => text()();
 
   @override
   Set<Column> get primaryKey => {id};

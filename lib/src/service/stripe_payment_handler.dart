@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/config/constants/app_const.dart';
+import 'package:i2hand/src/config/enum/order_enum.dart';
 import 'package:i2hand/src/dialog/toast_wrapper.dart';
 import 'package:i2hand/src/network/data/payment_success/order_repository.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
@@ -53,7 +54,6 @@ class StripePaymentHandle {
                 name: CollectionMode.always,
                 phone: CollectionMode.always,
                 email: CollectionMode.always,
-                address: AddressCollectionMode.full,
               ),
               appearance: const PaymentSheetAppearance(
                 primaryButton: PaymentSheetPrimaryButtonAppearance(
@@ -77,19 +77,24 @@ class StripePaymentHandle {
 
   void displayPaymentSheet(
       {required String productId, required double productPrice}) async {
+    OrderStatusEnum status = OrderStatusEnum.succeeded;
     try {
       await Stripe.instance.presentPaymentSheet();
-
-      await _updateFirebase(productId: productId, productPrice: productPrice);
 
       XToast.show('Payment succesfully completed');
     } on Exception catch (e) {
       if (e is StripeException) {
         XToast.error('Error from Stripe: ${e.error.localizedMessage}');
+        status = OrderStatusEnum.failed;
       } else {
         XToast.show('Unforeseen error: $e');
+        status = OrderStatusEnum.failed;
       }
     }
+    await _updateFirebase(
+        productId: productId,
+        productPrice: productPrice,
+        paymentStatus: status);
   }
 
 //create Payment
@@ -124,12 +129,15 @@ class StripePaymentHandle {
   }
 
   Future<void> _updateFirebase(
-      {required String productId, required double productPrice}) async {
-    await _updateBuyerFirebase(productId);
+      {required String productId,
+      required double productPrice,
+      required OrderStatusEnum paymentStatus}) async {
+    await _updateBuyerFirebase(productId, paymentStatus);
     await _updateSellerFirebase(productPrice);
   }
 
-  Future<void> _updateBuyerFirebase(String productId) async {
+  Future<void> _updateBuyerFirebase(
+      String productId, OrderStatusEnum paymentStatus) async {
     await GetIt.I.get<OrderRepository>().getOrAddOrder(
           MOrder(
             id: StringUtils.createGenerateRandomOrderNumber(
