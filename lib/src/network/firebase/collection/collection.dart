@@ -58,4 +58,13 @@ class XCollection {
             MOrder.fromJson(snapshot.data() as Map<String, dynamic>),
         toFirestore: (chatRoom, _) => chatRoom.toJson(),
       );
+
+  static CollectionReference<MUserProduct> get cart => FirebaseFirestore
+      .instance
+      .collection('users/${(SharedPrefs.I.getUser() ?? MUser.empty()).id}/cart')
+      .withConverter<MUserProduct>(
+        fromFirestore: (snapshot, options) =>
+            MUserProduct.fromJson(snapshot.data() as Map<String, dynamic>),
+        toFirestore: (chatRoom, _) => chatRoom.toJson(),
+      );
 }

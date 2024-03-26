@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:i2hand/src/dialog/alert_wrapper.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_state.dart';
 import 'package:i2hand/src/local/database_app.dart';
+import 'package:i2hand/src/local/repo/cart/cart_local_repo.dart';
 import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_repo.dart';
+import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/data/product/product_repository.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
 import 'package:i2hand/src/network/model/product/product.dart';
@@ -114,5 +117,15 @@ class DetailProductBloc extends BaseCubit<DetailProductState> {
     } catch (e) {
       xLog.e(e);
     }
+  }
+
+  Future<void> addProductToCart() async {
+    await GetIt.I
+        .get<CartLocalRepo>()
+        .insertDetail(CartEntityData(id: state.id));
+    XAlert.show(
+      title: S.text.doneY,
+      body: S.text.youCardHasBeenSuccessfullyCharged,
+    );
   }
 }

@@ -166,5 +166,7 @@
     "sampleCardHolder": "LANCE",
     "sampleCardCVV": "057",
     "sampleCardValid": "02/28",
-    "pleaseAddYourPhone": "Please add your phone"
+    "pleaseAddYourPhone": "Please add your phone",
+    "doneY": "Done!",
+    "youCardHasBeenSuccessfullyCharged": "You card has been successfully charged"
 }

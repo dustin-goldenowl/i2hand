@@ -5,6 +5,7 @@ import 'package:i2hand/src/feature/wishlist/logic/wishlist_state.dart';
 import 'package:i2hand/src/local/database_app.dart';
 import 'package:i2hand/src/local/entities/product_entity.dart';
 import 'package:i2hand/src/local/entities/wishlist_products_entity.dart';
+import 'package:i2hand/src/local/repo/cart/cart_local_repo.dart';
 import 'package:i2hand/src/local/repo/product/product_local_repo.dart';
 import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_repo.dart';
 import 'package:i2hand/src/network/model/product/product.dart';
@@ -57,5 +58,9 @@ class WishlistBloc extends BaseCubit<WishlistState> {
 
   void removeProduct({required String id}) async {
     await GetIt.I.get<WishlistProductsLocalRepo>().deleteProductById(id);
+  }
+
+  void addProductToCart({required String id}) async {
+    await GetIt.I.get<CartLocalRepo>().insertDetail(CartEntityData(id: id));
   }
 }

@@ -179,7 +179,10 @@ class _WishlistScreenState extends State<WishlistScreen> {
       child: XProductCartEdit(
         title: product.title,
         price: Utils.createPriceText(product.price),
-        onTapRemove: () => context.read<WishlistBloc>().removeProduct(id: product.id),
+        onTapRemove: () =>
+            context.read<WishlistBloc>().removeProduct(id: product.id),
+        onTapAddToCart: () =>
+            context.read<WishlistBloc>().addProductToCart(id: product.id),
         image: (isNullOrEmpty(product.image))
             ? null
             : Image.memory(

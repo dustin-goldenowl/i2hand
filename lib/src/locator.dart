@@ -7,6 +7,8 @@ import 'package:get_it/get_it.dart';
 import 'package:i2hand/firebase_options.dart';
 import 'package:i2hand/src/config/device/app_infor.dart';
 import 'package:i2hand/src/local/database_app.dart';
+import 'package:i2hand/src/local/repo/cart/cart_local_repo.dart';
+import 'package:i2hand/src/local/repo/cart/cart_local_repo_impl.dart';
 import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo.dart';
 import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo_impl.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
@@ -19,6 +21,8 @@ import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_re
 import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_repo_impl.dart';
 import 'package:i2hand/src/network/data/attribute/attribute_repository.dart';
 import 'package:i2hand/src/network/data/attribute/attribute_repository_impl.dart';
+import 'package:i2hand/src/network/data/cart/cart_repository.dart';
+import 'package:i2hand/src/network/data/cart/cart_repository_impl.dart';
 import 'package:i2hand/src/network/data/category/category_repository.dart';
 import 'package:i2hand/src/network/data/category/category_repository_impl.dart';
 import 'package:i2hand/src/network/data/payment_success/order_repo_impl.dart';
@@ -82,6 +86,7 @@ void _locator() {
   GetIt.I.registerLazySingleton<WishlistRepository>(
       () => WishlistRepositoryImpl());
   GetIt.I.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl());
+  GetIt.I.registerLazySingleton<CartRepository>(() => CartRepositoryImpl());
 
   // Local database
   GetIt.I.registerLazySingleton<DatabaseApp>((() => DatabaseApp()));
@@ -95,6 +100,8 @@ void _locator() {
       (() => ProductsLocalRepoImpl(GetIt.I())));
   GetIt.I.registerLazySingleton<OrderLocalRepo>(
       (() => OrderLocalRepoImpl(GetIt.I())));
+  GetIt.I.registerLazySingleton<CartLocalRepo>(
+      (() => CartLocalRepoImpl(GetIt.I())));
 }
 
 void resetSingleton() {

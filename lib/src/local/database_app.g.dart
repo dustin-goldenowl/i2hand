@@ -1122,6 +1122,154 @@ class OrderEntityCompanion extends UpdateCompanion<OrderEntityData> {
   }
 }
 
+class $CartEntityTable extends CartEntity
+    with TableInfo<$CartEntityTable, CartEntityData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CartEntityTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cart_entity';
+  @override
+  VerificationContext validateIntegrity(Insertable<CartEntityData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CartEntityData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CartEntityData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+    );
+  }
+
+  @override
+  $CartEntityTable createAlias(String alias) {
+    return $CartEntityTable(attachedDatabase, alias);
+  }
+}
+
+class CartEntityData extends DataClass implements Insertable<CartEntityData> {
+  final String id;
+  const CartEntityData({required this.id});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    return map;
+  }
+
+  CartEntityCompanion toCompanion(bool nullToAbsent) {
+    return CartEntityCompanion(
+      id: Value(id),
+    );
+  }
+
+  factory CartEntityData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CartEntityData(
+      id: serializer.fromJson<String>(json['id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+    };
+  }
+
+  CartEntityData copyWith({String? id}) => CartEntityData(
+        id: id ?? this.id,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('CartEntityData(')
+          ..write('id: $id')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CartEntityData && other.id == this.id);
+}
+
+class CartEntityCompanion extends UpdateCompanion<CartEntityData> {
+  final Value<String> id;
+  final Value<int> rowid;
+  const CartEntityCompanion({
+    this.id = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CartEntityCompanion.insert({
+    required String id,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id);
+  static Insertable<CartEntityData> custom({
+    Expression<String>? id,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CartEntityCompanion copyWith({Value<String>? id, Value<int>? rowid}) {
+    return CartEntityCompanion(
+      id: id ?? this.id,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CartEntityCompanion(')
+          ..write('id: $id, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$DatabaseApp extends GeneratedDatabase {
   _$DatabaseApp(QueryExecutor e) : super(e);
   late final $NewProductsEntityTable newProductsEntity =
@@ -1132,6 +1280,7 @@ abstract class _$DatabaseApp extends GeneratedDatabase {
       $WishlistProductsEntityTable(this);
   late final $ProductsEntityTable productsEntity = $ProductsEntityTable(this);
   late final $OrderEntityTable orderEntity = $OrderEntityTable(this);
+  late final $CartEntityTable cartEntity = $CartEntityTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1141,6 +1290,7 @@ abstract class _$DatabaseApp extends GeneratedDatabase {
         mostViewProductsEntity,
         wishlistProductsEntity,
         productsEntity,
-        orderEntity
+        orderEntity,
+        cartEntity
       ];
 }
