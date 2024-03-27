@@ -92,4 +92,7 @@ class AppCoordinator {
   static void showPaymentScreen({required String productId}) =>
       context.pushNamed(AppRouteNames.payment.name,
           pathParameters: {'productId': productId});
+
+  static void showAboutAppScreen() =>
+      context.pushNamed(AppRouteNames.aboutApp.name);
 }

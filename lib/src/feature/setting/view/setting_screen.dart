@@ -135,7 +135,10 @@ class SettingScreen extends StatelessWidget {
         const XDashSeparator(color: AppColors.grey6),
         _renderOptionItem(label: S.of(context).language, onTap: () {}),
         const XDashSeparator(color: AppColors.grey6),
-        _renderOptionItem(label: S.of(context).abouti2hand, onTap: () {}),
+        _renderOptionItem(
+          label: S.of(context).abouti2hand,
+          onTap: () => AppCoordinator.showAboutAppScreen(),
+        ),
         const XDashSeparator(color: AppColors.grey6),
       ],
     );
