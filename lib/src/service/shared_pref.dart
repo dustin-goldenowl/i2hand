@@ -27,6 +27,8 @@ class SharedPrefs {
 
   Future<void> clearSharedPref() async {
     await setToken(null);
+    await setUser(null);
+    await setUserAvatar(null);
   }
 
   // theme

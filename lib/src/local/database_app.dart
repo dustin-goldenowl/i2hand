@@ -42,6 +42,12 @@ class DatabaseApp extends _$DatabaseApp {
     await GetIt.I.get<OrderLocalRepo>().deleteAll();
     await GetIt.I.get<CartLocalRepo>().deleteAll();
   }
+
+  Future<void> clearUserDatabase() async {
+    await GetIt.I.get<OrderLocalRepo>().deleteAll();
+    await GetIt.I.get<CartLocalRepo>().deleteAll();
+    await GetIt.I.get<WishlistProductsLocalRepo>().deleteAll();
+  }
 }
 
 LazyDatabase _openConnection() {

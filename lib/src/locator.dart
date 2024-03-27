@@ -105,6 +105,13 @@ void _locator() {
 }
 
 void resetSingleton() {
+  // Reset repository
+  GetIt.I.resetLazySingleton<WishlistRepository>();
+  GetIt.I.resetLazySingleton<OrderRepository>();
+  GetIt.I.resetLazySingleton<CartRepository>();
+
+  // Reset Table database
   GetIt.I.resetLazySingleton<WishlistProductsLocalRepo>();
   GetIt.I.resetLazySingleton<OrderLocalRepo>();
+  GetIt.I.resetLazySingleton<CartLocalRepo>();
 }

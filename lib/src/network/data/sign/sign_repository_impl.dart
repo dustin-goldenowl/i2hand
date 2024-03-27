@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:i2hand/src/local/database_app.dart';
 import 'package:i2hand/src/locator.dart';
 import 'package:i2hand/src/network/data/sign/sign_repository.dart';
 import 'package:i2hand/src/network/firebase/helper/firebase_helper.dart';
@@ -59,6 +61,7 @@ class SignRepositoryImpl extends SignRepository {
   Future<MResult> logOut(MUser user) async {
     try {
       await FirebaseAuth.instance.signOut();
+      await _logOutHandler();
       return MResult.success(user);
     } catch (e) {
       return MResult.exception(e);
@@ -159,5 +162,14 @@ class SignRepositoryImpl extends SignRepository {
     } else {
       return MResult.error(MErrorCode.unknown);
     }
+  }
+
+  Future<void> _logOutHandler() async {
+    // reset singleton database
+    resetSingleton();
+    // Clear user table database : Cart table, Wishlist table, Order table
+    await GetIt.I.get<DatabaseApp>().clearUserDatabase();
+    // Clear shared preference: AccountToken, User, UserAvatar
+    await SharedPrefs.I.clearSharedPref();
   }
 }
