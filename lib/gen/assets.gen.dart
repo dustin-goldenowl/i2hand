@@ -190,6 +190,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/empty-data.svg
   SvgGenImage get emptyData => const SvgGenImage('assets/svg/empty-data.svg');
 
+  /// File path: assets/svg/failed_dialog.svg
+  SvgGenImage get failedDialog =>
+      const SvgGenImage('assets/svg/failed_dialog.svg');
+
   /// File path: assets/svg/google.svg
   SvgGenImage get google => const SvgGenImage('assets/svg/google.svg');
 
@@ -251,6 +255,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/product.svg
   SvgGenImage get product => const SvgGenImage('assets/svg/product.svg');
 
+  /// File path: assets/svg/succeeded_dialog.svg
+  SvgGenImage get succeededDialog =>
+      const SvgGenImage('assets/svg/succeeded_dialog.svg');
+
   /// File path: assets/svg/thunder_sale.svg
   SvgGenImage get thunderSale =>
       const SvgGenImage('assets/svg/thunder_sale.svg');
@@ -274,6 +282,7 @@ class $AssetsSvgGen {
         devices,
         emptyAttributes,
         emptyData,
+        failedDialog,
         google,
         home,
         icColor,
@@ -292,6 +301,7 @@ class $AssetsSvgGen {
         onboardingIllustration,
         post,
         product,
+        succeededDialog,
         thunderSale,
         verified
       ];

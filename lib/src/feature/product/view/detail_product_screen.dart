@@ -175,7 +175,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: Container(
         width: AppSize.s70,
         height: AppSize.s70,
-        margin: const EdgeInsets.symmetric(horizontal: AppMargin.m8),
+        margin: const EdgeInsets.symmetric(
+            horizontal: AppMargin.m8, vertical: AppMargin.m2),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(AppRadius.r20),
