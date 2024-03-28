@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:i2hand/src/network/model/attribute/attribute_model.dart';
 import 'package:i2hand/src/network/model/category/category.dart';
+import 'package:i2hand/src/network/model/order/order.dart';
 import 'package:i2hand/src/network/model/product/product.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/network/model/user_product/user_product.dart';
@@ -48,4 +49,13 @@ class XCollection {
                 MUserProduct.fromJson(snapshot.data() as Map<String, dynamic>),
             toFirestore: (chatRoom, _) => chatRoom.toJson(),
           );
+
+  static CollectionReference<MOrder> get order => FirebaseFirestore.instance
+      .collection(
+          'users/${(SharedPrefs.I.getUser() ?? MUser.empty()).id}/order')
+      .withConverter<MOrder>(
+        fromFirestore: (snapshot, options) =>
+            MOrder.fromJson(snapshot.data() as Map<String, dynamic>),
+        toFirestore: (chatRoom, _) => chatRoom.toJson(),
+      );
 }
