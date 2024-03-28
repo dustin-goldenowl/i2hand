@@ -14,7 +14,7 @@ class AppConstantData {
   static const int orderNumberLength = 10;
 
   static const String adminUsername = 'photostartup2020@gmail.com';
-  static const String adminPassword = 'Death12a2';
+  static const String adminEmail = 'lance.dinh.goldenowl@gmail.com';
 
   static const double minPrice = 0.0;
   static const double maxPrice = 1000.0;

@@ -175,6 +175,8 @@ flutter:
   fonts:
     - family: Nunito Sans
       fonts:
+        - asset: assets/fonts/NunitoSans-Light.ttf
+          weight: 300
         - asset: assets/fonts/NunitoSans-Regular.ttf
           weight: 400
         - asset: assets/fonts/NunitoSans-Medium.ttf

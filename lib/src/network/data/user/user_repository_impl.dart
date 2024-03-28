@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -73,7 +74,7 @@ class UserRepositoryImpl extends UserRepository {
     };
     final body = {
       'username': AppConstantData.adminUsername,
-      'password': AppConstantData.adminPassword,
+      'password': dotenv.env['ADMIN_PASSWORD'],
     };
     return http
         .post(Uri.parse(AppLink.urlUpPassToken),

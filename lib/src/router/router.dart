@@ -32,6 +32,7 @@ import 'package:i2hand/src/feature/payment/logic/payment_bloc.dart';
 import 'package:i2hand/src/feature/payment/view/payment_screen.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_bloc.dart';
 import 'package:i2hand/src/feature/product/view/detail_product_screen.dart';
+import 'package:i2hand/src/feature/setting/feature/about_app/view/about_app_screen.dart';
 import 'package:i2hand/src/feature/setting/feature/detail_account/logic/detail_account_bloc.dart';
 import 'package:i2hand/src/feature/setting/feature/detail_account/view/detail_account_screen.dart';
 import 'package:i2hand/src/feature/setting/view/setting_screen.dart';
@@ -294,6 +295,13 @@ class AppRouter {
                                   userWithAvatar ?? MUser.empty()),
                               child: const DetailAccountScreen(),
                             );
+                          }),
+                      GoRoute(
+                          parentNavigatorKey: AppCoordinator.navigatorKey,
+                          name: AppRouteNames.aboutApp.name,
+                          path: AppRouteNames.aboutApp.subPath,
+                          builder: (__, _) {
+                            return const AboutAppScreen();
                           }),
                     ]),
               ]),
