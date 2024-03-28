@@ -50,7 +50,7 @@ class XToast {
         crossPage: true,
         clickClose: true,
         allowClick: true,
-        ignoreContentClick: true,
+        ignoreContentClick: false,
         onClose: () => loadingCancel = null,
       );
     }
@@ -67,9 +67,7 @@ class XToast {
           status: DialogStatus.failed,
         ),
         crossPage: true,
-        clickClose: true,
-        allowClick: true,
-        ignoreContentClick: true,
+        ignoreContentClick: false,
         onClose: () => loadingCancel = null,
       );
     }

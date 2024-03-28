@@ -109,16 +109,18 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _renderEmptyCartProduct() {
-    return Container(
-        padding: const EdgeInsets.symmetric(vertical: AppPadding.p59),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          boxShadow: AppDecorations.shadowTwo,
-          borderRadius: BorderRadius.circular(AppRadius.r100),
-        ),
-        child: XCircleEmptyContainer(
-          emptyIcon: Assets.svg.cartApp.svg(width: AppSize.s105),
-        ));
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppPadding.p59),
+      child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            boxShadow: AppDecorations.shadowTwo,
+            borderRadius: BorderRadius.circular(AppRadius.r100),
+          ),
+          child: XCircleEmptyContainer(
+            emptyIcon: Assets.svg.cartApp.svg(width: AppSize.s105),
+          )),
+    );
   }
 
   Widget _renderListProductInCart(List<MProduct> listProductsInCart) {
