@@ -32,6 +32,7 @@ import 'package:i2hand/src/feature/payment/logic/payment_bloc.dart';
 import 'package:i2hand/src/feature/payment/view/payment_screen.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_bloc.dart';
 import 'package:i2hand/src/feature/product/view/detail_product_screen.dart';
+import 'package:i2hand/src/feature/profile/logic/profile_bloc.dart';
 import 'package:i2hand/src/feature/setting/feature/about_app/view/about_app_screen.dart';
 import 'package:i2hand/src/feature/setting/feature/detail_account/logic/detail_account_bloc.dart';
 import 'package:i2hand/src/feature/setting/feature/detail_account/view/detail_account_screen.dart';
@@ -265,8 +266,11 @@ class AppRouter {
           GoRoute(
               path: AppRouteNames.account.path,
               name: AppRouteNames.account.name,
-              pageBuilder: (context, state) => const NoTransitionPage(
-                    child: ProfileScreen(),
+              pageBuilder: (context, state) => NoTransitionPage(
+                    child: BlocProvider(
+                      create: (context) => ProfileBloc(),
+                      child: const ProfileScreen(),
+                    ),
                   ),
               routes: [
                 GoRoute(

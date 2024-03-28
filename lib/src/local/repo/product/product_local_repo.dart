@@ -20,4 +20,6 @@ abstract class ProductsLocalRepo {
 
   //Delete all tables
   Future<void> deleteAll();
+
+  Future<Uint8List?> getProductImageById({required String userId});
 }

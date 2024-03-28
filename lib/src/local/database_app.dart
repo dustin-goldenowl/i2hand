@@ -8,12 +8,14 @@ import 'package:i2hand/src/local/entities/most_viewed_products_entity.dart';
 import 'package:i2hand/src/local/entities/new_products_entity.dart';
 import 'package:i2hand/src/local/entities/order_entity.dart';
 import 'package:i2hand/src/local/entities/product_entity.dart';
+import 'package:i2hand/src/local/entities/recently_viewed_entity.dart';
 import 'package:i2hand/src/local/entities/wishlist_products_entity.dart';
 import 'package:i2hand/src/local/repo/cart/cart_local_repo.dart';
 import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
 import 'package:i2hand/src/local/repo/order/order_local_repo.dart';
 import 'package:i2hand/src/local/repo/product/product_local_repo.dart';
+import 'package:i2hand/src/local/repo/recently_viewed/recently_viewed_local_repo.dart';
 import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_repo.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
@@ -28,6 +30,7 @@ part 'database_app.g.dart';
   ProductsEntity,
   OrderEntity,
   CartEntity,
+  RecentlyViewedEntity,
 ])
 class DatabaseApp extends _$DatabaseApp {
   DatabaseApp() : super(_openConnection());
@@ -47,6 +50,7 @@ class DatabaseApp extends _$DatabaseApp {
     await GetIt.I.get<OrderLocalRepo>().deleteAll();
     await GetIt.I.get<CartLocalRepo>().deleteAll();
     await GetIt.I.get<WishlistProductsLocalRepo>().deleteAll();
+    await GetIt.I.get<RecentlyViewedLocalRepo>().deleteAll();
   }
 }
 

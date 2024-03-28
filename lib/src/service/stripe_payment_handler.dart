@@ -144,6 +144,7 @@ class StripePaymentHandle {
                 length: AppConstantData.orderNumberLength),
             productId: productId,
             createdOrderTime: DateTime.now().millisecondsSinceEpoch,
+            status: paymentStatus,
           ),
         );
   }

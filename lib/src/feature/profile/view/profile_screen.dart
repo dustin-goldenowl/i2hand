@@ -1,16 +1,27 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i2hand/gen/assets.gen.dart';
+import 'package:i2hand/src/config/enum/order_enum.dart';
+import 'package:i2hand/src/feature/profile/logic/profile_bloc.dart';
+import 'package:i2hand/src/feature/profile/logic/profile_state.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
+import 'package:i2hand/src/network/model/order/order.dart';
+import 'package:i2hand/src/network/model/recently_viewed/recently_viewed.dart';
+import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/router/coordinator.dart';
 import 'package:i2hand/src/theme/colors.dart';
 import 'package:i2hand/src/theme/styles.dart';
 import 'package:i2hand/src/theme/value.dart';
 import 'package:i2hand/src/utils/padding_utils.dart';
+import 'package:i2hand/src/utils/string_ext.dart';
 import 'package:i2hand/src/utils/string_utils.dart';
+import 'package:i2hand/src/utils/utils.dart';
 import 'package:i2hand/widget/avatar/avatar.dart';
 import 'package:i2hand/widget/button/fill_button.dart';
 import 'package:i2hand/widget/button/icon_button.dart';
 import 'package:i2hand/widget/card/product_card_order.dart';
+import 'package:i2hand/widget/section/recently_viewed_section.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -20,25 +31,10 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late PageController _pageController;
-  // Store the current page number
-  int _currentPage = 0;
-
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
-    _pageController.addListener(() {
-      setState(() {
-        _currentPage = _pageController.page?.round() ?? 0;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _pageController.dispose();
+    context.read<ProfileBloc>().inital();
   }
 
   @override
@@ -75,8 +71,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _renderAvatar() {
-    return const XAvatar(
-      imageSize: AppSize.s40,
+    return BlocSelector<ProfileBloc, ProfileState, MUser>(
+      selector: (state) {
+        return state.account;
+      },
+      builder: (context, account) {
+        return XAvatar(
+          imageSize: AppSize.s40,
+          memoryData: isNullOrEmpty(account.avatar)
+              ? null
+              : account.avatar!.convertToUint8List(),
+          imageType:
+              isNullOrEmpty(account.avatar) ? ImageType.none : ImageType.memory,
+        );
+      },
     );
   }
 
@@ -130,36 +138,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _renderHelloText(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: AppPadding.p20),
-      child: Row(
-        children: [
-          Text(
-            S.of(context).hello,
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      buildWhen: (previous, current) => previous.account != current.account,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(left: AppPadding.p20),
+          child: DefaultTextStyle(
             style: AppTextStyle.titleTextStyle.copyWith(
               fontSize: AppFontSize.f28,
             ),
+            child: Row(
+              children: [
+                Text(S.of(context).hello),
+                (StringUtils.isNullOrEmpty(state.account.name))
+                    ? const SizedBox.shrink()
+                    : Text(state.account.name!),
+              ],
+            ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   Widget _renderRecentlyViewed(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppPadding.p20,
-        vertical: AppPadding.p15,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _renderTitle(title: S.of(context).recentlyViewed, isShowMore: true),
-          XPaddingUtils.verticalPadding(height: AppPadding.p12),
-          _renderListRecentlyViewed(context),
-        ],
-      ),
+    return BlocSelector<ProfileBloc, ProfileState,
+        List<MRecentlyViewedProduct>>(
+      selector: (state) {
+        return state.listRecentlyViewed;
+      },
+      builder: (context, listRecently) {
+        return XRecentlyViewedProductSection(listRecentlyVieweds: listRecently);
+      },
     );
   }
 
@@ -222,29 +232,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _renderListOptions(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          XPaddingUtils.horizontalPadding(width: AppPadding.p20),
-          _renderOptionButtons(context,
-              label: S.of(context).toPay, isSelected: _currentPage == 0),
-          XPaddingUtils.horizontalPadding(width: AppPadding.p8),
-          _renderOptionButtons(context,
-              label: S.of(context).toReceive, isSelected: _currentPage == 1),
-          XPaddingUtils.horizontalPadding(width: AppPadding.p8),
-          _renderOptionButtons(context,
-              label: S.of(context).toReview, isSelected: _currentPage == 2),
-          XPaddingUtils.horizontalPadding(width: AppPadding.p20),
-        ],
-      ),
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      buildWhen: (previous, current) =>
+          previous.numberPage != current.numberPage,
+      builder: (context, state) {
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              XPaddingUtils.horizontalPadding(width: AppPadding.p20),
+              _renderOptionButtons(
+                context,
+                label: S.of(context).toShip,
+                isSelected: state.numberPage == 0,
+                onTap: () => context.read<ProfileBloc>().jumpToPage(0),
+              ),
+              XPaddingUtils.horizontalPadding(width: AppPadding.p8),
+              _renderOptionButtons(
+                context,
+                label: S.of(context).toReceive,
+                isSelected: state.numberPage == 1,
+                onTap: () => context.read<ProfileBloc>().jumpToPage(1),
+              ),
+              XPaddingUtils.horizontalPadding(width: AppPadding.p8),
+              _renderOptionButtons(
+                context,
+                label: S.of(context).toReview,
+                isSelected: state.numberPage == 2,
+                onTap: () => context.read<ProfileBloc>().jumpToPage(2),
+              ),
+              XPaddingUtils.horizontalPadding(width: AppPadding.p20),
+            ],
+          ),
+        );
+      },
     );
   }
 
   Widget _renderOptionButtons(BuildContext context,
-      {required String label, bool isSelected = false}) {
+      {required String label,
+      bool isSelected = false,
+      required Function() onTap}) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           color:
@@ -269,81 +299,80 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _renderListOrders(BuildContext context) {
     return Expanded(
-      child: PageView.builder(
-        controller: _pageController,
-        itemBuilder: (context, index) {
-          switch (index) {
-            case 0:
-              return _renderListToPay(context);
-            case 1:
-              return _renderListToReceive(context);
-            case 2:
-            default:
-              return _renderListToReview(context);
-          }
+      child: BlocBuilder<ProfileBloc, ProfileState>(
+        buildWhen: (previous, current) =>
+            !listEquals(previous.listOrder, current.listOrder),
+        builder: (context, state) {
+          final listToPay = state.listOrder
+              .where((element) => element.status == OrderStatusEnum.succeeded)
+              .toList();
+          return PageView.builder(
+            controller: context.read<ProfileBloc>().pageController,
+            itemBuilder: (context, index) {
+              switch (index) {
+                case 0:
+                  return _renderListToPay(context, listOrder: listToPay);
+                case 1:
+                  return _renderListToReceive(context);
+                case 2:
+                default:
+                  return _renderListToReview(context);
+              }
+            },
+            itemCount: 3,
+            onPageChanged: (value) =>
+                context.read<ProfileBloc>().jumpToPage(value),
+          );
         },
-        itemCount: 3,
       ),
     );
   }
 
-  Widget _renderListToPay(BuildContext context) {
+  Widget _renderListToPay(BuildContext context,
+      {required List<MOrder> listOrder}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppPadding.p20),
       child: Column(
-        children: [
-          XProductCartOrder(
-            image: Assets.svg.product.svg(
-              width: AppSize.s90,
-              height: AppSize.s90,
-            ),
-            orderNumber:
-                StringUtils.createGenerateRandomOrderNumber(length: 10),
-            delivery: S.of(context).standardDelivery,
-            status: S.of(context).delivered,
-          )
-        ],
+        children: _getListOrder(listOrder),
       ),
     );
+  }
+
+  List<Widget> _getListOrder(List<MOrder> listOrder) {
+    List<Widget> listWidget = [];
+    for (MOrder order in listOrder) {
+      Widget image = isNullOrEmpty(order.image)
+          ? Assets.svg.product.svg(
+              width: AppSize.s90,
+              height: AppSize.s90,
+            )
+          : Image.memory(
+              order.image!.convertToUint8List(),
+              width: AppSize.s90,
+              height: AppSize.s90,
+            );
+      final orderWidget = XProductCartOrder(
+        image: image,
+        orderNumber: order.id,
+        delivery: S.of(context).standardDelivery,
+        status: S.of(context).delivered,
+      );
+      listWidget.add(orderWidget);
+    }
+    return listWidget;
   }
 
   Widget _renderListToReceive(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppPadding.p20),
-      child: Column(
-        children: [
-          XProductCartOrder(
-            image: Assets.svg.product.svg(
-              width: AppSize.s90,
-              height: AppSize.s90,
-            ),
-            orderNumber:
-                StringUtils.createGenerateRandomOrderNumber(length: 10),
-            delivery: S.of(context).standardDelivery,
-            status: S.of(context).delivered,
-          )
-        ],
-      ),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppPadding.p20),
+      child: SizedBox.shrink(),
     );
   }
 
   Widget _renderListToReview(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppPadding.p20),
-      child: Column(
-        children: [
-          XProductCartOrder(
-            image: Assets.svg.product.svg(
-              width: AppSize.s90,
-              height: AppSize.s90,
-            ),
-            orderNumber:
-                StringUtils.createGenerateRandomOrderNumber(length: 10),
-            delivery: S.of(context).standardDelivery,
-            status: S.of(context).delivered,
-          )
-        ],
-      ),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppPadding.p20),
+      child: SizedBox.shrink(),
     );
   }
 }

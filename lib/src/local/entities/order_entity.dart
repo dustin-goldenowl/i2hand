@@ -1,11 +1,11 @@
 import 'package:drift/drift.dart';
 import 'package:i2hand/src/local/database_app.dart';
-import 'package:i2hand/src/network/model/user_product/user_product.dart';
+import 'package:i2hand/src/network/model/order/order.dart';
 
 class OrderEntity extends Table {
   TextColumn get id => text()();
   TextColumn get productId => text()();
-  IntColumn get epochTime => integer()();
+  IntColumn get createdOrderTime => integer()();
   TextColumn get status => text()();
 
   @override
@@ -13,11 +13,11 @@ class OrderEntity extends Table {
 }
 
 extension ListPaymentedProductsExt on List<OrderEntityData> {
-  List<MUserProduct> convertToUserProductData() {
-    List<MUserProduct> listProducts = [];
+  List<MOrder> convertToOrderData() {
+    List<MOrder> listProducts = [];
     for (OrderEntityData data in this) {
       final jsonData = data.toJson();
-      listProducts.add(MUserProduct.fromJson(jsonData));
+      listProducts.add(MOrder.fromJson(jsonData));
     }
     return listProducts;
   }

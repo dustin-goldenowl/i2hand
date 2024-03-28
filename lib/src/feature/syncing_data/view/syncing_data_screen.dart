@@ -13,6 +13,7 @@ import 'package:i2hand/src/feature/global/logic/global_bloc.dart';
 import 'package:i2hand/src/local/database_app.dart';
 import 'package:i2hand/src/localization/localization_utils.dart';
 import 'package:i2hand/src/network/data/cart/cart_repository.dart';
+import 'package:i2hand/src/network/data/payment_success/order_repository.dart';
 import 'package:i2hand/src/network/data/product/product_repository.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
 import 'package:i2hand/src/network/data/wishlist/wishlist_repository.dart';
@@ -122,6 +123,7 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
     await _getAttributesData();
     await _getListWishlistProduct();
     await _getListCartProduct();
+    await _getListOrder();
   }
 
   Future<void> _syncingUserData() async {
@@ -183,5 +185,9 @@ class _SyncDataScreenState extends State<SyncDataScreen> {
 
   Future<void> _getListCartProduct() async {
     await GetIt.I.get<CartRepository>().getCartProducts();
+  }
+
+  Future<void> _getListOrder() async {
+    await GetIt.I.get<OrderRepository>().getOrders();
   }
 }
