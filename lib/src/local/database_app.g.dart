@@ -864,6 +864,264 @@ class ProductsEntityCompanion extends UpdateCompanion<ProductsEntityData> {
   }
 }
 
+class $OrderEntityTable extends OrderEntity
+    with TableInfo<$OrderEntityTable, OrderEntityData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $OrderEntityTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _productIdMeta =
+      const VerificationMeta('productId');
+  @override
+  late final GeneratedColumn<String> productId = GeneratedColumn<String>(
+      'product_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _epochTimeMeta =
+      const VerificationMeta('epochTime');
+  @override
+  late final GeneratedColumn<int> epochTime = GeneratedColumn<int>(
+      'epoch_time', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, productId, epochTime, status];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'order_entity';
+  @override
+  VerificationContext validateIntegrity(Insertable<OrderEntityData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('product_id')) {
+      context.handle(_productIdMeta,
+          productId.isAcceptableOrUnknown(data['product_id']!, _productIdMeta));
+    } else if (isInserting) {
+      context.missing(_productIdMeta);
+    }
+    if (data.containsKey('epoch_time')) {
+      context.handle(_epochTimeMeta,
+          epochTime.isAcceptableOrUnknown(data['epoch_time']!, _epochTimeMeta));
+    } else if (isInserting) {
+      context.missing(_epochTimeMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  OrderEntityData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return OrderEntityData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      productId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}product_id'])!,
+      epochTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}epoch_time'])!,
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
+    );
+  }
+
+  @override
+  $OrderEntityTable createAlias(String alias) {
+    return $OrderEntityTable(attachedDatabase, alias);
+  }
+}
+
+class OrderEntityData extends DataClass implements Insertable<OrderEntityData> {
+  final String id;
+  final String productId;
+  final int epochTime;
+  final String status;
+  const OrderEntityData(
+      {required this.id,
+      required this.productId,
+      required this.epochTime,
+      required this.status});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['product_id'] = Variable<String>(productId);
+    map['epoch_time'] = Variable<int>(epochTime);
+    map['status'] = Variable<String>(status);
+    return map;
+  }
+
+  OrderEntityCompanion toCompanion(bool nullToAbsent) {
+    return OrderEntityCompanion(
+      id: Value(id),
+      productId: Value(productId),
+      epochTime: Value(epochTime),
+      status: Value(status),
+    );
+  }
+
+  factory OrderEntityData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return OrderEntityData(
+      id: serializer.fromJson<String>(json['id']),
+      productId: serializer.fromJson<String>(json['productId']),
+      epochTime: serializer.fromJson<int>(json['epochTime']),
+      status: serializer.fromJson<String>(json['status']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'productId': serializer.toJson<String>(productId),
+      'epochTime': serializer.toJson<int>(epochTime),
+      'status': serializer.toJson<String>(status),
+    };
+  }
+
+  OrderEntityData copyWith(
+          {String? id, String? productId, int? epochTime, String? status}) =>
+      OrderEntityData(
+        id: id ?? this.id,
+        productId: productId ?? this.productId,
+        epochTime: epochTime ?? this.epochTime,
+        status: status ?? this.status,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('OrderEntityData(')
+          ..write('id: $id, ')
+          ..write('productId: $productId, ')
+          ..write('epochTime: $epochTime, ')
+          ..write('status: $status')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, productId, epochTime, status);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is OrderEntityData &&
+          other.id == this.id &&
+          other.productId == this.productId &&
+          other.epochTime == this.epochTime &&
+          other.status == this.status);
+}
+
+class OrderEntityCompanion extends UpdateCompanion<OrderEntityData> {
+  final Value<String> id;
+  final Value<String> productId;
+  final Value<int> epochTime;
+  final Value<String> status;
+  final Value<int> rowid;
+  const OrderEntityCompanion({
+    this.id = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.epochTime = const Value.absent(),
+    this.status = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  OrderEntityCompanion.insert({
+    required String id,
+    required String productId,
+    required int epochTime,
+    required String status,
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        productId = Value(productId),
+        epochTime = Value(epochTime),
+        status = Value(status);
+  static Insertable<OrderEntityData> custom({
+    Expression<String>? id,
+    Expression<String>? productId,
+    Expression<int>? epochTime,
+    Expression<String>? status,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (productId != null) 'product_id': productId,
+      if (epochTime != null) 'epoch_time': epochTime,
+      if (status != null) 'status': status,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  OrderEntityCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? productId,
+      Value<int>? epochTime,
+      Value<String>? status,
+      Value<int>? rowid}) {
+    return OrderEntityCompanion(
+      id: id ?? this.id,
+      productId: productId ?? this.productId,
+      epochTime: epochTime ?? this.epochTime,
+      status: status ?? this.status,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (productId.present) {
+      map['product_id'] = Variable<String>(productId.value);
+    }
+    if (epochTime.present) {
+      map['epoch_time'] = Variable<int>(epochTime.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OrderEntityCompanion(')
+          ..write('id: $id, ')
+          ..write('productId: $productId, ')
+          ..write('epochTime: $epochTime, ')
+          ..write('status: $status, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$DatabaseApp extends GeneratedDatabase {
   _$DatabaseApp(QueryExecutor e) : super(e);
   late final $NewProductsEntityTable newProductsEntity =
@@ -873,6 +1131,7 @@ abstract class _$DatabaseApp extends GeneratedDatabase {
   late final $WishlistProductsEntityTable wishlistProductsEntity =
       $WishlistProductsEntityTable(this);
   late final $ProductsEntityTable productsEntity = $ProductsEntityTable(this);
+  late final $OrderEntityTable orderEntity = $OrderEntityTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -881,6 +1140,7 @@ abstract class _$DatabaseApp extends GeneratedDatabase {
         newProductsEntity,
         mostViewProductsEntity,
         wishlistProductsEntity,
-        productsEntity
+        productsEntity,
+        orderEntity
       ];
 }

@@ -7,6 +7,7 @@ import 'package:i2hand/src/network/data/user/user_repository.dart';
 import 'package:i2hand/src/network/model/product/product.dart';
 import 'package:i2hand/src/network/model/user/user.dart';
 import 'package:i2hand/src/service/shared_pref.dart';
+import 'package:i2hand/src/service/stripe_payment_handler.dart';
 import 'package:i2hand/src/utils/base_cubit.dart';
 import 'package:i2hand/src/utils/string_utils.dart';
 import 'package:i2hand/src/utils/utils.dart';
@@ -40,9 +41,12 @@ class PaymentBloc extends BaseCubit<PaymentState> {
         .get<ProductsLocalRepo>()
         .getDetail(id: state.productId)
         .get();
-    emit(state.copyWith(product: product.convertToProductData().first));
+    final productDetail = product.convertToProductData().first;
+    emit(state.copyWith(
+      product: productDetail,
+      totalPrice: productDetail.price,
+    ));
   }
-
 
   Future<void> _getUserData() async {
     final user = SharedPrefs.I.getUser();
@@ -62,5 +66,16 @@ class PaymentBloc extends BaseCubit<PaymentState> {
     } catch (e) {
       xLog.e(e);
     }
+  }
+
+  void paidProduct() {
+    StripePaymentHandle().stripeMakePayment(
+      buyerMail: state.user.email ?? '',
+      buyerPhone: state.user.phone ?? '',
+      address: state.address.split(','),
+      price: state.totalPrice,
+      productId: state.productId,
+      productPrice: state.totalPrice,
+    );
   }
 }

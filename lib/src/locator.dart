@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart' hide AppInfo;
 import 'package:get_it/get_it.dart';
 import 'package:i2hand/firebase_options.dart';
 import 'package:i2hand/src/config/device/app_infor.dart';
@@ -10,6 +11,8 @@ import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_lo
 import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo_impl.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo_impl.dart';
+import 'package:i2hand/src/local/repo/order/order_local_repo.dart';
+import 'package:i2hand/src/local/repo/order/order_local_repo_impl.dart';
 import 'package:i2hand/src/local/repo/product/product_local_repo.dart';
 import 'package:i2hand/src/local/repo/product/product_local_repo_impl.dart';
 import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_repo.dart';
@@ -18,6 +21,8 @@ import 'package:i2hand/src/network/data/attribute/attribute_repository.dart';
 import 'package:i2hand/src/network/data/attribute/attribute_repository_impl.dart';
 import 'package:i2hand/src/network/data/category/category_repository.dart';
 import 'package:i2hand/src/network/data/category/category_repository_impl.dart';
+import 'package:i2hand/src/network/data/payment_success/order_repo_impl.dart';
+import 'package:i2hand/src/network/data/payment_success/order_repository.dart';
 import 'package:i2hand/src/network/data/product/product_repository.dart';
 import 'package:i2hand/src/network/data/product/product_repository_impl.dart';
 import 'package:i2hand/src/network/data/sign/sign_repository.dart';
@@ -29,12 +34,18 @@ import 'package:i2hand/src/network/data/wishlist/wishlist_repository_impl.dart';
 import 'package:i2hand/src/router/deep_link.dart';
 import 'package:i2hand/src/router/router.dart';
 import 'package:i2hand/src/service/shared_pref.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // setup dotenv
+  await dotenv.load(fileName: "lib/.env");
+
+  _initStripeKey();
 
   // catch error
   FlutterError.onError = (errorDetails) {
@@ -54,6 +65,10 @@ Future initializeApp() async {
   _locator();
 }
 
+void _initStripeKey() {
+  Stripe.publishableKey = dotenv.env['STRIPE_PUBLIC'] ?? '';
+}
+
 void _locator() {
   GetIt.I.registerLazySingleton(() => AppRouter());
   GetIt.I.registerLazySingleton<SignRepository>(() => SignRepositoryImpl());
@@ -66,6 +81,7 @@ void _locator() {
       () => AttributeRepositoryImpl());
   GetIt.I.registerLazySingleton<WishlistRepository>(
       () => WishlistRepositoryImpl());
+  GetIt.I.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl());
 
   // Local database
   GetIt.I.registerLazySingleton<DatabaseApp>((() => DatabaseApp()));
@@ -77,8 +93,11 @@ void _locator() {
       (() => WishlistProductsLocalRepoImpl(GetIt.I())));
   GetIt.I.registerLazySingleton<ProductsLocalRepo>(
       (() => ProductsLocalRepoImpl(GetIt.I())));
+  GetIt.I.registerLazySingleton<OrderLocalRepo>(
+      (() => OrderLocalRepoImpl(GetIt.I())));
 }
 
 void resetSingleton() {
   GetIt.I.resetLazySingleton<WishlistProductsLocalRepo>();
+  GetIt.I.resetLazySingleton<OrderLocalRepo>();
 }

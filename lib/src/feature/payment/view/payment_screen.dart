@@ -296,9 +296,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Widget _renderTotalPrice(BuildContext context) {
     return Expanded(
-      child: Text(
-        S.of(context).samplePriceText,
-        style: AppTextStyle.titleTextStyle.copyWith(fontSize: AppFontSize.f18),
+      child: BlocSelector<PaymentBloc, PaymentState, double>(
+        selector: (state) {
+          return state.totalPrice;
+        },
+        builder: (context, price) {
+          return Text(
+            Utils.createPriceText(price),
+            style:
+                AppTextStyle.titleTextStyle.copyWith(fontSize: AppFontSize.f18),
+          );
+        },
       ),
     );
   }
@@ -307,6 +315,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return Expanded(
       child: XFillButton(
           bgColor: AppColors.text,
+          onPressed: () => context.read<PaymentBloc>().paidProduct(),
           label: Text(
             S.of(context).pay,
             style: AppTextStyle.buttonTextStylePrimary,

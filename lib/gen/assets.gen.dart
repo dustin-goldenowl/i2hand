@@ -12,6 +12,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 
+class $LibGen {
+  const $LibGen();
+
+  /// File path: lib/.env
+  String get env => 'lib/.env';
+
+  /// List of all assets
+  List<String> get values => [env];
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -293,6 +303,7 @@ class Assets {
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsJsonsGen jsons = $AssetsJsonsGen();
   static const $AssetsSvgGen svg = $AssetsSvgGen();
+  static const $LibGen lib = $LibGen();
 }
 
 class AssetGenImage {
