@@ -168,5 +168,11 @@
     "sampleCardValid": "02/28",
     "pleaseAddYourPhone": "Please add your phone",
     "doneY": "Done!",
-    "youCardHasBeenSuccessfullyCharged": "You card has been successfully charged"
+    "youCardHasBeenSuccessfullyCharged": "You card has been successfully charged",
+    "paymentIsInProgress": "Payment is in progress",
+    "pleaseWaitAFewMoments": "Please, wait a few moments",
+    "weCouldntProceedYourPayment" : "We couldn't proceed your payment",
+    "pleasChangeYourPayment": "Please, change your payment method or try again",
+    "change": "Change",
+    "trackMyOrder": "Track My Order"
 }

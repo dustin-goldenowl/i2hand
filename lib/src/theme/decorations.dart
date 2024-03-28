@@ -25,25 +25,25 @@ class AppDecorations {
     ),
   ];
 
-  static fullShadow({Color? color}) => [
+  static fullShadow({Color? color, double shadowSize = 2}) => [
         BoxShadow(
-          offset: const Offset(0, 2),
-          blurRadius: 2,
+          offset: Offset(0, shadowSize),
+          blurRadius: shadowSize,
           color: color ?? Colors.black.withOpacity(.1),
         ),
         BoxShadow(
-          offset: const Offset(2, 0),
-          blurRadius: 2,
+          offset: Offset(shadowSize, 0),
+          blurRadius: shadowSize,
           color: color ?? Colors.black.withOpacity(.1),
         ),
         BoxShadow(
-          offset: const Offset(0, -2),
-          blurRadius: 2,
+          offset: Offset(0, -shadowSize),
+          blurRadius: shadowSize,
           color: color ?? Colors.black.withOpacity(.1),
         ),
         BoxShadow(
-          offset: const Offset(-2, 0),
-          blurRadius: 2,
+          offset: Offset(-shadowSize, 0),
+          blurRadius: shadowSize,
           color: color ?? Colors.black.withOpacity(.1),
         ),
       ];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:i2hand/src/dialog/widget/custom_dialog.dart';
 
 import 'widget/loading_alert.dart';
 import 'widget/status_toast.dart';
@@ -18,6 +19,58 @@ class XToast {
         toastBuilder: (_) => const XLoadingAlert(),
         crossPage: true,
         ignoreContentClick: true,
+      );
+    }
+  }
+
+  static showLoadingDialog({required String title, String? subTitle}) {
+    if (isShowLoading == false) {
+      loadingCancel = BotToast.showCustomLoading(
+        toastBuilder: (_) => XCustomDialog(
+          title: title,
+          subTitle: subTitle ?? '',
+          status: DialogStatus.loading,
+        ),
+        crossPage: true,
+        ignoreContentClick: true,
+      );
+    }
+  }
+
+  static showSucceededDialog(
+      {required String title, String? subTitle, Widget? actions}) {
+    if (isShowLoading == false) {
+      loadingCancel = BotToast.showCustomLoading(
+        toastBuilder: (_) => XCustomDialog(
+          title: title,
+          subTitle: subTitle ?? '',
+          actions: actions,
+          status: DialogStatus.succeeded,
+        ),
+        crossPage: true,
+        clickClose: true,
+        allowClick: true,
+        ignoreContentClick: true,
+        onClose: () => loadingCancel = null,
+      );
+    }
+  }
+
+  static showFailedDialog(
+      {required String title, String? subTitle, Widget? actions}) {
+    if (isShowLoading == false) {
+      loadingCancel = BotToast.showCustomLoading(
+        toastBuilder: (_) => XCustomDialog(
+          title: title,
+          subTitle: subTitle ?? '',
+          actions: actions,
+          status: DialogStatus.failed,
+        ),
+        crossPage: true,
+        clickClose: true,
+        allowClick: true,
+        ignoreContentClick: true,
+        onClose: () => loadingCancel = null,
       );
     }
   }
