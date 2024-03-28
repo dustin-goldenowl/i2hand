@@ -1,30 +1,31 @@
 import 'package:drift/drift.dart';
 import 'package:i2hand/src/local/database_app.dart';
-import 'package:i2hand/src/local/repo/order/order_local_repo.dart';
+import 'package:i2hand/src/local/repo/recently_viewed/recently_viewed_local_repo.dart';
 import 'package:i2hand/src/utils/utils.dart';
 
-class OrderLocalRepoImpl extends OrderLocalRepo {
-  OrderLocalRepoImpl(super.database);
+class RecentlyViewedLocalRepoImpl extends RecentlyViewedLocalRepo {
+  RecentlyViewedLocalRepoImpl(super.database);
 
   @override
-  MultiSelectable<OrderEntityData> getDetail({required String id}) {
-    return (database.select(database.orderEntity)
+  MultiSelectable<RecentlyViewedEntityData> getDetail({required String id}) {
+    return (database.select(database.recentlyViewedEntity)
       ..where((product) => product.id.equals(id)));
   }
 
   @override
-  MultiSelectable<OrderEntityData> getAllDetails({int? limit}) {
+  MultiSelectable<RecentlyViewedEntityData> getAllDetails({int? limit}) {
     if (limit == null) {
-      return database.select(database.orderEntity);
+      return database.select(database.recentlyViewedEntity);
     }
 
-    return (database.select(database.orderEntity)
+    return (database.select(database.recentlyViewedEntity)
       ..limit(limit)
       ..orderBy([(item) => OrderingTerm.desc(item.id)]));
   }
 
   @override
-  Future<OrderEntityData?> upsert(OrderEntityData entity) async {
+  Future<RecentlyViewedEntityData?> upsert(
+      RecentlyViewedEntityData entity) async {
     try {
       await upsertDetail(entity);
       return entity;
@@ -36,26 +37,25 @@ class OrderLocalRepoImpl extends OrderLocalRepo {
   @override
   Future<void> deleteAll() async {
     try {
-      await database.delete(database.orderEntity).go();
+      await database.delete(database.recentlyViewedEntity).go();
     } catch (error) {
       xLog.w("[error][delete-table] $error");
     }
   }
 
-  Future<OrderEntityData?> upsertDetail(OrderEntityData entity) async {
+  Future<RecentlyViewedEntityData?> upsertDetail(
+      RecentlyViewedEntityData entity) async {
     try {
       final oldEntity = await _getDetail(entity.id);
       if (oldEntity != null) {
         await database
-            .into(database.orderEntity)
-            .insertOnConflictUpdate(entity.toCompanion(true));
+            .into(database.recentlyViewedEntity)
+            .insertOnConflictUpdate(entity);
 
         return oldEntity;
       }
 
-      await database
-          .into(database.orderEntity)
-          .insert(entity.toCompanion(true));
+      await database.into(database.recentlyViewedEntity).insert(entity);
 
       return null;
     } catch (error) {
@@ -63,9 +63,9 @@ class OrderLocalRepoImpl extends OrderLocalRepo {
     }
   }
 
-  Future<OrderEntityData?> _getDetail(String id) async {
+  Future<RecentlyViewedEntityData?> _getDetail(String id) async {
     try {
-      return await (database.select(database.orderEntity)
+      return await (database.select(database.recentlyViewedEntity)
             ..where((tbl) => tbl.id.equals(id)))
           .getSingle();
     } catch (error) {
@@ -74,9 +74,12 @@ class OrderLocalRepoImpl extends OrderLocalRepo {
   }
 
   @override
-  Future<OrderEntityData?> insertDetail(OrderEntityData entity) async {
+  Future<RecentlyViewedEntityData?> insertDetail(
+      RecentlyViewedEntityData entity) async {
     try {
-      await database.into(database.orderEntity).insertOnConflictUpdate(entity.toCompanion(true));
+      await database
+          .into(database.recentlyViewedEntity)
+          .insertOnConflictUpdate(entity);
       return entity;
     } catch (error) {
       xLog.e("[error - _insertDetail] $error");
@@ -89,7 +92,8 @@ class OrderLocalRepoImpl extends OrderLocalRepo {
     try {
       final isContained = await isContainInDatabase(id);
       if (!isContained) return;
-      (database.delete(database.orderEntity)..where((tbl) => tbl.id.equals(id)))
+      (database.delete(database.recentlyViewedEntity)
+            ..where((tbl) => tbl.id.equals(id)))
           .go();
     } catch (error) {
       xLog.e("[error - deleteProductById] $error");

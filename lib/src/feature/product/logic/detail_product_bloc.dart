@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:i2hand/src/feature/product/logic/detail_product_state.dart';
 import 'package:i2hand/src/local/database_app.dart';
 import 'package:i2hand/src/local/repo/cart/cart_local_repo.dart';
+import 'package:i2hand/src/local/repo/recently_viewed/recently_viewed_local_repo.dart';
 import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_repo.dart';
 import 'package:i2hand/src/network/data/product/product_repository.dart';
 import 'package:i2hand/src/network/data/user/user_repository.dart';
@@ -28,6 +29,7 @@ class DetailProductBloc extends BaseCubit<DetailProductState> {
     await _fetchProductData(state.id);
     await _fetchProductImage(state.id);
     await _initSavedProduct(state.id);
+    await _initAddToRecentlyViewed(state.id);
   }
 
   Future<void> _fetchProductData(String id) async {
@@ -121,5 +123,16 @@ class DetailProductBloc extends BaseCubit<DetailProductState> {
     await GetIt.I
         .get<CartLocalRepo>()
         .insertDetail(CartEntityData(id: state.id));
+  }
+
+  Future<void> _initAddToRecentlyViewed(String id) async {
+    if (isNullOrEmpty(state.listImage?.first)) return;
+    await GetIt.I
+        .get<RecentlyViewedLocalRepo>()
+        .upsert(RecentlyViewedEntityData(
+          id: id,
+          image: state.listImage!.first!,
+          time: DateTime.now().millisecondsSinceEpoch,
+        ));
   }
 }

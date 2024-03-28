@@ -86,8 +86,17 @@ class ProductsLocalRepoImpl extends ProductsLocalRepo {
   }
 
   @override
-  MultiSelectable<ProductsEntityData> getDetailByOwnerId({required String userId}) {
+  MultiSelectable<ProductsEntityData> getDetailByOwnerId(
+      {required String userId}) {
     return (database.select(database.productsEntity)
       ..where((product) => product.owner.equals(userId)));
+  }
+
+  @override
+  Future<Uint8List?> getProductImageById({required String userId}) async {
+    final product = await (database.select(database.productsEntity)
+          ..where((product) => product.id.equals(userId)))
+        .getSingle();
+    return product.image;
   }
 }

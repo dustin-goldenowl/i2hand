@@ -17,6 +17,8 @@ import 'package:i2hand/src/local/repo/order/order_local_repo.dart';
 import 'package:i2hand/src/local/repo/order/order_local_repo_impl.dart';
 import 'package:i2hand/src/local/repo/product/product_local_repo.dart';
 import 'package:i2hand/src/local/repo/product/product_local_repo_impl.dart';
+import 'package:i2hand/src/local/repo/recently_viewed/recently_viewed_local_repo.dart';
+import 'package:i2hand/src/local/repo/recently_viewed/recently_viewed_local_repo_impl.dart';
 import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_repo.dart';
 import 'package:i2hand/src/local/repo/wishlist_product/wishlist_product_local_repo_impl.dart';
 import 'package:i2hand/src/network/data/attribute/attribute_repository.dart';
@@ -102,6 +104,8 @@ void _locator() {
       (() => OrderLocalRepoImpl(GetIt.I())));
   GetIt.I.registerLazySingleton<CartLocalRepo>(
       (() => CartLocalRepoImpl(GetIt.I())));
+  GetIt.I.registerLazySingleton<RecentlyViewedLocalRepo>(
+      (() => RecentlyViewedLocalRepoImpl(GetIt.I())));
 }
 
 void resetSingleton() {
@@ -114,4 +118,5 @@ void resetSingleton() {
   GetIt.I.resetLazySingleton<WishlistProductsLocalRepo>();
   GetIt.I.resetLazySingleton<OrderLocalRepo>();
   GetIt.I.resetLazySingleton<CartLocalRepo>();
+  GetIt.I.resetLazySingleton<RecentlyViewedLocalRepo>();
 }

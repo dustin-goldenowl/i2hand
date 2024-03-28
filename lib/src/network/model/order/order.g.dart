@@ -12,6 +12,8 @@ MOrder _$MOrderFromJson(Map<String, dynamic> json) => MOrder(
       createdOrderTime: json['createdOrderTime'] as int,
       status: $enumDecodeNullable(_$OrderStatusEnumEnumMap, json['status']) ??
           OrderStatusEnum.pending,
+      image:
+          (json['image'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$MOrderToJson(MOrder instance) => <String, dynamic>{
@@ -19,6 +21,7 @@ Map<String, dynamic> _$MOrderToJson(MOrder instance) => <String, dynamic>{
       'productId': instance.productId,
       'createdOrderTime': instance.createdOrderTime,
       'status': _$OrderStatusEnumEnumMap[instance.status]!,
+      'image': instance.image,
     };
 
 const _$OrderStatusEnumEnumMap = {
@@ -26,4 +29,7 @@ const _$OrderStatusEnumEnumMap = {
   OrderStatusEnum.pending: 'pending',
   OrderStatusEnum.succeeded: 'succeeded',
   OrderStatusEnum.failed: 'failed',
+  OrderStatusEnum.paid: 'paid',
+  OrderStatusEnum.received: 'received',
+  OrderStatusEnum.reviewed: 'reviewed',
 };
