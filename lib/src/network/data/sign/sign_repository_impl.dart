@@ -2,7 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:i2hand/src/local/database_app.dart';
+import 'package:i2hand/src/local/entities/product_entity.dart';
+import 'package:i2hand/src/local/repo/product/product_local_repo.dart';
 import 'package:i2hand/src/locator.dart';
+import 'package:i2hand/src/network/data/product/product_repository.dart';
 import 'package:i2hand/src/network/data/sign/sign_repository.dart';
 import 'package:i2hand/src/network/firebase/helper/firebase_helper.dart';
 import 'package:i2hand/src/network/model/common/error_code.dart';
@@ -121,11 +124,13 @@ class SignRepositoryImpl extends SignRepository {
   }
 
   @override
-  Future<MResult> removeAccount(MUser user) async {
+  Future<MResult> removeAccount(MUser account) async {
     try {
       final user = AuthenticationHelper().user;
       user?.delete();
-      return MResult.success(user);
+      await _logOutHandler();
+      await _clearAccountsProduct(account.id);
+      return MResult.success(account);
     } catch (e) {
       return MResult.exception(e);
     }
@@ -171,5 +176,17 @@ class SignRepositoryImpl extends SignRepository {
     await GetIt.I.get<DatabaseApp>().clearUserDatabase();
     // Clear shared preference: AccountToken, User, UserAvatar
     await SharedPrefs.I.clearSharedPref();
+  }
+
+  Future<void> _clearAccountsProduct(String userId) async {
+    final productsOwner = await GetIt.I
+        .get<ProductsLocalRepo>()
+        .getDetailByOwnerId(userId: userId)
+        .get();
+    for (ProductsEntityData product in productsOwner) {
+      await GetIt.I
+          .get<ProductRepository>()
+          .deleteProduct([product].convertToProductData().first);
+    }
   }
 }

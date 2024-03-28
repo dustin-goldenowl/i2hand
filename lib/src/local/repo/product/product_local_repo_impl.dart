@@ -84,4 +84,10 @@ class ProductsLocalRepoImpl extends ProductsLocalRepo {
       return null;
     }
   }
+
+  @override
+  MultiSelectable<ProductsEntityData> getDetailByOwnerId({required String userId}) {
+    return (database.select(database.productsEntity)
+      ..where((product) => product.owner.equals(userId)));
+  }
 }

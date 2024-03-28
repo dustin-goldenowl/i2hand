@@ -30,6 +30,7 @@ class XFillButton extends StatelessWidget {
       onPressed: onPressed,
       style: ButtonStyle(
         surfaceTintColor: MaterialStateProperty.all(Colors.transparent),
+        shadowColor: MaterialStateProperty.all(Colors.transparent),
         shape: MaterialStateProperty.all(RoundedRectangleBorder(
             side: border ?? BorderSide.none,
             borderRadius: BorderRadius.circular(borderRadius))),

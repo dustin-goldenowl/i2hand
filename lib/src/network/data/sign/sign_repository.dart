@@ -26,5 +26,5 @@ abstract class SignRepository {
   Future<MResult> logOut(MUser user);
 
   /// removeAccount
-  Future<MResult> removeAccount(MUser user);
+  Future<MResult> removeAccount(MUser account);
 }

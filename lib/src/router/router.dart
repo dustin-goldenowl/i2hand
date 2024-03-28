@@ -35,6 +35,7 @@ import 'package:i2hand/src/feature/product/view/detail_product_screen.dart';
 import 'package:i2hand/src/feature/setting/feature/about_app/view/about_app_screen.dart';
 import 'package:i2hand/src/feature/setting/feature/detail_account/logic/detail_account_bloc.dart';
 import 'package:i2hand/src/feature/setting/feature/detail_account/view/detail_account_screen.dart';
+import 'package:i2hand/src/feature/setting/logic/setting_bloc.dart';
 import 'package:i2hand/src/feature/setting/view/setting_screen.dart';
 import 'package:i2hand/src/feature/profile/view/profile_screen.dart';
 import 'package:i2hand/src/feature/recently_viewed/logic/recently_viewed_bloc.dart';
@@ -274,7 +275,7 @@ class AppRouter {
                     path: AppRouteNames.setting.subPath,
                     builder: (__, _) {
                       return BlocProvider(
-                        create: (context) => SearchBloc(),
+                        create: (context) => SettingBloc(),
                         child: const SettingScreen(),
                       );
                     },

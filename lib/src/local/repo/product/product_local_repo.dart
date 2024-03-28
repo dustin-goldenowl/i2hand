@@ -12,6 +12,9 @@ abstract class ProductsLocalRepo {
 
   MultiSelectable<ProductsEntityData> getDetail({required String id});
 
+  MultiSelectable<ProductsEntityData> getDetailByOwnerId(
+      {required String userId});
+
   //Get all records of Details table with limitation and order by desc
   MultiSelectable<ProductsEntityData> getAllDetails({int? limit});
 

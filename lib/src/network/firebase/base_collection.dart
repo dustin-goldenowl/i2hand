@@ -68,11 +68,12 @@ class BaseCollectionReference<T> {
   Future<MResult<bool>> delete(T item) async {
     try {
       await ref
-          .doc(getObjectId(item).toLowerCase())
+          .doc(getObjectId(item))
           .delete()
           .timeout(const Duration(seconds: 5));
       return MResult.success(true);
     } catch (e) {
+      xLog.e(e);
       return MResult.exception(e);
     }
   }
