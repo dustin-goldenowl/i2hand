@@ -420,6 +420,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Expanded(
       child: XFillButton(
           bgColor: AppColors.black3,
+          onPressed: () => context.read<DetailProductBloc>().addProductToCart(),
           label: Text(
             S.of(context).addToCart,
             style: AppTextStyle.buttonTextStylePrimary

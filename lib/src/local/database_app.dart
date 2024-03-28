@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:get_it/get_it.dart';
+import 'package:i2hand/src/local/entities/cart_entity.dart';
 import 'package:i2hand/src/local/entities/most_viewed_products_entity.dart';
 import 'package:i2hand/src/local/entities/new_products_entity.dart';
 import 'package:i2hand/src/local/entities/order_entity.dart';
 import 'package:i2hand/src/local/entities/product_entity.dart';
 import 'package:i2hand/src/local/entities/wishlist_products_entity.dart';
+import 'package:i2hand/src/local/repo/cart/cart_local_repo.dart';
 import 'package:i2hand/src/local/repo/most_viewed_product/most_viewed_product_local_repo.dart';
 import 'package:i2hand/src/local/repo/new_product/new_product_local_repo.dart';
 import 'package:i2hand/src/local/repo/order/order_local_repo.dart';
@@ -25,6 +27,7 @@ part 'database_app.g.dart';
   WishlistProductsEntity,
   ProductsEntity,
   OrderEntity,
+  CartEntity,
 ])
 class DatabaseApp extends _$DatabaseApp {
   DatabaseApp() : super(_openConnection());
@@ -37,6 +40,7 @@ class DatabaseApp extends _$DatabaseApp {
     await GetIt.I.get<WishlistProductsLocalRepo>().deleteAll();
     await GetIt.I.get<ProductsLocalRepo>().deleteAll();
     await GetIt.I.get<OrderLocalRepo>().deleteAll();
+    await GetIt.I.get<CartLocalRepo>().deleteAll();
   }
 }
 

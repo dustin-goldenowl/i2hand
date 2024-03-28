@@ -38,4 +38,9 @@ extension MUserProductExt on MUserProduct {
     final jsonData = toJson();
     return WishlistProductsEntityData.fromJson(jsonData);
   }
+
+  CartEntityData convertToCartLocalData() {
+    final jsonData = toJson();
+    return CartEntityData.fromJson(jsonData);
+  }
 }

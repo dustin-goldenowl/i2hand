@@ -14,21 +14,27 @@ class XProductCartEdit extends StatelessWidget {
     this.price = '',
     this.image,
     required this.onTapRemove,
+    this.onTapAddToCart,
+    this.onTapPayProduct,
   });
   final String title;
   final String price;
   final Widget? image;
   final Function onTapRemove;
+  final Function? onTapAddToCart;
+  final Function? onTapPayProduct;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        _renderImageProduct(),
-        XPaddingUtils.horizontalPadding(width: AppPadding.p16),
-        _renderInfor(context),
-      ],
+    return IntrinsicHeight(
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          _renderImageProduct(),
+          XPaddingUtils.horizontalPadding(width: AppPadding.p16),
+          _renderInfor(context),
+        ],
+      ),
     );
   }
 
@@ -70,7 +76,7 @@ class XProductCartEdit extends StatelessWidget {
   Widget _renderInfor(BuildContext context) {
     return Expanded(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _renderProductName(context),
           _renderProductPrice(context),
@@ -93,28 +99,31 @@ class XProductCartEdit extends StatelessWidget {
   }
 
   Widget _renderProductPrice(BuildContext context) {
-    return Text(
-      price,
-      style: AppTextStyle.titleTextStyle.copyWith(fontSize: AppFontSize.f18),
+    return Expanded(
+      child: Text(
+        price,
+        style: AppTextStyle.titleTextStyle.copyWith(fontSize: AppFontSize.f18),
+      ),
     );
   }
 
   Widget _renderOptions(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _renderAddToCart(context),
-      ],
-    );
-  }
-
-  Widget _renderAddToCart(BuildContext context) {
-    return XFillButton(
-        label: Text(
-      S.of(context).addToCart,
-      style: AppTextStyle.buttonTextStylePrimary,
-    ));
+    return onTapAddToCart != null
+        ? XFillButton(
+            onPressed: () => onTapAddToCart?.call(),
+            label: Text(
+              S.of(context).addToCart,
+              style: AppTextStyle.buttonTextStylePrimary,
+            ))
+        : onTapPayProduct != null
+            ? XFillButton(
+                bgColor: AppColors.black2,
+                onPressed: () => onTapPayProduct?.call(),
+                label: Text(
+                  S.of(context).pay,
+                  style: AppTextStyle.buttonTextStylePrimary,
+                ))
+            : const SizedBox.shrink();
   }
 
   Widget _renderRemoveButton() {
